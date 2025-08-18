@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\GH\\source\\repos\\Diller\\api\\TimeRegistration.csproj": {}
+    "C:\\Users\\GH\\source\\repos\\CheckInOutSystem\\api\\TimeRegistration.csproj": {}
   },
   "projects": {
-    "C:\\Users\\GH\\source\\repos\\Diller\\api\\TimeRegistration.csproj": {
+    "C:\\Users\\GH\\source\\repos\\CheckInOutSystem\\api\\TimeRegistration.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\GH\\source\\repos\\Diller\\api\\TimeRegistration.csproj",
+        "projectUniqueName": "C:\\Users\\GH\\source\\repos\\CheckInOutSystem\\api\\TimeRegistration.csproj",
         "projectName": "TimeRegistration",
-        "projectPath": "C:\\Users\\GH\\source\\repos\\Diller\\api\\TimeRegistration.csproj",
+        "projectPath": "C:\\Users\\GH\\source\\repos\\CheckInOutSystem\\api\\TimeRegistration.csproj",
         "packagesPath": "C:\\Users\\GH\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\GH\\source\\repos\\Diller\\api\\obj\\",
+        "outputPath": "C:\\Users\\GH\\source\\repos\\CheckInOutSystem\\api\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
