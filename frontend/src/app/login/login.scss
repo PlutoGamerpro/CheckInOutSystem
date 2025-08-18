@@ -1,0 +1,308 @@
+@use '../../base' as styles;
+
+// Color and style variables for the login page (same as signup)
+$bg1: #232526;
+$bg2: #414345;
+$glass: rgba(40, 44, 52, 0.68);
+$white: #ffffff;
+$text: #e8e8e8;
+$muted: #a6a8ab;
+$success: #27ae60;
+$error: #ff5252;
+$primary: #00c853;
+$primary-2: #00e676;
+$shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+
+// Main container for the login page, with background effects
+#login-container {
+
+ transform: scale(1.5);
+
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3vh 2vw;
+  background-image:
+    radial-gradient(1200px 600px at 10% -10%, rgba(0, 200, 83, 0.18), transparent 60%),
+    radial-gradient(800px 500px at 100% 20%, rgba(0, 230, 118, 0.12), transparent 60%),
+    url(../../../public/background.jpg),
+    linear-gradient(120deg, $bg1 0%, $bg2 100%);
+  background-size: cover, cover, cover, cover;
+  background-blend-mode: screen, screen, overlay, normal;
+}
+
+// Login form container with glassmorphism effect
+.loginContainer {
+  width: 100%;
+  max-width: 480px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  background: $glass;
+  backdrop-filter: blur(10px) saturate(120%);
+  border-radius: 18px;
+  padding: 2.25rem 1.75rem 2.25rem;
+  box-shadow: $shadow;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  animation: fadeIn 0.8s ease;
+}
+
+// Login page title style
+#login-title {
+  font-size: 2.4rem;
+  font-weight: 800;
+  color: $white;
+  letter-spacing: 0.5px;
+  margin: 0 0 0.75rem 0;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+}
+
+// Field wrapper for input and label (floating label)
+.field {
+  width: 86%;
+  margin: 0.5rem 0 0.25rem;
+  position: relative;
+}
+
+// Style for text input fields
+.text-input {
+  width: 100%;
+  height: 3.1rem;
+  border-radius: 12px;
+  border: 2px solid transparent;
+  background: rgba(255, 255, 255, 0.9);
+  color: #232526;
+  font-size: 1.05rem;
+  padding: 1.2rem 1rem 0.6rem 1rem;
+  box-shadow: 0 2px 14px rgba(0, 0, 0, 0.1);
+  transition: border-color 0.15s ease, box-shadow 0.2s ease, transform 0.04s ease;
+}
+
+// Hide placeholder text for floating label effect
+.text-input::placeholder {
+  color: transparent;
+}
+
+// Highlight input on focus
+.text-input:focus {
+  outline: none;
+  border-color: rgba(0, 200, 83, 0.8);
+  box-shadow: 0 0 0 3px rgba(0, 200, 83, 0.2);
+}
+
+// Floating label for inputs
+.floating {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #666;
+  pointer-events: none;
+  transition: all 0.15s ease;
+  padding: 0 0.25rem;
+  background: transparent;
+}
+
+// Move label above input when focused or filled
+.text-input:focus + .floating,
+.text-input:not(:placeholder-shown) + .floating {
+  top: 6px;
+  font-size: 0.8rem;
+  color: $primary;
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 6px;
+}
+
+// Error message for individual fields
+.field-error {
+  color: $error;
+  font-size: 0.9rem;
+  margin-top: 0.25rem;
+  padding-left: 0.25rem;
+}
+
+// Main login button styles
+#loginBtn {
+  width: 86%;
+  height: 2.9rem;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  background: linear-gradient(90deg, $success 0%, $primary 100%);
+  color: $white;
+  border: none;
+  margin-top: 0.35rem;
+  cursor: pointer;
+  user-select: none;
+  box-shadow: 0 8px 20px rgba(0, 200, 83, 0.18);
+  transition: background 0.18s, transform 0.08s, box-shadow 0.18s, opacity 0.18s;
+  position: relative;
+  overflow: hidden;
+}
+
+// Add icon before login button text
+#loginBtn::before {
+  content: "→ ";
+  font-size: 1.2rem;
+  margin-right: 0.25rem;
+}
+
+// Hover effect for login button
+#loginBtn:hover {
+  background: linear-gradient(90deg, $primary-2 0%, $primary 100%);
+  box-shadow: 0 10px 24px rgba(0, 200, 83, 0.25);
+  transform: translateY(-2px) scale(1.02);
+}
+
+// Active/clicked effect for login button
+#loginBtn:active {
+  transform: scale(0.98);
+}
+
+// Disabled state for login button
+#loginBtn[disabled] {
+  opacity: 0.65;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+// Feedback message style (success/error/info)
+.feedback {
+  margin-top: 0.9rem;
+  font-weight: 600;
+  text-align: center;
+  color: $text;
+}
+
+// Tighter feedback spacing for check-in/out time
+.feedback-tight {
+  margin-top: 0.2rem;
+  margin-bottom: -0.4rem;
+  font-size: 0.97em;
+}
+
+// Container for signup link area
+#signUpContainer {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+// Label for signup link
+.signUpLabel {
+  font-size: 0.98rem;
+  color: $muted;
+}
+
+// Signup button/link style
+#signUpBtn {
+  font-family: inherit;
+  color: #ffb74d;
+  user-select: none;
+  transition: color 0.15s, text-decoration 0.15s;
+  cursor: pointer;
+  font-weight: 700;
+  background: transparent;
+  border: 0;
+  text-decoration: underline dotted;
+  padding: 0;
+}
+
+// Hover effect for signup button/link
+#signUpBtn:hover {
+  color: #ffc107;
+  text-decoration: underline solid;
+}
+
+// Home/back button in the login form
+#homeBtn {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.92);
+  color: #232526;
+  font-size: 1rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.12);
+  transition: background 0.18s ease, color 0.18s ease, transform 0.08s ease, outline-color 0.18s;
+  z-index: 2;
+  padding: 0;
+}
+
+// Add arrow icon before home button text
+#homeBtn::before {
+  content: "←";
+  font-size: 1.1rem;
+}
+
+// Hover/focus effect for home button
+#homeBtn:hover,
+#homeBtn:focus-visible {
+  background: #fcfcfc;
+  color: #020202;
+  transform: scale(1.06);
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.15);
+  outline: 2.5px solid #0a0a0a;
+  outline-offset: 2px;
+}
+
+// Loader/spinner for loading state
+.loader {
+  border: 3px solid #fff;
+  border-top: 3px solid $success;
+  border-radius: 50%;
+  width: 22px;
+  height: 22px;
+  animation: spin 0.7s linear infinite;
+  display: inline-block;
+  vertical-align: middle;
+  margin: 0 auto;
+}
+
+// Animation for loader spinner
+@keyframes spin {
+  0% { transform: rotate(0deg);}
+  100% { transform: rotate(360deg);}
+}
+
+// Animation for fade-in effect
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(30px);}
+  to { opacity: 1; transform: translateY(0);}
+}
+
+// Style invalid/touched Angular inputs with error color
+input.ng-invalid.ng-touched {
+  border-color: rgba(255, 82, 82, 0.95);
+  background: #fff0f0;
+  box-shadow: 0 0 0 3px rgba(255, 82, 82, 0.18);
+}
+
+// Show progress cursor when form is loading
+form.loading {
+  cursor: progress;
+}
+
+// Responsive styles for small screens
+@media (max-width: 560px) {
+  .loginContainer {
+    max-width: 96vw;
+    padding: 1.4rem 0.9rem 1.4rem;
+  }
+  .field, #loginBtn {
+    width: 94%;
+  }
+}

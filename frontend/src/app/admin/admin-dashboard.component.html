@@ -1,0 +1,99 @@
+<div class="admin-dashboard">
+  <h2 class="page-title">Admin - Registrations</h2>
+
+  <div class="toolbar">
+    <button class="btn btn-primary" (click)="load()">Reload</button>
+    <button class="btn btn-outline" (click)="logout()">Logout</button>
+     </div>
+
+  <div *ngIf="loading" class="info info-loading">Loading...</div>
+  <div *ngIf="error && !networkDown" class="info info-error">{{ error }}</div>
+  <div *ngIf="networkDown" class="info info-error">
+    Não foi possível conectar ao backend.<br>
+    Verifique se o servidor está rodando e a URL base.<br>
+    <small>{{ lastUrl }}</small><br>
+    <button class="btn btn-outline btn-sm" (click)="load()">Retry</button>
+  </div>
+  <div *ngIf="!loading && allFieldsEmpty" class="info info-error">
+    Registros carregados mas campos normalizados estão vazios.
+    <div *ngIf="detectedKeys.length">
+      Campos recebidos: {{ detectedKeys.join(', ') }}
+    </div>
+    <details style="margin-top:.5rem">
+      <summary style="cursor:pointer">Ver primeiro objeto bruto</summary>
+      <pre style="white-space:pre-wrap;font-size:.65rem">{{ firstRawSample | json }}</pre>
+    </details>
+    Ajuste a função normalize() para mapear os nomes corretos.
+    <details style="margin-top:.5rem">
+      <summary style="cursor:pointer">Exemplo de função normalize()</summary>
+      <pre style="white-space:pre-wrap;font-size:.6rem;line-height:1.1" ngNonBindable>
+normalize(item: any) &#123;
+  if (!item) &#123; return null; &#125;
+  return &#123;
+    id: item.id || item._id || item.guid,
+    userName: item.userName || item.user || item.username || item.name,
+    phone: item.phone || item.telefone || item.celular || item.mobile,
+    checkIn: item.checkIn ? new Date(item.checkIn)
+            : (item.check_in ? new Date(item.check_in)
+            : (item.createdAt ? new Date(item.createdAt) : null)),
+    checkOut: item.checkOut ? new Date(item.checkOut)
+             : (item.check_out ? new Date(item.check_out) : null),
+    isOpen: typeof item.isOpen === 'boolean'
+            ? item.isOpen
+            : !(item.checkOut || item.check_out)
+  &#125;;
+&#125;
+// Depois aplique: this.registrations = raw.map(normalize).filter(r => r);
+      </pre>
+      <small>Dica: Use o botão "Show RAW" para confirmar os nomes reais das propriedades.</small>
+    </details>
+  </div>
+
+  <table *ngIf="!loading && registrations.length" class="data-table">
+    <thead>
+      <tr>
+        <th>User</th>
+        <th>Phone</th>
+        <th>Check In</th>
+        <th>Check Out</th>
+        <th>Status</th>
+        <th class="col-actions">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let r of registrations; trackBy: trackById" [class.row-closed]="!r.isOpen">
+        <td data-label="User">
+          <ng-container *ngIf="r.userName; else dash">{{ r.userName }}</ng-container>
+        </td>
+        <td data-label="Phone">
+          <ng-container *ngIf="r.phone; else dash">{{ r.phone }}</ng-container>
+        </td>
+        <td data-label="Check In">
+          <ng-container *ngIf="r.checkIn; else dash">{{ r.checkIn | date : 'short' }}</ng-container>
+        </td>
+        <td data-label="Check Out">
+          <ng-container *ngIf="r.checkOut; else dash">{{ r.checkOut | date : 'short' }}</ng-container>
+        </td>
+        <td data-label="Status">
+          <span class="status-pill" [class.is-open]="r.isOpen" [class.is-closed]="!r.isOpen">
+            {{ r.isOpen ? 'OPEN' : 'CLOSED' }}
+          </span>
+        </td>
+        <td data-label="Actions">
+          <button class="btn btn-danger btn-sm" (click)="delete(r)">Delete</button>
+        </td>
+        <ng-template #dash>-</ng-template>
+      </tr>
+    </tbody>
+  </table>
+
+  <div *ngIf="!loading && !registrations.length" class="info info-empty">No registrations.</div>
+
+  <div *ngIf="debug" class="info" style="margin-top:1rem;max-height:40vh;overflow:auto">
+    <strong>RAW array ({{ originalRaw.length }} itens)</strong>
+    <div *ngIf="detectedKeys.length" style="font-size:.65rem;margin:.25rem 0">
+      Keys: {{ detectedKeys.join(', ') }}
+    </div>
+    <pre style="white-space:pre-wrap;font-size:.7rem">{{ originalRaw | json }}</pre>
+  </div>
+</div>

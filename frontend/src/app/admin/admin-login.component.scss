@@ -1,0 +1,206 @@
+@use '../../_theme' as *; // atualizado para usar src/_theme.scss
+
+$bg1: #1f2123;
+$bg2: #2d3136;
+$accent: #5865f2;
+$accent2: #8b5cf6;
+$glass: rgba(40, 44, 52, 0.68);
+$white: #ffffff;
+$error: #ff5252;
+$shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+
+#admin-login-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3vh 2vw;
+  background-image:
+    radial-gradient(1000px 500px at 15% -10%, rgba($accent, 0.25), transparent 65%),
+    radial-gradient(900px 600px at 90% 110%, rgba($accent2, 0.18), transparent 70%),
+    linear-gradient(120deg, $bg1 0%, $bg2 100%);
+  background-size: cover;
+  background-blend-mode: screen, screen, normal;
+}
+
+.adminLoginContainer {
+    transform: scale(1.5);
+  width: 100%;
+  max-width: 420px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .4rem;
+  background: $glass;
+  backdrop-filter: blur(10px) saturate(122%);
+  border-radius: 18px;
+  padding: 2.25rem 1.75rem 2.25rem;
+  box-shadow: $shadow;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  animation: fadeIn .7s ease;
+}
+
+#admin-login-title {
+  font-size: 2.2rem;
+  font-weight: 800;
+  letter-spacing: .6px;
+  margin: 0 0 .9rem;
+  background: linear-gradient(90deg, $accent 0%, $accent2 100%);
+  -webkit-background-clip: text;
+  color: transparent;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.18);
+}
+
+.field {
+  width: 86%;
+  margin: .55rem 0 .25rem;
+  position: relative;
+}
+
+.text-input {
+  width: 100%;
+  height: 3.1rem;
+  border-radius: 12px;
+  border: 2px solid transparent;
+  background: rgba(255, 255, 255, 0.9);
+  color: #232526;
+  font-size: 1.02rem;
+  padding: 1.2rem 1rem 0.6rem 1rem;
+  box-shadow: 0 2px 14px rgba(0,0,0,0.1);
+  transition: border-color .15s ease, box-shadow .2s ease, transform .04s ease;
+  &::placeholder { color: transparent; }
+  &:focus {
+    outline: none;
+    border-color: rgba($accent, 0.9);
+    box-shadow: 0 0 0 3px rgba($accent, 0.25);
+  }
+}
+
+.floating {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #666;
+  pointer-events: none;
+  transition: all .15s ease;
+  padding: 0 .25rem;
+  background: transparent;
+}
+
+.text-input:focus + .floating,
+.text-input:not(:placeholder-shown) + .floating {
+  top: 6px;
+  font-size: .75rem;
+  color: $accent;
+  background: rgba(255,255,255,0.85);
+  border-radius: 6px;
+}
+
+.field-error {
+  color: $error;
+  font-size: .78rem;
+  margin-top: .3rem;
+  padding-left: .25rem;
+  font-weight: 500;
+}
+
+#adminLoginBtn {
+  width: 86%;
+  height: 2.9rem;
+  border-radius: 12px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  background: linear-gradient(90deg, $accent 0%, $accent2 100%);
+  color: $white;
+  border: none;
+  margin-top: .4rem;
+  cursor: pointer;
+  user-select: none;
+  box-shadow: 0 8px 22px -6px rgba($accent, 0.35);
+  transition: background .18s, transform .08s, box-shadow .18s, opacity .18s;
+  position: relative;
+  overflow: hidden;
+  &:hover:not(:disabled) {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 10px 28px -6px rgba($accent, .45);
+  }
+  &:active:not(:disabled) { transform: scale(.97); }
+  &[disabled] { opacity: .6; cursor: not-allowed; box-shadow: none; }
+}
+
+#adminLoginBtn::before {
+  content: "🔐 ";
+  font-size: 1.15rem;
+  margin-right: .15rem;
+}
+
+#admin-errorMessage {
+  color: $error;
+  margin-top: .9rem;
+  font-weight: 600;
+  text-align: center;
+  font-size: .9rem;
+}
+
+#homeBtn {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.92);
+  color: #232526;
+  font-size: 1rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.12);
+  transition: background .18s ease, color .18s ease, transform .08s ease, outline-color .18s;
+  padding: 0;
+  &::before { content: "←"; font-size: 1.1rem; }
+  &:hover,
+  &:focus-visible {
+    background: #fcfcfc;
+    color: #020202;
+    transform: scale(1.06);
+    box-shadow: 0 4px 18px rgba(0,0,0,0.15);
+    outline: 2.5px solid #0a0a0a;
+    outline-offset: 2px;
+  }
+}
+
+.loader {
+  border: 3px solid #fff;
+  border-top: 3px solid $accent;
+  border-radius: 50%;
+  width: 22px;
+  height: 22px;
+  animation: spin .7s linear infinite;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+input.ng-invalid.ng-touched {
+  border-color: rgba($error, .95);
+  background: #fff0f0;
+  box-shadow: 0 0 0 3px rgba($error, .18);
+}
+
+form.loading { cursor: progress; }
+
+@media (max-width: 560px) {
+  .adminLoginContainer { max-width: 96vw; padding: 1.4rem .9rem 1.4rem; }
+  .field, #adminLoginBtn { width: 94%; }
+}

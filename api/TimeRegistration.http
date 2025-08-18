@@ -1,0 +1,6 @@
+@TimeRegistration_HostAddress = http://localhost:5169
+
+GET {{TimeRegistration_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

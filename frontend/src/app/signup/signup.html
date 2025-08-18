@@ -1,0 +1,83 @@
+<!-- Signup form with name and phone number fields -->
+<form (ngSubmit)="onSubmit()" #signupForm="ngForm" novalidate [class.loading]="loading">
+  <div id="signup-container">
+
+
+    <div id="signupContainer" class="signupContainer" #signupContainer>
+      <!-- Back button to return to login -->
+      <button id="homeBtn" type="button" (click)="goToLogin()" aria-label="Tilbage til login"></button>
+
+      <!-- Signup page title -->
+      <h1 id="signup-title">Tilmeld dig</h1>
+
+      <!-- Name input field with floating label and validation -->
+      <div class="field">
+        <input
+          id="nameField"
+          #nameInput
+          class="text-input"
+          type="text"
+          name="name"
+          [(ngModel)]="name"
+          required
+          autocomplete="name"
+          autocapitalize="words"
+          spellcheck="false"
+          placeholder=" "
+          pattern="^[A-Za-zÀ-ÖØ-öø-ÿ]+(?:\s+[A-Za-zÀ-ÖØ-öø-ÿ'-]+)+$"
+          (keydown)="allowOnlyLetters($event)"
+          #nameCtrl="ngModel"
+          [attr.aria-invalid]="nameCtrl.invalid && nameCtrl.touched ? true : null"
+          [attr.aria-describedby]="(nameCtrl.invalid && nameCtrl.touched) ? 'nameError' : null"
+        />
+        <label for="nameField" class="floating">Fornavn & Efternavn</label>
+        <!-- Error message for invalid name input -->
+        <div class="field-error" *ngIf="nameCtrl.touched && nameCtrl.invalid" id="nameError" aria-live="assertive">
+          Indtast fornavn og efternavn.
+        </div>
+      </div>
+
+      <!-- Phone number input field with floating label and validation -->
+      <div class="field">
+        <input
+          id="phoneField"
+          #phoneInput
+          class="text-input"
+          type="tel"
+          name="phone"
+          [(ngModel)]="phone"
+          required
+          minlength="8"
+          maxlength="8"
+          pattern="^[0-9]{8}$"
+          inputmode="numeric"
+          autocomplete="tel"
+          placeholder=" "
+          (keydown)="allowOnlyNumbers($event)"
+          (paste)="onPasteNumbersOnly($event)"
+          #phoneCtrl="ngModel"
+          [attr.aria-invalid]="phoneCtrl.invalid && phoneCtrl.touched ? true : null"
+          [attr.aria-describedby]="(phoneCtrl.invalid && phoneCtrl.touched) ? 'phoneError' : null"
+        />
+        <label for="phoneField" class="floating">Telefonnummer (8 cifre)</label>
+        <!-- Error message for invalid phone input -->
+        <div class="field-error" *ngIf="phoneCtrl.touched && phoneCtrl.invalid" id="phoneError" aria-live="assertive">
+          Indtast et gyldigt telefonnummer med 8 cifre.
+        </div>
+      </div>
+
+      <!-- Signup submit button with loading spinner -->
+      <button id="signupBtn" type="submit" [disabled]="loading || signupForm.invalid" [attr.aria-busy]="loading ? 'true' : null">
+        <span *ngIf="!loading">Tilmeld dig</span>
+        <span *ngIf="loading" class="loader" aria-hidden="true"></span>
+      </button>
+
+      <!-- Error message for signup process -->
+      <div *ngIf="errorMessage" id="signup-errorMessage" role="alert" aria-live="assertive">{{ errorMessage }}</div>
+      <!-- Success message for signup process -->
+      <div *ngIf="successMessage" id="signup-successMessage" aria-live="polite">
+        {{ successMessage }}<span> Du bliver sendt til login...</span>
+      </div>
+    </div>
+  </div>
+</form>

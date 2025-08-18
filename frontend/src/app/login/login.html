@@ -1,0 +1,61 @@
+<!-- Login form with phone number input and check in/out button -->
+<form (ngSubmit)="checkInOrOut()" #loginForm="ngForm" novalidate [class.loading]="loading">
+  <div id="login-container">
+    <div class="loginContainer">
+      <!-- Login page title -->
+      <h1 id="login-title">Check ind/ud</h1>
+
+      <!-- Phone number input field with floating label and validation -->
+      <div class="field">
+        <input
+          id="loginField"
+          class="text-input"
+          type="tel"
+          name="phone"
+          [(ngModel)]="phone"
+          required
+          minlength="8"
+          maxlength="8"
+          pattern="^[0-9]{8}$"
+          inputmode="numeric"
+          autocomplete="tel"
+          placeholder=" "
+          (keydown)="allowOnlyNumbers($event)"
+          (paste)="onPasteNumbersOnly($event)"
+          #phoneCtrl="ngModel"
+          [attr.aria-invalid]="phoneCtrl.invalid && phoneCtrl.touched ? true : null"
+          [attr.aria-describedby]="(phoneCtrl.invalid && phoneCtrl.touched) ? 'phoneError' : null"
+        />
+        <label for="loginField" class="floating">Telefonnummer (8 cifre)</label>
+        <!-- Error message for invalid phone input -->
+        <div class="field-error" *ngIf="phoneCtrl.touched && phoneCtrl.invalid" id="phoneError" aria-live="assertive">
+          Indtast et gyldigt telefonnummer med 8 cifre.
+        </div>
+      </div>
+
+      <!-- Submit button with loading spinner -->
+      <button id="loginBtn" type="submit" [disabled]="loading || loginForm.invalid" [attr.aria-busy]="loading ? 'true' : null">
+        <span *ngIf="!loading">Check ind/ud</span>
+        <span *ngIf="loading" class="loader" aria-hidden="true"></span>
+      </button>
+
+      <!-- Show check-in time if available -->
+      <div *ngIf="checkInTime && isCheckedIn" class="feedback feedback-tight">
+        Check-in tid: {{ checkInTime | date:'dd-MM-yyyy HH:mm:ss' }}
+      </div>
+      <!-- Show check-out time if available -->
+      <div *ngIf="checkOutTime && !isCheckedIn" class="feedback feedback-tight">
+        Check-ud tid: {{ checkOutTime | date:'dd-MM-yyyy HH:mm:ss' }}
+      </div>
+
+      <!-- Feedback message for login result -->
+      <div *ngIf="message" class="feedback" role="alert" aria-live="polite">{{ message }}</div>
+
+      <!-- Signup link section -->
+      <div id="signUpContainer">
+        <span class="signUpLabel">Har du ikke en konto?</span>
+        <button type="button" id="signUpBtn" (click)="goToSignup()">Tilmeld dig</button>
+      </div>
+    </div>
+  </div>
+</form>
