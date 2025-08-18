@@ -12,10 +12,10 @@ public class User
     [JsonPropertyName("name")]
     public string? Name { get; set; }
 
-    // ÚNICO campo de telefone exposto via API.
-    // A coluna física ainda se chama "Tlf" no banco (legado). Faça migration de rename se quiser unificar.
+    //Det ENESTE telefonfelt, der eksponeres via API.
+    // Den fysiske kolonne kaldes stadig "Tlf" i databasen (ældre). Udfør en omdøbningsmigrering, hvis du vil forene.
     [JsonPropertyName("phone")]
-    [Column("Tlf")] // Coluna física permanece Tlf
+    [Column("Tlf")] // Fysisk kolonne forbliver Tlf
     public string? Phone
     {
         get => _phone;

@@ -11,6 +11,7 @@ import { environment } from '../../environments/environment';
   imports: [FormsModule, CommonModule],
   templateUrl: './admin-login.component.html',
   styleUrls: ['./admin-login.component.scss']
+  
 })
 export class AdminLoginComponent {
   @ViewChild('adminLoginForm') adminLoginForm?: NgForm;

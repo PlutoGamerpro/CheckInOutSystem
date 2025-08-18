@@ -18,7 +18,7 @@ namespace TimeRegistration.Controllers
             _repo = repo;
             _userRepo = userRepo;
             _registrationRepo = registrationRepo;
-        }
+        } 
 
         [HttpGet]
         public ActionResult<IEnumerable<CheckIn>> GetAll()
@@ -55,7 +55,7 @@ namespace TimeRegistration.Controllers
                     .OrderByDescending(c => c.TimeStart)
                     .FirstOrDefault();
 
-                // Se existe um CheckIn cujo Registration associado está aberto (FkCheckOutId null) -> conflito
+                // Hvis der er en CheckIn, hvis tilhørende registrering er åben (FkCheckOutId null) -> konflikt
                 if (lastCheckIn != null)
                 {
                     var hasOpen = _registrationRepo.GetAll()
@@ -64,7 +64,7 @@ namespace TimeRegistration.Controllers
                         return Conflict("Du er allerede checket ind! Check ud før du kan checke ind igen.");
                 }
 
-                // Cria novo CheckIn
+                // Opretter en ny CheckIn
                 var checkIn = new CheckIn
                 {
                     TimeStart = DateTime.UtcNow,
@@ -72,7 +72,7 @@ namespace TimeRegistration.Controllers
                 };
                 _repo.Create(checkIn);
 
-                // Cria Registration aberta (FkCheckOutId null)
+                // Opretter en åben registrering (FkCheckOutId null)
                 var registration = new Registration
                 {
                     FkCheckInId = checkIn.Id,

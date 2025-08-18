@@ -16,12 +16,12 @@ namespace TimeRegistration.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            // Índice único para telefone (já deveria ser único)
+            // Unikt indeks for telefon (burde allerede være unikt)
             modelBuilder.Entity<User>()
                 .HasIndex(u => u.Phone)
                 .IsUnique();
 
-            // Índice único para nome (se decidir permitir nomes duplicados depois, remova)
+            // Unikt indeks for navn (fjern det, hvis du senere beslutter dig for at tillade dubletter af navne)
             modelBuilder.Entity<User>()
                 .HasIndex(u => u.Name)
                 .IsUnique();

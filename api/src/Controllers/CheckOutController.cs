@@ -54,18 +54,18 @@ namespace TimeRegistration.Controllers
             if (user == null)
                 return NotFound("Telefonnummeret eksisterer ikke i systemet");
 
-            // Localiza registration aberta (join CheckIn -> User)
+            // Find åben tilmelding (tilmeld dig CheckIn -> Bruger)
             var openReg = _registrationRepo.GetAll()
                 .Where(r => r.FkCheckOutId == null)
                 .Join(
                     _checkInRepo.GetAll(),
-                    r => r.FkCheckInId,
-                    ci => ci.Id,
-                    (r, ci) => new { r, ci }
+                    r => r.FkCheckInId, // Brug indtjeknings-id'et for posten
+                    ci => ci.Id, // Sammenlign med eller tjek ind
+                    (r, ci) => new { r, ci } // Opretter et objekt med registrering og check-in
                 )
-                .Where(x => x.ci.FkUserId == user.Id)
-                .OrderByDescending(x => x.ci.TimeStart)
-                .FirstOrDefault()?.r;
+                .Where(x => x.ci.FkUserId == user.Id) // Kun nuværende bruger
+                .OrderByDescending(x => x.ci.TimeStart) // tager det seneste check-in
+                .FirstOrDefault()?.r; // Hent posten (eller nullen)
 
             if (openReg == null)
                 return Conflict("Ingen åben check-in fundet for bruger.");
@@ -77,7 +77,8 @@ namespace TimeRegistration.Controllers
             };
             _repo.Create(checkOut);
 
-            // Fecha registration
+            // Opdater eller åbn registrering til dato med ny checkout
+         
             openReg.FkCheckOutId = checkOut.Id;
             _registrationRepo.Update(openReg.Id, openReg);
 

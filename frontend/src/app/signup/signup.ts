@@ -27,6 +27,7 @@ export class Signup {
   private nameRegex = /^[A-Za-zÀ-ÖØ-öø-ÿ]+(?:\s+[A-Za-zÀ-ÖØ-öø-ÿ'-]+)+$/;
 
   constructor(private http: HttpClient, private router: Router) {}
+  
 
    // Allow only number keys and control keys in the phone input
  allowOnlyNumbers(event: KeyboardEvent): void {
@@ -47,7 +48,7 @@ export class Signup {
   }
 
   allowOnlyLetters(event: KeyboardEvent): void {
-    const allowedKeys = [
+      const allowedKeys = [
       'Backspace', 'ArrowLeft', 'ArrowRight', 'Tab', 'Delete', 'Enter', 'Home', 'End'
     ];
     const ctrlCombo =

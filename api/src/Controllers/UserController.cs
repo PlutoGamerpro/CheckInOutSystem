@@ -33,14 +33,7 @@ namespace TimeRegistration.Controllers
                 return NotFound();
             return Ok(user);
         }
-        // ...existing code...
-    [HttpGet("phones")]
-    public IActionResult GetAllPhones()
-    {
-        var phones = _repo.GetAll().Select(u => u.Phone).ToList();
-        return Ok(phones);
-    }
-// ...existing code...
+        
 
         [HttpPost]
         public IActionResult Create([FromBody] CreateUserRequest dto)

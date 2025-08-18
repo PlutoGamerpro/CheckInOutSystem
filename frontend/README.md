@@ -51,5 +51,3 @@ npm run build  # production
 3. Implement i18n (Angular built-in or Transloco).
 4. E2E tests (Playwright).
 
-## Codacy
-After modifying files, run analysis via Codacy MCP (see root README).

@@ -7,7 +7,7 @@ public static class DependencyInjection
     public static IServiceCollection AddRepositories(this IServiceCollection services)
     {
         
-        // Registro automático para todos os repositórios do assembly atual
+        //  Automatisk registrering for alle arkiver i den aktuelle assembly
         services.Scan(scan => scan
             .FromAssemblies(Assembly.GetExecutingAssembly())
             .AddClasses(classes => classes.Where(type => type.Name.EndsWith("Repo")))

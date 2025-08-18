@@ -46,9 +46,9 @@ namespace TimeRegistration.Repositories
         {
             var reg = _context.Registrations.FirstOrDefault(r => r.Id == id);
             if (reg == null) return null;
-            if (reg.FkCheckOutId != null) return reg; // já fechado
+            if (reg.FkCheckOutId != null) return reg; // allerede lukket
 
-            // Localiza o CheckIn para obter o usuário
+            // Finder CheckIn for at hente brugeren
             var checkIn = _context.CheckIns.FirstOrDefault(ci => ci.Id == reg.FkCheckInId);
             var userId = checkIn?.FkUserId ?? 0;
 
