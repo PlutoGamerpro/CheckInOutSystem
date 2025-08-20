@@ -103,8 +103,8 @@ export class Signup {
     return v.length > 0 && this.nameRegex.test(v);
   }
 
-  // onsubmit creating a user
-  onSubmit() {
+  // onsubmit creating a user 
+  onSubmit() { 
     this.errorMessage = '';
     this.successMessage = '';
 

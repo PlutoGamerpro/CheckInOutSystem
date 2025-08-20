@@ -1,0 +1,80 @@
+<h2>All Users</h2>
+
+
+
+  <div class="toolbar">
+    <button class="btn btn-primary" (click)="load()">Reload</button>
+    <button class="btn btn-outline" (click)="logout()">Logout</button>
+  
+     </div>
+
+
+
+<div *ngIf="loading" class="info info-loading">Loading users...</div>
+<div *ngIf="error" class="info info-error">{{ error }}</div>
+
+<table class="data-table" *ngIf="!loading && users.length">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Phone</th>
+      <th>Is Admin</th>
+    </tr>
+  </thead>
+  <tbody>
+   <tbody>
+  <tr *ngFor="let u of users">
+    <ng-container *ngIf="editUser?.id !== u.id; else editRow">
+      <td>{{ u.id }}</td>
+      <td>{{ u.name }}</td>
+      <td>{{ u.phone }}</td>
+      <td>{{ u.isAdmin ? 'Yes' : 'No' }}</td>
+      <td>
+        <button class="btn btn-sm" (click)="startEdit(u)">Edit</button>
+        <button class="btn btn-danger btn-sm" (click)="DeleteUser(u.id)">Delete</button>
+      </td>
+    </ng-container>
+    <ng-template #editRow>
+      <td>{{ editUser.id }}</td>
+      <td>
+        <input [(ngModel)]="editUser.name" class="form-control" />
+      </td>
+      <td>
+        <input [(ngModel)]="editUser.phone" class="form-control" />
+      </td>
+      <td>
+        <select [(ngModel)]="editUser.isAdmin" class="form-control">
+          <option [ngValue]="true">Yes</option>
+          <option [ngValue]="false">No</option>
+        </select>
+      </td>
+      <td>
+        <button class="btn btn-primary btn-sm" (click)="saveEdit()">Save</button>
+        <button class="btn btn-outline btn-sm" (click)="cancelEdit()">Cancel</button>
+      </td>
+    </ng-template>
+  </tr>
+</tbody>
+</table>
+
+
+<!--
+  <div *ngIf="loading" class="info info-loading">Loading...</div>
+  <div *ngIf="error && !networkDown" class="info info-error">{{ error }}</div>
+  <div *ngIf="networkDown" class="info info-error">
+    Não foi possível conectar ao backend.<br>
+    Verifique se o servidor está rodando e a URL base.<br>
+    <small>{{ lastUrl }}</small><br>
+    <button class="btn btn-outline btn-sm" (click)="load()">Retry</button>
+  </div>
+  <div *ngIf="!loading && allFieldsEmpty" class="info info-error">
+    Registros carregados mas campos normalizados estão vazios.
+    <div *ngIf="detectedKeys.length">
+      Campos recebidos: {{ detectedKeys.join(', ') }}
+    </div>
+
+
+  </div>
+-->
+<!--  <table *ngIf="!loading && registrations.length" class="data-table"></table> -->

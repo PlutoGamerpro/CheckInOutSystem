@@ -1,0 +1,301 @@
+// Variáveis (poderiam migrar para tema global)
+$color-bg: #0f1115;
+$color-surface: #1b1f27;
+$color-surface-alt: #222833;
+$color-border: #2d3642;
+$color-border-strong: #3b4654;
+$color-text: #e6ecf3;
+$color-text-dim: #9aa8b9;
+$color-accent: #3d82f6;
+$color-accent-hover: #2d6fe0;
+$color-danger: #e03131;
+$color-danger-hover: #c02424;
+$radius-sm: 4px;
+$radius-md: 8px;
+$radius-pill: 999px;
+$shadow: 0 2px 4px -2px rgba(0,0,0,.4), 0 4px 12px -2px rgba(0,0,0,.35);
+$transition: .16s cubic-bezier(.4,0,.2,1);
+
+:host {
+  display: block;
+  color: $color-text;
+  font: 14px/1.45 system-ui, "Segoe UI", Roboto, Arial, sans-serif;
+  background: linear-gradient(145deg, #0d1014, #141a22);
+  min-height: 100dvh;
+  padding: clamp(1rem, 2vw, 2rem);
+  box-sizing: border-box;
+}
+
+.admin-dashboard {
+    
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.page-title {
+  margin: 0 0 1.25rem;
+  font-size: clamp(1.35rem, 2.2vw, 1.9rem);
+  font-weight: 600;
+  letter-spacing: .5px;
+  background: linear-gradient(90deg, #fff, #aac3ff);
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .6rem;
+  margin-bottom: 1.1rem;
+}
+
+.btn {
+  --btn-bg: $color-surface-alt;
+  --btn-color: $color-text;
+  --btn-border: $color-border-strong;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  padding: .55rem 1rem;
+  border: 1px solid var(--btn-border);
+  border-radius: $radius-sm;
+  background: var(--btn-bg);
+  color: var(--btn-color);
+  font: inherit;
+  cursor: pointer;
+  line-height: 1.1;
+  text-decoration: none;
+  user-select: none;
+  transition: background $transition, border-color $transition, color $transition, box-shadow $transition, transform $transition;
+
+  &:hover {
+    background: lighten($color-surface-alt, 4%);
+  }
+  &:active {
+    transform: translateY(1px);
+  }
+  &:focus-visible {
+    outline: 2px solid $color-accent;
+    outline-offset: 2px;
+  }
+
+  &.btn-primary {
+    --btn-bg: $color-accent;
+    --btn-border: darken($color-accent, 8%);
+    &:hover { background: $color-accent-hover; }
+  }
+
+  &.btn-outline {
+    --btn-bg: transparent;
+    --btn-color: $color-text-dim;
+    &:hover { --btn-color: $color-text; background: rgba(255,255,255,.05); }
+  }
+
+  &.btn-danger {
+    --btn-bg: $color-danger;
+    --btn-border: darken($color-danger, 10%);
+    &:hover { background: $color-danger-hover; }
+  }
+
+  &.btn-sm {
+    padding: .4rem .7rem;
+    font-size: .75rem;
+  }
+}
+
+.info {
+  padding: .85rem 1rem;
+  border: 1px solid $color-border;
+  border-radius: $radius-md;
+  background: $color-surface;
+  font-size: .85rem;
+  & + & { margin-top: .75rem; }
+
+  &.info-loading {
+    border-style: dashed;
+    color: $color-text-dim;
+    animation: pulse 1.4s ease-in-out infinite;
+  }
+  &.info-error {
+    border-color: $color-danger;
+    background: linear-gradient(135deg, rgba($color-danger,.18), rgba($color-danger,.05));
+    color: #ffdedd;
+  }
+  &.info-empty {
+    color: $color-text-dim;
+    text-align: center;
+    font-style: italic;
+  }
+}
+
+@keyframes pulse {
+  0%,100% { opacity: .55; }
+  50% { opacity: 1; }
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: $color-surface;
+  border: 1px solid $color-border;
+  border-radius: $radius-md;
+  overflow: hidden;
+  box-shadow: $shadow;
+  font-size: .82rem;
+
+  thead {
+    background: linear-gradient(90deg, $color-surface-alt, darken($color-surface-alt, 4%));
+    text-align: left;
+    th {
+      padding: .75rem .85rem;
+      font-weight: 600;
+      letter-spacing: .5px;
+      color: $color-text-dim;
+      font-size: .7rem;
+      text-transform: uppercase;
+      border-bottom: 1px solid $color-border-strong;
+      &:first-child { padding-left: 1rem; }
+      &:last-child { padding-right: 1rem; }
+    }
+  }
+
+  tbody {
+    tr {
+      transition: background $transition;
+      &:nth-child(even) {
+        background: rgba(255,255,255,.02);
+      }
+      &:hover {
+        background: rgba(255,255,255,.06);
+      }
+      &.row-closed {
+        td {
+          opacity: .78;
+        }
+      }
+    }
+    td {
+      padding: .75rem .85rem;
+      border-bottom: 1px solid rgba($color-border, .7);
+      vertical-align: middle;
+      &:first-child { padding-left: 1rem; }
+      &:last-child { padding-right: 1rem; }
+    }
+    tr:last-child td {
+      border-bottom: none;
+    }
+  }
+
+  .col-actions {
+    width: 140px;
+    text-align: left;
+  }
+}
+
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 70px;
+  padding: .3rem .65rem .35rem;
+  font-size: .65rem;
+  font-weight: 600;
+  letter-spacing: .8px;
+  border-radius: $radius-pill;
+  border: 1px solid transparent;
+  text-transform: uppercase;
+  background: rgba($color-accent,.12);
+  color: $color-accent;
+  position: relative;
+  overflow: hidden;
+
+  &.is-open {
+    background: linear-gradient(135deg, rgba(#12b886,.18), rgba(#12b886,.05));
+    color: #2ee6a7;
+    border-color: rgba(#12b886,.4);
+  }
+  &.is-closed {
+    background: linear-gradient(135deg, rgba($color-danger,.25), rgba($color-danger,.08));
+    color: #ffa8a8;
+    border-color: rgba($color-danger,.5);
+  }
+}
+
+@media (max-width: 820px) {
+  .data-table {
+    font-size: .75rem;
+    thead th { padding: .6rem .6rem; }
+    tbody td { padding: .55rem .6rem; }
+    .col-actions { width: 110px; }
+  }
+  .toolbar {
+    flex-direction: row;
+  }
+}
+
+@media (max-width: 560px) {
+  .data-table,
+  .data-table thead,
+  .data-table tbody,
+  .data-table th,
+  .data-table td,
+  .data-table tr {
+    display: block;
+  }
+
+  .data-table thead {
+    display: none;
+  }
+
+  .data-table tr {
+    margin: 0 0 .9rem;
+    border: 1px solid $color-border;
+    border-radius: $radius-sm;
+    overflow: hidden;
+    background: $color-surface-alt;
+    padding: .4rem .6rem .55rem;
+  }
+
+  
+
+  .data-table td {
+    border: none !important;
+    position: relative;
+    padding: .4rem 0 .4rem 6.8rem;
+    font-size: .72rem;
+    &:first-child {
+      padding-top: .55rem;
+    }
+    &:last-child {
+      padding-bottom: .65rem;
+    }
+    &::before {
+      content: attr(data-label);
+      position: absolute;
+      left: 0;
+      top: 0;
+      padding: .4rem .55rem;
+      width: 6.2rem;
+      font-weight: 600;
+      color: $color-text-dim;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+    }
+  }
+}
+
+// Garante que o texto digitado em campos de formulário seja branco
+input,
+textarea,
+select {
+  color: #fff;
+  background: $color-surface-alt;
+  border: 1px solid $color-border;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: $color-text-dim;
+  opacity: 1;
+}

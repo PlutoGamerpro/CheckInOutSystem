@@ -198,6 +198,12 @@ export class AdminDashboardComponent implements OnInit {
     return { headers: { 'X-Admin-Token': t } };
   }
 
+  manageUsers(): void {
+    this.router.navigate(['/users-dashboard']);
+  }
+
+
+
   delete(r: AdminReg): void {
     if (!confirm('Delete this registration?')) return;
     this.http.delete(`${this.base}/registration/${r.id}`, this.authHeaders())

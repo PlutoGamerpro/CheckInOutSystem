@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ApiUrlService } from '../../core/api-url.service';
 
-// Tipos de resposta esperados
+// Forventede svartyper
 interface StatusResponse { isCheckedIn: boolean; }
 interface ActionResponse { name: string; }
 
