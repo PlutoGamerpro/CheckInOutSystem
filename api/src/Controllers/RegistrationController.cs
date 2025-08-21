@@ -142,7 +142,8 @@ namespace TimeRegistration.Controllers
             {
                 id = updated.Id,
                 checkIn,
-                forcedAt = when
+                forcedAt = when,
+               
             });
         }
     }

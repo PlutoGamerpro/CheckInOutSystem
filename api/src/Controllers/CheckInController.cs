@@ -76,7 +76,8 @@ namespace TimeRegistration.Controllers
                 var registration = new Registration
                 {
                     FkCheckInId = checkIn.Id,
-                    FkCheckOutId = null
+                    FkCheckOutId = null,
+                    FkUserId = user.Id
                 };
                 _registrationRepo.Create(registration);
 

@@ -1,0 +1,15 @@
+C:\Users\GH\source\repos\CheckInOutSystem\Seed\bin\Debug\net8.0\SeedTool.exe
+C:\Users\GH\source\repos\CheckInOutSystem\Seed\bin\Debug\net8.0\SeedTool.deps.json
+C:\Users\GH\source\repos\CheckInOutSystem\Seed\bin\Debug\net8.0\SeedTool.runtimeconfig.json
+C:\Users\GH\source\repos\CheckInOutSystem\Seed\bin\Debug\net8.0\SeedTool.dll
+C:\Users\GH\source\repos\CheckInOutSystem\Seed\bin\Debug\net8.0\SeedTool.pdb
+C:\Users\GH\source\repos\CheckInOutSystem\Seed\obj\Debug\net8.0\SeedTool.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\GH\source\repos\CheckInOutSystem\Seed\obj\Debug\net8.0\SeedTool.AssemblyInfoInputs.cache
+C:\Users\GH\source\repos\CheckInOutSystem\Seed\obj\Debug\net8.0\SeedTool.AssemblyInfo.cs
+C:\Users\GH\source\repos\CheckInOutSystem\Seed\obj\Debug\net8.0\SeedTool.csproj.CoreCompileInputs.cache
+C:\Users\GH\source\repos\CheckInOutSystem\Seed\obj\Debug\net8.0\SeedTool.sourcelink.json
+C:\Users\GH\source\repos\CheckInOutSystem\Seed\obj\Debug\net8.0\SeedTool.dll
+C:\Users\GH\source\repos\CheckInOutSystem\Seed\obj\Debug\net8.0\refint\SeedTool.dll
+C:\Users\GH\source\repos\CheckInOutSystem\Seed\obj\Debug\net8.0\SeedTool.pdb
+C:\Users\GH\source\repos\CheckInOutSystem\Seed\obj\Debug\net8.0\SeedTool.genruntimeconfig.cache
+C:\Users\GH\source\repos\CheckInOutSystem\Seed\obj\Debug\net8.0\ref\SeedTool.dll

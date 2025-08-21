@@ -23,11 +23,14 @@ export class CheckinService {
     return this.http.post<ActionResponse>(this.apiUrl.url(`checkout/byphone/${phone}`), {});
   }
 
+
+// probably is in the wrong file
   // List all registrations (used by admin dashboard)
   getAllRegistrations(): Observable<any> {
     return this.http.get(this.apiUrl.url('checkin'));
   }
 
+  // is in the wrong file 
   // Delete a registration by id
   deleteRegistration(id: string): Observable<any> {
     return this.http.delete(this.apiUrl.url(`checkin/${id}`));

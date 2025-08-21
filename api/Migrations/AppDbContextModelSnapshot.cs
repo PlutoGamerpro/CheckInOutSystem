@@ -108,7 +108,18 @@ namespace TimeRegistration.Migrations
                     b.Property<int?>("FkCheckOutId")
                         .HasColumnType("integer");
 
+                    b.Property<int>("FkUserId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("TimeStart")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int?>("UserId")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Registrations");
                 });
@@ -148,6 +159,15 @@ namespace TimeRegistration.Migrations
                         .IsUnique();
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("TimeRegistration.Classes.Registration", b =>
+                {
+                    b.HasOne("TimeRegistration.Classes.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("User");
                 });
 #pragma warning restore 612, 618
         }

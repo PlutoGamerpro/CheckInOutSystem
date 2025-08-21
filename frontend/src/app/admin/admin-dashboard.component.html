@@ -1,11 +1,37 @@
 <div class="admin-dashboard">
-  <h2 class="page-title">Admin - Registrations</h2>
+  <h2 class="page-title">
+    Admin - Registrations
+    <ng-container *ngIf="!currentPeriod || currentPeriod === 'all'"> / All Reg.</ng-container>
+    <ng-container *ngIf="currentPeriod==='today'"> / Today</ng-container>
+    <ng-container *ngIf="currentPeriod==='yesterday'"> / Yesterday</ng-container>
+    <ng-container *ngIf="currentPeriod==='week'"> / This Week</ng-container>
+    <ng-container *ngIf="currentPeriod==='month'"> / This Month</ng-container>
+    <ng-container *ngIf="currentPeriod==='year'"> / This Year</ng-container>
+    <ng-container *ngIf="currentPeriod==='calendar'"> / {{ calendarLabel }}</ng-container>
+  </h2>
 
   <div class="toolbar">
     <button class="btn btn-primary" (click)="load()">Reload</button>
-    <button class="btn btn-outline" (click)="logout()">Logout</button>
-     <button class="btn btn-outline" (click)="manageUsers()">Administrar users</button>
-     </div>
+    <button class="btn btn-outline" (click)="Home()">Home</button>
+    <button class="btn btn-outline" (click)="manageUsers()">Manage Users</button>
+    <button class="btn btn-outline" (click)="fetchPeriod('today')">Today</button>
+    <button class="btn btn-outline" (click)="fetchPeriod('yesterday')">Yesterday</button>
+    <button class="btn btn-outline" (click)="fetchPeriod('week')">This Week</button>
+    <button class="btn btn-outline" (click)="fetchPeriod('month')">This Month</button>
+    <button class="btn btn-outline" (click)="fetchPeriod('year')">This Year</button>
+    <button class="btn btn-outline" (click)="load()">All Reg.</button>
+    <button class="btn btn-outline" (click)="enterCalendarMode()">Calendar</button>
+  </div>
+
+  <div class="toolbar calendar-nav" *ngIf="currentPeriod==='calendar'" style="margin-top:.5rem;gap:.5rem;flex-wrap:wrap">
+    <button class="btn btn-outline btn-sm" (click)="prevMonth()">« Prev</button>
+    <strong>{{ calendarLabel }}</strong>
+    <button class="btn btn-outline btn-sm" (click)="nextMonth()">Next »</button>
+    <input type="month" (change)="onMonthInput($event)" [value]="monthInputValue" class="month-input" />
+    <button class="btn btn-outline btn-sm" (click)="goThisMonth()">This Month</button>
+    <button class="btn btn-outline btn-sm" (click)="exitCalendarMode()">Exit</button>
+  </div>
+
 
   <div *ngIf="loading" class="info info-loading">Loading...</div>
   <div *ngIf="error && !networkDown" class="info info-error">{{ error }}</div>
@@ -81,12 +107,12 @@ normalize(item: any) &#123;
           </span>
         </td>
         <td data-label="Actions">
-          <button class="btn btn-danger btn-sm" (click)="delete(r)">Delete</button>
+          <button class="btn btn-danger btn-sm" (click)="deleteRegistration(r.id)">Delete</button>
         </td>
-        <ng-template #dash>-</ng-template>
       </tr>
     </tbody>
   </table>
+  <ng-template #dash>-</ng-template>
 
   <div *ngIf="!loading && !registrations.length" class="info info-empty">No registrations.</div>
 

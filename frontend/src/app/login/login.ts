@@ -106,6 +106,8 @@ export class Login {
           this.afterActionReset();
         },
         error: (err: unknown) => {
+       //   // Log detalhado do erro para facilitar o debug do 500
+       //   console.error('Erro no check-in:', err);
           this.setErrorMessage(err, 'Der opstod en fejl. Prøv igen.');
           this.loading = false;
         }

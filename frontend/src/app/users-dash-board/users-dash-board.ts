@@ -71,8 +71,11 @@ saveEdit(): void {
     });
   }
 
-  logout(): void {
+  Home(): void {
     this.router.navigate(['/']);
+  }
+  Registrations(): void {
+    this.router.navigate(['/admin']);
   }
 
   DeleteUser(id: number): void {
