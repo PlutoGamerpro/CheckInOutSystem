@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using TimeRegistration.Interfaces;
 using TimeRegistration.Classes;
 using System.Text.RegularExpressions;
+using BCrypt.Net;
 
 namespace TimeRegistration.Controllers
 {
@@ -19,10 +20,14 @@ namespace TimeRegistration.Controllers
             _registrationRepo = registrationRepo;
         }
 
+        // Alterado: retornar também o password (plaintext ou hash, conforme armazenado)
         [HttpGet]
-        public ActionResult<List<User>> GetAll()
+        public ActionResult<IEnumerable<object>> GetAll()
         {
-            return Ok(_repo.GetAll());
+            var users = _repo.GetAll()
+                .Select(u => new { u.Id, u.Name, u.Phone, u.IsAdmin, password = u.Password })
+                .ToList();
+            return Ok(users);
         }
 
         [HttpGet("byphone/{phone}")]
@@ -31,7 +36,8 @@ namespace TimeRegistration.Controllers
             var user = _repo.GetAll().FirstOrDefault(u => u.Phone == phone);
             if (user == null)
                 return NotFound();
-            return Ok(user);
+            // Agora também expõe a senha (apenas para seus testes)
+            return Ok(new { user.Id, user.Name, phone = user.Phone, user.IsAdmin, password = user.Password });
         }
         
 
@@ -54,7 +60,7 @@ namespace TimeRegistration.Controllers
             if (_repo.GetAll().Any(u => u.Phone != null && u.Phone == phone))
                 return Conflict("Phone number already exists!");
 
-            
+
             if (_repo.GetAll()
                 .Where(u => !string.IsNullOrWhiteSpace(u.Name))
                 .Any(u => NormalizeName(u.Name) == name))
@@ -67,11 +73,32 @@ namespace TimeRegistration.Controllers
                 IsAdmin = dto.IsAdmin ?? false
             };
 
+            // Se password foi fornecido, armazena como veio (plaintext) para testes.
+            // Atenção: armazenar senhas em plaintext é inseguro. Use apenas para debug/local.
+            if (!string.IsNullOrWhiteSpace(dto.Password))
+            {
+                user.Password = dto.Password;
+            }
+
+            // Se for admin, obrigar password
+            if (user.IsAdmin)
+            {
+                if (string.IsNullOrWhiteSpace(dto.Password))
+                    return BadRequest("Password required for admin users");
+                // já atribuída acima (não hasheada para este teste)
+            }
+
             _repo.Create(user);
-            return CreatedAtAction(nameof(GetByPhone), new { phone = user.Phone }, new { user.Id, user.Name, phone = user.Phone, user.IsAdmin });
+            return CreatedAtAction(
+                nameof(GetByPhone),
+                new { phone = user.Phone },
+                new { user.Id, user.Name, phone = user.Phone, user.IsAdmin, password = user.Password });
         }
 
-        public record CreateUserRequest(string? Name, string? Phone, bool? IsAdmin);
+        // DTO para login via telefone
+        public record LoginRequest(string? Password);
+
+        public record CreateUserRequest(string? Name, string? Phone, bool? IsAdmin, string? Password);
 
         private static string? NormalizePhone(string? v)
         {
@@ -88,11 +115,35 @@ namespace TimeRegistration.Controllers
         }
 
         [HttpPost("login-by-phone/{tlf}")]
-        public IActionResult LoginByPhone(string tlf)
+        public IActionResult LoginByPhone(string tlf, [FromBody] LoginRequest? dto)
         {
-            var user = _repo.GetAll().FirstOrDefault(u => u.Phone == tlf);
+            // Normaliser telefonnummeret før søgning
+            var phone = NormalizePhone(tlf);
+            if (string.IsNullOrWhiteSpace(phone))
+                return BadRequest("Ugyldigt telefonnummer");
+
+            var user = _repo.GetAll().FirstOrDefault(u => u.Phone == phone);
             if (user == null)
                 return NotFound("Telefonnummeret eksisterer ikke i systemet");
+
+            // Hvis brugeren har password sat (eks. admin), kræv og verificer det
+            if (!string.IsNullOrWhiteSpace(user.Password))
+            {
+                if (dto == null || string.IsNullOrWhiteSpace(dto.Password))
+                    return Unauthorized("Password påkrævet");
+                var stored = user.Password;
+                // Se parece um hash bcrypt (ex: $2a$... ou $2b$...), use Verify, senão compare plaintext
+                if (stored.StartsWith("$2"))
+                {
+                    if (!BCrypt.Net.BCrypt.Verify(dto.Password, stored))
+                        return Unauthorized("Ugyldigt password");
+                }
+                else
+                {
+                    if (dto.Password != stored)
+                        return Unauthorized("Ugyldigt password");
+                }
+            }
 
             // Tjek om brugeren har en åben registration (dvs. FkCheckOutId er 0 eller null)
             var openRegistration = _registrationRepo.GetAll()

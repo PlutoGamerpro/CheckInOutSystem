@@ -145,6 +145,9 @@ namespace TimeRegistration.Migrations
                         .HasColumnType("text")
                         .HasAnnotation("Relational:JsonPropertyName", "name");
 
+                    b.Property<string>("Password")
+                        .HasColumnType("text");
+
                     b.Property<string>("Phone")
                         .HasColumnType("text")
                         .HasColumnName("Tlf")

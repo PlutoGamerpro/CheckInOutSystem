@@ -66,7 +66,8 @@ namespace TimeRegistration.Migrations
                     Name = table.Column<string>(type: "text", nullable: true),
                     Tlf = table.Column<string>(type: "text", nullable: true),
                     IsCheckedIn = table.Column<bool>(type: "boolean", nullable: false),
-                    IsAdmin = table.Column<bool>(type: "boolean", nullable: false)
+                    IsAdmin = table.Column<bool>(type: "boolean", nullable: false),
+                    Password = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {

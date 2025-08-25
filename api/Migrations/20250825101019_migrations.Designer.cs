@@ -12,7 +12,7 @@ using TimeRegistration.Data;
 namespace TimeRegistration.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250821075721_migrations")]
+    [Migration("20250825101019_migrations")]
     partial class migrations
     {
         /// <inheritdoc />
@@ -147,6 +147,9 @@ namespace TimeRegistration.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("text")
                         .HasAnnotation("Relational:JsonPropertyName", "name");
+
+                    b.Property<string>("Password")
+                        .HasColumnType("text");
 
                     b.Property<string>("Phone")
                         .HasColumnType("text")

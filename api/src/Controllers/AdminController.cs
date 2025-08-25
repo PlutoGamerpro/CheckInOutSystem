@@ -30,16 +30,28 @@ public class AdminController : ControllerBase
         _ctx = ctx;
     }
 
-    public record AdminLoginRequest(string Phone, string Secret);
+    public record AdminLoginRequest(string Phone, string Secret, string Password);
 
     [HttpPost("login")]
     public IActionResult Login(AdminLoginRequest req)
     {
-        if (string.IsNullOrWhiteSpace(req.Phone)) return BadRequest("Phone required");
-        var user = _ctx.Users.FirstOrDefault(u => u.Phone == req.Phone);
+        if (req is null) return BadRequest("Requisição inválida");
+        var phone = (req.Phone ?? "").Trim();
+        if (string.IsNullOrWhiteSpace(phone)) return BadRequest("Phone required");
+        if (string.IsNullOrWhiteSpace(req.Secret)) return BadRequest("Secret required");
+        if (string.IsNullOrWhiteSpace(req.Password)) return BadRequest("Password required");
+
+        var user = _ctx.Users.FirstOrDefault(u => u.Phone == phone);
         if (user == null) return Unauthorized();
+
         var configSecret = _cfg["Admin:Secret"] ?? "";
-        var token = _auth.IssueTokenFor(req.Phone, user.IsAdmin, req.Secret, configSecret);
+        if (!BCrypt.Net.BCrypt.Verify(req.Password, user.Password))
+        {
+            return Unauthorized("Invalid password");
+        }
+
+
+        var token = _auth.IssueTokenFor(phone, user.IsAdmin, req.Secret, configSecret, req.Password, user.Password);
         if (token == null) return Unauthorized();
         return Ok(new { token, user = user.Name });
     }

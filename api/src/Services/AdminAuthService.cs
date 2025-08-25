@@ -4,7 +4,8 @@ namespace TimeRegistration.Services;
 
 public interface IAdminAuthService
 {
-    string? IssueTokenFor(string phone, bool isAdmin, string providedSecret, string configuredSecret);
+   // string? IssueTokenFor(string phone, bool isAdmin, string providedSecret, string configuredSecret, string password, string configuredPassword);
+    string? IssueTokenFor(string phone, bool isAdmin, string secret, string configSecret, string password, string configPassword);
     bool Validate(string token);
 }
 
@@ -13,10 +14,11 @@ public class AdminAuthService : IAdminAuthService
     private static readonly ConcurrentDictionary<string, DateTime> _tokens = new();
     private static readonly TimeSpan Lifetime = TimeSpan.FromHours(2);
 
-    public string? IssueTokenFor(string phone, bool isAdmin, string providedSecret, string configuredSecret)
+    public string? IssueTokenFor(string phone, bool isAdmin, string secret, string configSecret, string password, string configPassword)
     {
         if (!isAdmin) return null;
-        if (string.IsNullOrWhiteSpace(providedSecret) || providedSecret != configuredSecret) return null;
+        if (string.IsNullOrWhiteSpace(password) || password != configPassword) return null;
+        if (string.IsNullOrWhiteSpace(secret) || secret != configSecret) return null;
         var token = Guid.NewGuid().ToString("N");
         _tokens[token] = DateTime.UtcNow.Add(Lifetime);
         return token;

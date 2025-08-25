@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SeedTool")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b094a8fce2ca45402ce552f936192bc8fd6e990e")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+178bb07cfe8b6debf54e8c3f4884556b0332b1e6")]
 [assembly: System.Reflection.AssemblyProductAttribute("SeedTool")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SeedTool")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

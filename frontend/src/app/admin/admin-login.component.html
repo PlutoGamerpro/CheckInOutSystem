@@ -29,6 +29,24 @@
       </div>
 
       <div class="field">
+      <input
+        id="adminPassword"
+        class="text-input"
+        name="password" 
+        type="password"
+        [(ngModel)]="password"
+        required
+        placeholder=" "
+        #passwordCtrl="ngModel"
+        [attr.aria-invalid]="passwordCtrl.invalid && passwordCtrl.touched ? true : null"
+      />
+      <label class="floating" for="adminPassword">Your Password</label>
+      <div class="field-error" *ngIf="passwordCtrl.touched && passwordCtrl.invalid">
+        Password påkrævet.
+  </div>
+</div>
+
+      <div class="field">
         <input
           id="adminSecret"
             class="text-input"

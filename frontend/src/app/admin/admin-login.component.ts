@@ -17,6 +17,7 @@ export class AdminLoginComponent {
   @ViewChild('adminLoginForm') adminLoginForm?: NgForm;
 
   phone = '';
+  password = '';
   secret = '';
   loading = false;
   errorMessage = '';
@@ -57,10 +58,15 @@ export class AdminLoginComponent {
       this.errorMessage = 'Secret er påkrævet.';
       return;
     }
+    if (!this.password) {
+      this.errorMessage = 'Password er påkrævet.';
+      return;
+    }
 
     this.loading = true;
     this.http.post<{token:string,user:string}>(`${this.base}/admin/login`, {
       phone: phoneDigits,
+      password: this.password,
       secret: this.secret
     }).subscribe({
       next: res => {
