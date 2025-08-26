@@ -31,6 +31,7 @@ public class AdminController : ControllerBase
     }
 
     public record AdminLoginRequest(string Phone, string Secret, string Password);
+   
 
     [HttpPost("login")]
     public IActionResult Login(AdminLoginRequest req)
@@ -45,13 +46,15 @@ public class AdminController : ControllerBase
         if (user == null) return Unauthorized();
 
         var configSecret = _cfg["Admin:Secret"] ?? "";
+       
+        
         if (!BCrypt.Net.BCrypt.Verify(req.Password, user.Password))
         {
             return Unauthorized("Invalid password");
         }
+        
 
-
-        var token = _auth.IssueTokenFor(phone, user.IsAdmin, req.Secret, configSecret, req.Password, user.Password);
+        var token = _auth.IssueTokenFor(phone, user.IsAdmin, req.Secret, configSecret, req.Password);
         if (token == null) return Unauthorized();
         return Ok(new { token, user = user.Name });
     }

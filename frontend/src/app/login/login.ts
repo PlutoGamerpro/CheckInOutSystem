@@ -116,7 +116,7 @@ export class Login {
 
   // English: Performs check-out
   private performCheckout(): void {
-    this.checkinService.checkoutByPhone(this.phone)
+       this.checkinService.checkoutByPhone(this.phone)
       .subscribe({
         next: (outRes: ActionResponse) => {
           this.message = `Du er nu checket ud, ${outRes.name}!`;

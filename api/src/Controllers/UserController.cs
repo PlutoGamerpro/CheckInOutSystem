@@ -71,22 +71,22 @@ namespace TimeRegistration.Controllers
                 Name = name,
                 Phone = phone,
                 IsAdmin = dto.IsAdmin ?? false
+                // if save hash password here other logic wont worik..
             };
-
-            // Se password foi fornecido, armazena como veio (plaintext) para testes.
-            // Atenção: armazenar senhas em plaintext é inseguro. Use apenas para debug/local.
-            if (!string.IsNullOrWhiteSpace(dto.Password))
-            {
-                user.Password = dto.Password;
-            }
-
-            // Se for admin, obrigar password
+       
             if (user.IsAdmin)
             {
                 if (string.IsNullOrWhiteSpace(dto.Password))
                     return BadRequest("Password required for admin users");
-                // já atribuída acima (não hasheada para este teste)
             }
+         
+
+            if (!string.IsNullOrWhiteSpace(dto.Password))
+            {
+               string hashedPassword = BCrypt.Net.BCrypt.HashPassword(dto.Password);
+               user.Password = hashedPassword;
+            }
+
 
             _repo.Create(user);
             return CreatedAtAction(
@@ -126,25 +126,6 @@ namespace TimeRegistration.Controllers
             if (user == null)
                 return NotFound("Telefonnummeret eksisterer ikke i systemet");
 
-            // Hvis brugeren har password sat (eks. admin), kræv og verificer det
-            if (!string.IsNullOrWhiteSpace(user.Password))
-            {
-                if (dto == null || string.IsNullOrWhiteSpace(dto.Password))
-                    return Unauthorized("Password påkrævet");
-                var stored = user.Password;
-                // Se parece um hash bcrypt (ex: $2a$... ou $2b$...), use Verify, senão compare plaintext
-                if (stored.StartsWith("$2"))
-                {
-                    if (!BCrypt.Net.BCrypt.Verify(dto.Password, stored))
-                        return Unauthorized("Ugyldigt password");
-                }
-                else
-                {
-                    if (dto.Password != stored)
-                        return Unauthorized("Ugyldigt password");
-                }
-            }
-
             // Tjek om brugeren har en åben registration (dvs. FkCheckOutId er 0 eller null)
             var openRegistration = _registrationRepo.GetAll()
                 .FirstOrDefault(r => r.FkCheckInId == user.Id && (r.FkCheckOutId == 0 || r.FkCheckOutId == null));
@@ -164,7 +145,3 @@ namespace TimeRegistration.Controllers
     }
 }
 
-// cspell:ignore byphone Telefonnummeret eksisterer ikke systemet Tjek brugeren åben allerede checket checke igen hvis
-
-
-// cspell:ignore byphone Telefonnummeret eksisterer ikke systemet Tjek brugeren åben allerede checket checke igen hvis
