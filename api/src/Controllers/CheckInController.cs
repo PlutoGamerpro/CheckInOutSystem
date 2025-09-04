@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TimeRegistration.Classes;
 using TimeRegistration.Interfaces;
+using TimeRegistration.Services;
 
 namespace TimeRegistration.Controllers
 {
@@ -9,35 +10,46 @@ namespace TimeRegistration.Controllers
     [ApiController]
     public class CheckInController : ControllerBase
     {
-        private readonly ICheckInRepo _repo;
-        private readonly IUserRepo _userRepo;
-        private readonly IRegistrationRepo _registrationRepo;
+        private readonly ICheckInService _checkInService;
 
-        public CheckInController(ICheckInRepo repo, IUserRepo userRepo, IRegistrationRepo registrationRepo)
+        public CheckInController(ICheckInService checkInService)
         {
-            _repo = repo;
-            _userRepo = userRepo;
-            _registrationRepo = registrationRepo;
-        } 
+            _checkInService = checkInService;
+        }
 
         [HttpGet]
         public ActionResult<IEnumerable<CheckIn>> GetAll()
         {
-            return Ok(_repo.GetAll());
+            return Ok(_checkInService.GetAllCheckIns());
         }
 
         [HttpGet("{id}")]
         public ActionResult<CheckIn> Get(int id)
         {
-            CheckIn? checkIn = _repo.Get(id);
-            return checkIn != null ? Ok(checkIn) : NotFound();
+
+            try
+            {
+                var checkIn = _checkInService.GetCheckInById(id);
+                return Ok(checkIn);
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound();
+            }
         }
 
         [HttpPost]
         public ActionResult<CheckIn> Create(CheckIn checkIn)
         {
-            _repo.Create(checkIn);
-            return CreatedAtAction(nameof(Get), new { id = checkIn.Id }, checkIn);
+            try
+            {
+                _checkInService.UpdateCheckIn(checkIn.Id, checkIn); // evt. lav en separat Create metode i servicen
+                return CreatedAtAction(nameof(Get), new { id = checkIn.Id }, checkIn);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
         }
 
 
@@ -46,42 +58,16 @@ namespace TimeRegistration.Controllers
         {
             try
             {
-                var user = _userRepo.GetAll().FirstOrDefault(u => u.Phone == tlf);
-                if (user == null)
-                    return NotFound("Telefonnummeret eksisterer ikke i systemet");
-
-                var lastCheckIn = _repo.GetAll()
-                    .Where(c => c.FkUserId == user.Id)
-                    .OrderByDescending(c => c.TimeStart)
-                    .FirstOrDefault();
-
-                // Hvis der er en CheckIn, hvis tilhørende registrering er åben (FkCheckOutId null) -> konflikt
-                if (lastCheckIn != null)
-                {
-                    var hasOpen = _registrationRepo.GetAll()
-                        .Any(r => r.FkCheckInId == lastCheckIn.Id && r.FkCheckOutId == null);
-                    if (hasOpen)
-                        return Conflict("Du er allerede checket ind! Check ud før du kan checke ind igen.");
-                }
-
-                // Opretter en ny CheckIn
-                var checkIn = new CheckIn
-                {
-                    TimeStart = DateTime.UtcNow,
-                    FkUserId = user.Id
-                };
-                _repo.Create(checkIn);
-
-                // Opretter en åben registrering (FkCheckOutId null)
-                var registration = new Registration
-                {
-                    FkCheckInId = checkIn.Id,
-                    FkCheckOutId = null,
-                    FkUserId = user.Id
-                };
-                _registrationRepo.Create(registration);
-
-                return Ok(new { name = user.Name, checkInId = checkIn.Id });
+                var result = _checkInService.CreateCheckInByPhone(tlf);
+                return Ok(new { name = result.Name, phone = result.Phone, checkInId = result.CheckInId });
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return Conflict(ex.Message);
             }
             catch (Exception ex)
             {
@@ -92,45 +78,44 @@ namespace TimeRegistration.Controllers
         [HttpPut("{id}")]
         public ActionResult<CheckIn> Update(int id, CheckIn checkIn)
         {
-            var existing = _repo.Update(id, checkIn);
-
-            if (existing == null)
+            try
+            {
+                var updated = _checkInService.UpdateCheckIn(id, checkIn);
+                return AcceptedAtAction(nameof(Get), new { id = updated.Id }, updated);
+            }
+            catch (KeyNotFoundException)
+            {
                 return NotFound();
-
-            return AcceptedAtAction(nameof(Get), new { id = existing.Id }, existing);
+            }
         }
 
         [HttpDelete("{id}")]
         public ActionResult<CheckIn> Delete(int id)
         {
-            var checkIn = _repo.Delete(id);
-            if (checkIn == null)
+            try
+            {
+                _checkInService.DeleteCheckIn(id);
+                return NoContent();
+            }
+            catch (Exception)
+            {
                 return NotFound();
-
-            return AcceptedAtAction(nameof(Get), new { id = checkIn.Id }, checkIn);
+            }
         }
         [HttpGet("status/{tlf}")]
         public IActionResult GetCheckInStatus(string tlf)
         {
-            var user = _userRepo.GetAll().FirstOrDefault(u => u.Phone == tlf);
-            if (user == null)
-                return NotFound();
-
-            var lastCheckIn = _repo.GetAll()
-                .Where(c => c.FkUserId == user.Id)
-                .OrderByDescending(c => c.TimeStart)
-                .FirstOrDefault();
-
-            bool isCheckedIn = false;
-            if (lastCheckIn != null)
+            try
             {
-                isCheckedIn = _registrationRepo.GetAll()
-                    .Any(r => r.FkCheckInId == lastCheckIn.Id && r.FkCheckOutId == null);
+                bool isCheckedIn = _checkInService.GetCheckInStatus(tlf);
+                return Ok(new { phone = tlf, isCheckedIn });
             }
-
-            return Ok(new { isCheckedIn });
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
-            
-   }
+
+    }
 }
 // cspell:ignore Tilføj byphone Telefonnummeret eksisterer ikke systemet seneste brugeren allerede checket igen

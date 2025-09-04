@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TimeRegistration.Classes;
 using TimeRegistration.Interfaces;
+using TimeRegistration.Services;
 
 namespace TimeRegistration.Controllers
 {
@@ -9,6 +10,14 @@ namespace TimeRegistration.Controllers
     [ApiController]
     public class CheckOutController : ControllerBase
     {
+
+        private readonly ICheckOutService _checkoutservice;
+
+        public CheckOutController(ICheckOutService checkoutservice)
+        {
+            _checkoutservice = checkoutservice;
+        }
+        /*
         private readonly ICheckOutRepo _repo;
         private readonly IUserRepo _userRepo;
         private readonly ICheckInRepo _checkInRepo;
@@ -25,34 +34,43 @@ namespace TimeRegistration.Controllers
             _checkInRepo = checkInRepo;
             _registrationRepo = registrationRepo;
         }
+        */
 
         [HttpGet]
         public ActionResult<IEnumerable<CheckOut>> GetAll()
         {
-            return Ok(_repo.GetAll());
+            var checkouts = _checkoutservice.GetAllCheckOuts();
+            return checkouts != null ? Ok(checkouts) : NotFound();
         }
 
         [HttpGet("{id}")]
         public ActionResult<CheckOut> Get(int id)
         {
+            var checkout = _checkoutservice.GetCheckOutById(id);
+            return checkout != null ? Ok(checkout) : NotFound();
+
+            /*
             CheckOut? checkOut = _repo.Get(id);
             return checkOut != null ? Ok(checkOut) : NotFound();
+            */
+
         }
 
-        [HttpPost]
-        public ActionResult<CheckOut> Create(CheckOut checkOut)
-        {
-            _repo.Create(checkOut);
-            return CreatedAtAction(nameof(Get), new { id = checkOut.Id }, checkOut);
-        }
+
 
         [HttpPost("byphone/{tlf}")]
         public IActionResult CheckOutByPhone(string tlf)
         {
+
+            var checkout = _checkoutservice.CreateCheckOut(tlf);
+            return CreatedAtAction(nameof(Get), new { id = checkout.CheckOutId, checkout.Name, checkout.Phone }, checkout);
+            /*
+
+            var phone = AuthService.NormalizePhone(tlf);
             // cspell:ignore byphone Telefonnummeret eksisterer ikke systemet seneste checkin brugeren Ingen fundet
             var user = _userRepo.GetAll().FirstOrDefault(u => u.Phone == tlf);
-            if (user == null)
-                return NotFound("Telefonnummeret eksisterer ikke i systemet");
+
+          
 
             // Find åben tilmelding (tilmeld dig CheckIn -> Bruger)
             var openReg = _registrationRepo.GetAll()
@@ -83,27 +101,51 @@ namespace TimeRegistration.Controllers
             _registrationRepo.Update(openReg.Id, openReg);
 
             return Ok(new { name = user.Name });
+            */
         }
 
         [HttpPut("{id}")]
         public ActionResult<CheckOut> Update(int id, CheckOut checkOut)
         {
+            var updated = _checkoutservice.UpdateCheckOut(id, checkOut);
+            if (updated == null)
+                return NotFound();
+            return AcceptedAtAction(nameof(Get), new { id = updated.Id }, updated);
+           
+
+
+
+
+           
+            /*
             var existing = _repo.Update(id, checkOut);
 
             if (existing == null)
                 return NotFound();
 
             return AcceptedAtAction(nameof(Get), new { id = existing.Id }, existing);
+            */
         }
 
         [HttpDelete("{id}")]
         public ActionResult<CheckOut> Delete(int id)
         {
+            try
+            {
+                _checkoutservice.DeleteCheckOut(id);
+                return NoContent();
+            }
+            catch (Exception)
+            {
+                return NotFound();
+            }
+            /*
             var checkOut = _repo.Delete(id);
             if (checkOut == null)
                 return NotFound();
 
             return AcceptedAtAction(nameof(Get), new { id = checkOut.Id }, checkOut);
+            */
         }
     }
 }

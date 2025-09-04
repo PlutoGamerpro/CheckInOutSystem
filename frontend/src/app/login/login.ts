@@ -10,7 +10,7 @@ import { CheckinService } from '../shared/services/checkin.service';
 
 // English: Backend response shapes
 interface StatusResponse { isCheckedIn: boolean; }
-interface ActionResponse { name: string; }
+interface ActionResponse { name?: string; phone?: string; }
 
 @Component({
   selector: 'app-login',
@@ -98,16 +98,15 @@ export class Login {
     this.checkinService.checkinByPhone(this.phone)
       .subscribe({
         next: (inRes: ActionResponse) => {
-          this.userName = inRes.name;
+          // se backend não enviar name por algum motivo, usar phone ou texto padrão
+          this.userName = inRes.name ?? inRes.phone ?? 'Bruger';
           this.checkInTime = new Date().toISOString();
           this.checkOutTime = undefined;
           this.isCheckedIn = true;
-          this.message = `Du er logget ind, ${inRes.name}!`;
+          this.message = `Du er logget ind, ${this.userName}!`;
           this.afterActionReset();
         },
         error: (err: unknown) => {
-       //   // Log detalhado do erro para facilitar o debug do 500
-       //   console.error('Erro no check-in:', err);
           this.setErrorMessage(err, 'Der opstod en fejl. Prøv igen.');
           this.loading = false;
         }
@@ -119,7 +118,8 @@ export class Login {
        this.checkinService.checkoutByPhone(this.phone)
       .subscribe({
         next: (outRes: ActionResponse) => {
-          this.message = `Du er nu checket ud, ${outRes.name}!`;
+          const name = outRes.name ?? outRes.phone ?? 'Bruger';
+          this.message = `Du er nu checket ud, ${name}!`;
           this.checkOutTime = new Date().toISOString();
           this.checkInTime = undefined;
           this.isCheckedIn = false;

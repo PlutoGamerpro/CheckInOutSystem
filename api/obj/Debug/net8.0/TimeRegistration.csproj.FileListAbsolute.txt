@@ -550,3 +550,4 @@ C:\Users\GH\source\repos\CheckInOutSystem\api\obj\Debug\net8.0\TimeRegistration.
 C:\Users\GH\source\repos\CheckInOutSystem\api\obj\Debug\net8.0\TimeRegistration.genruntimeconfig.cache
 C:\Users\GH\source\repos\CheckInOutSystem\api\obj\Debug\net8.0\ref\TimeRegistration.dll
 C:\Users\GH\source\repos\CheckInOutSystem\api\bin\Debug\net8.0\BCrypt.Net-Next.dll
+C:\Users\GH\source\repos\CheckInOutSystem\api\bin\Debug\net8.0\openapitools.json

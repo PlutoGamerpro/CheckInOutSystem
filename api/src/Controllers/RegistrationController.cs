@@ -4,7 +4,12 @@ using TimeRegistration.Classes;
 using TimeRegistration.Interfaces;
 using TimeRegistration.Data;
 using System.Reflection;
+using TimeRegistration.Services;
 using System.Linq;
+using Microsoft.AspNetCore.Authorization;
+using TimeRegistration.Filters; // <-- novo using
+
+
 
 namespace TimeRegistration.Controllers
 {
@@ -12,56 +17,118 @@ namespace TimeRegistration.Controllers
     [ApiController]
     public class RegistrationController : ControllerBase
     {
-        private readonly IRegistrationRepo _repo;
-        private readonly AppDbContext _ctx; // adicionado
+        private readonly IRegistrationService _registrationService;
 
-        public RegistrationController(IRegistrationRepo repo, AppDbContext ctx)
+        public RegistrationController(IRegistrationService registrationService)
         {
-            _repo = repo;
-            _ctx = ctx;
+            _registrationService = registrationService;
         }
 
-        private bool IsAdminAuthorized()
+        // error this method does creates problems when placed in service file 
+        /*public bool IsAdminAuthorized()
         {
+
             var token = Request.Headers["X-Admin-Token"].FirstOrDefault();
             var auth = HttpContext.RequestServices.GetService<TimeRegistration.Services.IAdminAuthService>();
             return auth != null && auth.Validate(token ?? "");
-        }
+        }*/
+
+
 
         [HttpGet]
         public ActionResult<IEnumerable<Registration>> GetAll()
         {
-            return Ok(_repo.GetAll());
+            try
+            {
+                var registrations = _registrationService.GetAllRegistrations();
+                return Ok(registrations);
+            }
+            catch
+            {
+                return NotFound();
+            }
+            /*
+                return Ok(_repo.GetAll());
+                */
         }
 
         [HttpGet("{id}")]
         public ActionResult<Registration> Get(int id)
         {
-            Registration? registration = _repo.Get(id);
-            return registration != null ? Ok(registration) : NotFound();
+            try
+            {
+                _registrationService.GetRegistrationById(id);
+                return Ok();
+            }
+            catch (Exception)
+            {
+                return NotFound();
+            }
+            /*
+                Registration? registration = _repo.Get(id);
+                return registration != null ? Ok(registration) : NotFound();
+                */
         }
 
         [HttpPost]
         public ActionResult<Registration> Create(Registration registration)
         {
+            try
+            {
+                _registrationService.CreateRegistration(registration);
+                return CreatedAtAction(nameof(Get), new { id = registration.Id }, registration);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+            /*
             _repo.Create(registration);
             return CreatedAtAction(nameof(Get), new { id = registration.Id }, registration);
+            */
         }
 
         [HttpPut("{id}")]
         public ActionResult<Registration> Update(int id, Registration registration)
         {
+
+            try
+            {
+                _registrationService.UpdateRegistration(id, registration);
+                return AcceptedAtAction(nameof(Get), new { id = registration.Id }, registration);
+            }
+            catch (Exception ex)
+            {
+                return NotFound();
+            }
+
+            /*
             var existing = _repo.Update(id, registration);
 
             if (existing == null)
                 return NotFound();
 
             return AcceptedAtAction(nameof(Get), new { id = existing.Id }, existing);
+            
+            */
         }
 
         [HttpDelete("{id}")]
+        [AdminAuthorize] // protegido por header X-Admin-Token
         public ActionResult<Registration> Delete(int id)
         {
+
+            try
+            {
+                _registrationService.DeleteRegistration(id);
+                return NoContent();
+            }
+            catch (Exception)
+            {
+                return NotFound();
+            }
+
+            /*
             if (!IsAdminAuthorized()) return Unauthorized();
 
             var registration = _repo.Delete(id);
@@ -69,12 +136,25 @@ namespace TimeRegistration.Controllers
                 return NotFound();
 
             return AcceptedAtAction(nameof(Get), new { id = registration.Id }, registration);
+            */
         }
-        
-        // GET api/registration/admin  (admin listing without compile-time dependency on optional props)
+
+        // GET api/registration/admin  (admin listing)
         [HttpGet("admin")]
+        [AdminAuthorize] // protegido por header X-Admin-Token
         public ActionResult<IEnumerable<object>> GetAllAdmin()
         {
+            try
+            {
+                var list = _registrationService.GetAllAdmin();
+                return Ok(list);
+            }
+            catch
+            {
+                return NotFound();
+            }
+        }
+        /*
             if (!IsAdminAuthorized()) return Unauthorized();
 
             var list = (from r in _ctx.Registrations
@@ -95,11 +175,26 @@ namespace TimeRegistration.Controllers
                         .ToList();
 
             return Ok(list);
-        }
+            */
+
 
         [HttpGet("open")]
+        [AdminAuthorize] // protegido por header X-Admin-Token
         public ActionResult<IEnumerable<object>> GetOpen()
         {
+            
+
+            try
+            {
+                var openRegistrations = _registrationService.GetOpenRegistrations();
+                return Ok(openRegistrations);
+            }
+            catch
+            {
+                return NotFound();
+            }
+
+            /*
             if (!IsAdminAuthorized()) return Unauthorized();
 
             var list = (from r in _ctx.Registrations
@@ -117,16 +212,30 @@ namespace TimeRegistration.Controllers
                         .ToList();
 
             return Ok(list);
+            */
         }
-
-        public class ForceCheckoutRequest
-        {
-            public DateTime? When { get; set; }
-        }
-
+        /*
+            public class ForceCheckoutRequest
+            {
+                public DateTime? When { get; set; }
+            }
+    */
         [HttpPatch("{id:int}/checkout")]
+        [AdminAuthorize] // protegido por header X-Admin-Token
         public ActionResult<object> ForceCheckout(int id, [FromBody] ForceCheckoutRequest body)
         {
+
+            try
+            {
+                _registrationService.ForceCheckout(id, body);
+                return NoContent();
+            }
+            catch
+            {
+                return NotFound();
+            }
+
+            /*
             if (!IsAdminAuthorized()) return Unauthorized();
 
             var when = body?.When ?? DateTime.UtcNow;
@@ -143,8 +252,9 @@ namespace TimeRegistration.Controllers
                 id = updated.Id,
                 checkIn,
                 forcedAt = when,
-               
+
             });
+            */
         }
     }
 }
