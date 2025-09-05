@@ -11,9 +11,8 @@ namespace TimeRegistration.Services
     {
         private readonly ICheckInRepo _repo;
         private readonly IUserRepo _userRepo;
-        private readonly IRegistrationRepo _registrationRepo;
-
-        private readonly AppDbContext _ctx; // changed from DbContext
+        private readonly IRegistrationRepo _registrationRepo; 
+        private readonly AppDbContext _ctx; 
 
         public CheckInService(ICheckInRepo repo, IUserRepo userRepo, IRegistrationRepo registrationRepo, AppDbContext ctx)
         {
@@ -38,8 +37,8 @@ namespace TimeRegistration.Services
                 .Where(c => c.FkUserId == user.Id)
                 .OrderByDescending(c => c.TimeStart)
                 .FirstOrDefault();
-
-            // Hvis der er en CheckIn, hvis tilhørende registrering er åben (FkCheckOutId null) -> konflikt
+            
+            // If there is a CheckIn whose associated registration is open (FkCheckOutId null) -> conflict
             if (lastCheckIn != null)
             {
                 var hasOpen = _registrationRepo.GetAll()
@@ -48,7 +47,7 @@ namespace TimeRegistration.Services
                     throw new InvalidOperationException("Du er allerede checket ind! Check ud før du kan checke ind igen.");
             }
 
-            // Opretter en ny CheckIn
+          
             var checkIn = new CheckIn
             {
                 TimeStart = DateTime.UtcNow,
@@ -56,17 +55,16 @@ namespace TimeRegistration.Services
             };
             _repo.Create(checkIn);
 
-            // Opretter en åben registrering (FkCheckOutId null)
+            // creates a new open registration (FkCheckOutId null)
             var registration = new Registration
             {
                 FkCheckInId = checkIn.Id,
                 FkCheckOutId = null,
                 FkUserId = user.Id
             };
-            _registrationRepo.Create(registration);
-
-
-            // Retorna resultado com dados úteis para o controller/frontend
+            _registrationRepo.Create(registration); 
+           
+            // return results with useful data for controller/frontend
             return new CheckInResult(checkIn.Id, name, phone);
         }
 
@@ -101,7 +99,7 @@ namespace TimeRegistration.Services
                 throw new KeyNotFoundException($"CheckIn with id {id} not found.");
             }
             return checkIn;
-            //return checkIn != null ? Ok(checkIn) : NotFound();
+           
         }
 
         public CheckIn? UpdateCheckIn(int id, CheckIn checkIn)
@@ -135,45 +133,7 @@ namespace TimeRegistration.Services
 
             return isCheckedIn;
         }
-// this method should not be in the script 
+
         
     }
 }
-/*  
-                .OrderByDescending(c => c.TimeStart)
-                .FirstOrDefault();
-
-            bool isCheckedIn = false;
-            if (lastCheckIn != null)
-            {
-                isCheckedIn = _registrationRepo.GetAll()
-                    .Any(r => r.FkCheckInId == lastCheckIn.Id && r.FkCheckOutId == null);
-            }
-
-return isCheckedIn;
-            
-
-
-        
-            OLD WORKS
-             var user = _userRepo.GetAll().FirstOrDefault(u => u.Phone == tlf);
-            if (user == null)
-                throw new KeyNotFoundException("Telefonnummeret eksisterer ikke i systemet");
-
-            var lastCheckIn = _repo.GetAll()
-                .Where(c => c.FkUserId == user.Id)
-                .OrderByDescending(c => c.TimeStart)
-                .FirstOrDefault();
-
-            bool isCheckedIn = false;
-            if (lastCheckIn != null)
-            {
-                isCheckedIn = _registrationRepo.GetAll()
-                    .Any(r => r.FkCheckInId == lastCheckIn.Id && r.FkCheckOutId == null);
-            }
-
-           
-        }
-        }
- }
-*/

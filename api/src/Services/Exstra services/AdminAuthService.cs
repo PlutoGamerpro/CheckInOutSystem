@@ -5,7 +5,7 @@ namespace TimeRegistration.Services;
 
 public interface IAdminAuthService
 {
-   // string? IssueTokenFor(string phone, bool isAdmin, string providedSecret, string configuredSecret, string password, string configuredPassword);
+   
     string? IssueTokenFor(string phone, bool isAdmin, string secret, string configSecret, string password);
     bool Validate(string token);
 }

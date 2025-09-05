@@ -11,7 +11,7 @@ namespace TimeRegistration.Services
         private readonly IRegistrationRepo _repo;
         private readonly AppDbContext _ctx;
 
-        // Construtor simplificado: não depende de controllers nem de HttpContextAccessor
+     
         public RegistrationService(IRegistrationRepo repo, AppDbContext ctx)
         {
             _repo = repo;

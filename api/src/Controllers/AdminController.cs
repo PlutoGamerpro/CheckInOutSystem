@@ -1,231 +1,168 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using TimeRegistration.Interfaces;
 using TimeRegistration.Services;
 using TimeRegistration.Classes;
 using TimeRegistration.Models;
 using TimeRegistration.Filters; // <-- novo using
 using TimeRegistration.Data;
-using TimeRegistration.Classes;
-using System.Diagnostics.CodeAnalysis;
-using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
-using Microsoft.AspNetCore.Authorization; // added
 
-namespace TimeRegistration.Controllers;
 
-// cspell:ignore Telefonnummeret eksisterer ikke systemet checket igen
 
-[ApiController]
-[Route("api/admin")]
-public class AdminController : ControllerBase
+namespace TimeRegistration.Controllers
 {
-    
-    private readonly IAdminService _adminservice;
-       private readonly AppDbContext _ctx; // changed from DbContext
-
-    public AdminController(IAdminService adminservice, AppDbContext ctx)
+    [ApiController]
+    [Route("api/admin")]
+    public class AdminController : ControllerBase
     {
-        _adminservice = adminservice;
-        _ctx = ctx;
-    }
+        private readonly IAdminService _adminservice;
+        private readonly AppDbContext _ctx; 
 
-    
-
-    
-    [HttpPost("login")]
-    public IActionResult Login([FromBody] AdminLoginRequest req)
-    {
-        
-        
-        try
+        public AdminController(IAdminService adminservice, AppDbContext ctx)
         {
-            var result = _adminservice.Login(req); // THE NEW PARAMENTER IS PROBALY WRONG  
-            return CreatedAtAction(nameof(Login), new { result.Token, result.UserName }, req);
-        }
-        catch (KeyNotFoundException) // wrong error message should probably be "User not found"
-        {
-            return NotFound("User not found");
+            _adminservice = adminservice;
+            _ctx = ctx;
         }
 
-        ///return new AdminLoginResult(token, user.Name);
-       
-        /*
-        if (req is null) return BadRequest("Requisição inválida");
-        var phone = (req.Phone ?? "").Trim();
-        if (string.IsNullOrWhiteSpace(phone)) return BadRequest("Phone required");
-        if (string.IsNullOrWhiteSpace(req.Secret)) return BadRequest("Secret required");
-        if (string.IsNullOrWhiteSpace(req.Password)) return BadRequest("Password required");
-
-        var user = _ctx.Users.FirstOrDefault(u => u.Phone == phone);
-        if (user == null) return Unauthorized();
-
-        var configSecret = _cfg["Admin:Secret"] ?? "";
-
-
-        if (!BCrypt.Net.BCrypt.Verify(req.Password, user.Password))
+        [HttpPost("login")]
+        public IActionResult Login([FromBody] AdminLoginRequest req)
         {
-            return Unauthorized("Invalid password");
-        }
-
-
-        var token = _auth.IssueTokenFor(phone, user.IsAdmin, req.Secret, configSecret, req.Password);
-        if (token == null) return Unauthorized();
-        return Ok(new { token, user = user.Name });
-        */
-        
-    }
-    [HttpDelete("user/{id}")]
-    [AdminAuthorize]
-    public IActionResult DeleteUser(int id)
-    {
-        try
-        {
-            _adminservice.DeleteUser(id);
-            return NoContent();
-        }
-        catch (KeyNotFoundException)
-        {
-            return NotFound("User not found");
-        }
-
-        /*
-        var user = _ctx.Users.Find(id);
-        if (user == null) return NotFound();
-
-        _adminRepo.DeleteUser(id, user); // // allready saves in the _adminrepo:!!
-        return NoContent();
-        */
-    }
-
-    [HttpPut("user/{id}")]
-    [AdminAuthorize]
-    public IActionResult UpdateUser(int id, User user)
-    {
-
-        try
-        {
-            _adminservice.UpdateUser(id, user);
-            return NoContent();
-        }
-        catch (KeyNotFoundException)
-        {
-            return NotFound("User not found");
-        }
-
-        /*
-        var existingUser = _ctx.Users.Find(id);
-        if (existingUser == null) return NotFound();
-
-        // Atualize apenas os campos permitidos
-        existingUser.Name = user.Name;
-        existingUser.Phone = user.Phone;
-        existingUser.IsAdmin = user.IsAdmin;
-        // Adicione outros campos editáveis conforme necessário
-
-        _adminRepo.UpdateUser(id, existingUser); // Apenas salva as alterações
-        return NoContent();
-        */
-    }
-
-    // SUBSTITUI: antes existia GetRegistrationsRange usando Include; agora usa joins conforme solicitado
-    private IEnumerable<object> GetRegistrationsJoinRange(DateTime? startInclusiveUtc, DateTime? endExclusiveUtc)
-    {
-        try
-        {
-
-            return _adminservice.GetRegistrationsRange(startInclusiveUtc, endExclusiveUtc);
+            try
+            {
+                var result = _adminservice.Login(req); 
+                return CreatedAtAction(nameof(Login), new { result.Token, result.UserName }, req);
+            }
+            catch (KeyNotFoundException) 
+            {
+                return NotFound("User not found");
+            }
 
         }
-        catch(Exception e)
+        [HttpDelete("user/{id}")]
+        [AdminAuthorize]
+        public IActionResult DeleteUser(int id)
         {
-            return Enumerable.Empty<object>();
+            try
+            {
+                _adminservice.DeleteUser(id);
+                return NoContent();
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound("User not found");
+            }
+
         }
 
-        
-    }
-
-    // Helper para midnight UTC evitando Kind=Unspecified (corrige erro Npgsql)
-    private static DateTime MidnightUtc(DateTime refUtc)
-        => new DateTime(refUtc.Year, refUtc.Month, refUtc.Day, 0, 0, 0, DateTimeKind.Utc);
-
-    private static DateTime ForceUtc(DateTime dt)
-        => dt.Kind == DateTimeKind.Utc ? dt : DateTime.SpecifyKind(dt, DateTimeKind.Utc);
-
-    [HttpGet("registrations")]
-    public IActionResult GetAllRegistrations()
-        => Ok(GetRegistrationsJoinRange(null, null));
-
-    [HttpGet("registrations/today")]
-    public IActionResult GetTodaysRegistrations()
-    {
-        var today = MidnightUtc(DateTime.UtcNow);
-        return Ok(GetRegistrationsJoinRange(today, today.AddDays(1)));
-    }
-
-    [HttpGet("registrations/yesterday")]
-    public IActionResult GetYesterdaysRegistrations()
-    {
-        var today = MidnightUtc(DateTime.UtcNow);
-        var yesterday = today.AddDays(-1);
-        return Ok(GetRegistrationsJoinRange(yesterday, today));
-    }
-
-    [HttpGet("registrations/week")]
-    public IActionResult GetWeekRegistrations()
-    {
-        var today = MidnightUtc(DateTime.UtcNow);
-        var startOfWeek = today.AddDays(-(int)today.DayOfWeek); // Sunday=0
-        return Ok(GetRegistrationsJoinRange(startOfWeek, startOfWeek.AddDays(7)));
-    }
-
-    [HttpGet("registrations/month")]
-    public IActionResult GetMonthRegistrations()
-    {
-        var today = MidnightUtc(DateTime.UtcNow);
-        var startOfMonth = new DateTime(today.Year, today.Month, 1, 0, 0, 0, DateTimeKind.Utc);
-        return Ok(GetRegistrationsJoinRange(startOfMonth, startOfMonth.AddMonths(1)));
-    }
-
-    [HttpGet("registrations/year")]
-    public IActionResult GetYearRegistrations()
-    {
-        var today = MidnightUtc(DateTime.UtcNow);
-        var startOfYear = new DateTime(today.Year, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-        return Ok(GetRegistrationsJoinRange(startOfYear, startOfYear.AddYears(1)));
-    }
-
-    [HttpGet("registrations/by-period")]
-    public IActionResult GetByPeriod([FromQuery] string period = "all")
-    {
-        var today = MidnightUtc(DateTime.UtcNow);
-        var startOfWeek = today.AddDays(-(int)today.DayOfWeek);
-        var startOfMonth = new DateTime(today.Year, today.Month, 1, 0, 0, 0, DateTimeKind.Utc);
-        var startOfYear = new DateTime(today.Year, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-
-        return period.ToLower() switch
+        [HttpPut("user/{id}")]
+        [AdminAuthorize]
+        public IActionResult UpdateUser(int id, User user)
         {
-            "today" => Ok(GetRegistrationsJoinRange(today, today.AddDays(1))),
-            "yesterday" => Ok(GetRegistrationsJoinRange(today.AddDays(-1), today)),
-            "week" => Ok(GetRegistrationsJoinRange(startOfWeek, startOfWeek.AddDays(7))),
-            "month" => Ok(GetRegistrationsJoinRange(startOfMonth, startOfMonth.AddMonths(1))),
-            "year" => Ok(GetRegistrationsJoinRange(startOfYear, startOfYear.AddYears(1))),
-            "all" => Ok(GetRegistrationsJoinRange(null, null)),
-            _ => BadRequest("period inválido")
-        };
-    }
+            try
+            {
+                _adminservice.UpdateUser(id, user);
+                return NoContent();
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound("User not found");
+            }
+        }
 
-    [HttpGet("registrations/range")]
-    public IActionResult GetRange([FromQuery] DateTime start, [FromQuery] DateTime end)
-    {
-        if (start == default || end == default) return BadRequest("start/end obrigatórios");
-        start = ForceUtc(start);
-        end = ForceUtc(end);
-        if (end <= start) return BadRequest("end <= start");
-        if ((end - start).TotalDays > 400) return BadRequest("Intervalo muito grande (max 400 dias).");
-        return Ok(GetRegistrationsJoinRange(start, end));
+        private IEnumerable<object> GetRegistrationsJoinRange(DateTime? startInclusiveUtc, DateTime? endExclusiveUtc)
+        {
+            try
+            {
+                return _adminservice.GetRegistrationsRange(startInclusiveUtc, endExclusiveUtc);
+            }
+            catch (Exception e)
+            {
+                return Enumerable.Empty<object>();
+            }
+        }
+
+        // possibly create a separate Create method in the service Helper for midnight UTC avoiding Kind=Unspecified (corrects Npgsql error)
+        private static DateTime MidnightUtc(DateTime refUtc)
+            => new DateTime(refUtc.Year, refUtc.Month, refUtc.Day, 0, 0, 0, DateTimeKind.Utc);
+
+        private static DateTime ForceUtc(DateTime dt)
+            => dt.Kind == DateTimeKind.Utc ? dt : DateTime.SpecifyKind(dt, DateTimeKind.Utc);
+
+        [HttpGet("registrations")]
+        public IActionResult GetAllRegistrations()
+            => Ok(GetRegistrationsJoinRange(null, null));
+
+        [HttpGet("registrations/today")]
+        public IActionResult GetTodaysRegistrations()
+        {
+            var today = MidnightUtc(DateTime.UtcNow);
+            return Ok(GetRegistrationsJoinRange(today, today.AddDays(1)));
+        }
+
+        [HttpGet("registrations/yesterday")]
+        public IActionResult GetYesterdaysRegistrations()
+        {
+            var today = MidnightUtc(DateTime.UtcNow);
+            var yesterday = today.AddDays(-1);
+            return Ok(GetRegistrationsJoinRange(yesterday, today));
+        }
+
+        [HttpGet("registrations/week")]
+        public IActionResult GetWeekRegistrations()
+        {
+            var today = MidnightUtc(DateTime.UtcNow);
+            var startOfWeek = today.AddDays(-(int)today.DayOfWeek); // Sunday=0
+            return Ok(GetRegistrationsJoinRange(startOfWeek, startOfWeek.AddDays(7)));
+        }
+
+        [HttpGet("registrations/month")]
+        public IActionResult GetMonthRegistrations()
+        {
+            var today = MidnightUtc(DateTime.UtcNow);
+            var startOfMonth = new DateTime(today.Year, today.Month, 1, 0, 0, 0, DateTimeKind.Utc);
+            return Ok(GetRegistrationsJoinRange(startOfMonth, startOfMonth.AddMonths(1)));
+        }
+
+        [HttpGet("registrations/year")]
+        public IActionResult GetYearRegistrations()
+        {
+            var today = MidnightUtc(DateTime.UtcNow);
+            var startOfYear = new DateTime(today.Year, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            return Ok(GetRegistrationsJoinRange(startOfYear, startOfYear.AddYears(1)));
+        }
+
+        [HttpGet("registrations/by-period")]
+        public IActionResult GetByPeriod([FromQuery] string period = "all")
+        {
+            var today = MidnightUtc(DateTime.UtcNow);
+            var startOfWeek = today.AddDays(-(int)today.DayOfWeek);
+            var startOfMonth = new DateTime(today.Year, today.Month, 1, 0, 0, 0, DateTimeKind.Utc);
+            var startOfYear = new DateTime(today.Year, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+
+            return period.ToLower() switch
+            {
+                "today" => Ok(GetRegistrationsJoinRange(today, today.AddDays(1))),
+                "yesterday" => Ok(GetRegistrationsJoinRange(today.AddDays(-1), today)),
+                "week" => Ok(GetRegistrationsJoinRange(startOfWeek, startOfWeek.AddDays(7))),
+                "month" => Ok(GetRegistrationsJoinRange(startOfMonth, startOfMonth.AddMonths(1))),
+                "year" => Ok(GetRegistrationsJoinRange(startOfYear, startOfYear.AddYears(1))),
+                "all" => Ok(GetRegistrationsJoinRange(null, null)),
+                _ => BadRequest("period inválido")
+            };
+        }
+
+        [HttpGet("registrations/range")]
+        public IActionResult GetRange([FromQuery] DateTime start, [FromQuery] DateTime end)
+        {
+            if (start == default || end == default) return BadRequest("start/end obrigatórios");
+            start = ForceUtc(start);
+            end = ForceUtc(end);
+            if (end <= start) return BadRequest("end <= start");
+            if ((end - start).TotalDays > 400) return BadRequest("Intervalo muito grande (max 400 dias).");
+            return Ok(GetRegistrationsJoinRange(start, end));
+        }
     }
 }
+
+
 /*
 [HttpPost("seed-basic")]
 public IActionResult SeedBasic([FromQuery] bool force = false)

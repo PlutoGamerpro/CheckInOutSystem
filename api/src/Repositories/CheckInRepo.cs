@@ -26,7 +26,7 @@ namespace TimeRegistration.Repositories
         public CheckIn Create(CheckIn checkIn)
         {
             _context.CheckIns.Add(checkIn);
-            _context.SaveChanges(); // Commit to DB
+            _context.SaveChanges(); 
             return checkIn;
         }
 
