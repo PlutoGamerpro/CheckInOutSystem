@@ -77,7 +77,7 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   private normalize(raw: any): AdminReg {
-    // Require backend returning userName and phone(fixed in admincontroller 'getall' + create registration with fkuserid)
+    // Require backend returning userName and phone (fixed in admincontroller 'getall' + create registration with fkuserid)
     if (!raw) {
       return { id: 0, userName: null, phone: null, checkIn: null, checkOut: null, isOpen: false };
     }
