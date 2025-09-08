@@ -36,21 +36,23 @@
   <div *ngIf="loading" class="info info-loading">Loading...</div>
   <div *ngIf="error && !networkDown" class="info info-error">{{ error }}</div>
   <div *ngIf="networkDown" class="info info-error">
-    Não foi possível conectar ao backend.<br>
-    Verifique se o servidor está rodando e a URL base.<br>
+   was not possible to connect to the server
+    <br>
+    check if the server is running and see if the base URL is correct.<br>
     <small>{{ lastUrl }}</small><br>
     <button class="btn btn-outline btn-sm" (click)="load()">Retry</button>
   </div>
   <div *ngIf="!loading && allFieldsEmpty" class="info info-error">
-    Registros carregados mas campos normalizados estão vazios.
-    <div *ngIf="detectedKeys.length">
-      Campos recebidos: {{ detectedKeys.join(', ') }}
+    registrations were loaded but normalized fields are empty.
+      <div *ngIf="detectedKeys.length">
+        fields detected in the raw data
+     
     </div>
     <details style="margin-top:.5rem">
       <summary style="cursor:pointer">Ver primeiro objeto bruto</summary>
       <pre style="white-space:pre-wrap;font-size:.65rem">{{ firstRawSample | json }}</pre>
     </details>
-    Ajuste a função normalize() para mapear os nomes corretos.
+  
     <details style="margin-top:.5rem">
       <summary style="cursor:pointer">Exemplo de função normalize()</summary>
       <pre style="white-space:pre-wrap;font-size:.6rem;line-height:1.1" ngNonBindable>
@@ -69,12 +71,8 @@ normalize(item: any) &#123;
             ? item.isOpen
             : !(item.checkOut || item.check_out)
   &#125;;
-&#125;
-// Depois aplique: this.registrations = raw.map(normalize).filter(r => r);
-      </pre>
-      <small>Dica: Use o botão "Show RAW" para confirmar os nomes reais das propriedades.</small>
-    </details>
-  </div>
+
+
 
   <table *ngIf="!loading && registrations.length" class="data-table">
     <thead>

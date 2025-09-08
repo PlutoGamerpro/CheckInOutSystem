@@ -29,7 +29,7 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-// Brug CORS-policyen altid (ikke kun i development)
+// Use CORS-POLICY always (not only in development)
 app.UseCors("AllowAll");
 
 // Configure the HTTP request pipeline.

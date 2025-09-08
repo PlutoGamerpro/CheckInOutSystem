@@ -3,10 +3,10 @@ using TimeRegistration.Classes;
 using TimeRegistration.Interfaces;
 namespace TimeRegistration.Services;
 
-public interface IAdminAuthService
+public interface IAdminAuthService // replace this with json token for more security
 {
-   
     string? IssueTokenFor(string phone, bool isAdmin, string secret, string configSecret, string password);
+
     bool Validate(string token);
 }
 
