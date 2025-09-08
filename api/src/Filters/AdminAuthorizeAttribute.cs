@@ -8,7 +8,7 @@ using TimeRegistration.Services;
 
 namespace TimeRegistration.Filters
 {
-	// Atributo de autorização admin reutilizável
+	// Reusable administrator authorization attribute
 	[AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
 	public class AdminAuthorizeAttribute : Attribute, IAsyncActionFilter
 	{

@@ -9,7 +9,7 @@ using TimeRegistration.Repositories;
 
 namespace TimeRegistration.Services
 {
-    public class AuthService
+    public class AuthService // make i dont need this file
     {
         private readonly IUserRepo _repo;
 
@@ -22,7 +22,7 @@ namespace TimeRegistration.Services
 
         public static string NormalizePhone(string phone)
         {
-            // din normaliseringslogik
+           
             return phone.Trim().Replace(" ", "");
         }
     

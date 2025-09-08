@@ -58,7 +58,6 @@ namespace TimeRegistration.Services
                 Name = name,
                 Phone = phone,
                 IsAdmin = dto.IsAdmin ?? false
-                // if save hash password here other logic wont worik..
             };
 
             if (user.IsAdmin)
@@ -66,34 +65,15 @@ namespace TimeRegistration.Services
                 if (string.IsNullOrWhiteSpace(dto.Password))
                     throw new Exception("Password required for admin users");
             }
-            // denne del gør at check in ikke virkere .....
-
-
-
-
-            // !  (ERROR EVEN WITH THIS OFF)
-            /*    
-            if (!string.IsNullOrWhiteSpace(dto.Phone))
-            {
-                string hashedPhonenumber = BCrypt.Net.BCrypt.HashPassword(dto.Phone);
-                user.Phone = hashedPhonenumber;
-            }
-            */
-
+        
             if (!string.IsNullOrWhiteSpace(dto.Password))
             {
                 string hashedPassword = BCrypt.Net.BCrypt.HashPassword(dto.Password);
                 user.Password = hashedPassword;
             }
 
-
             _repo.Create(user);
-            /*
-            return CreatedAtAction(
-                nameof(GetByPhone),
-                new { phone = user.Phone },
-                new { user.Id, user.Name, phone = user.Phone, user.IsAdmin, password = user.Password });
-                */
+         
         }
 
         public IEnumerable<User> GetAllUsers()
@@ -120,38 +100,23 @@ namespace TimeRegistration.Services
         {
             var user = _repo.GetAll().FirstOrDefault(u => u.Phone == phone);
             if (user == null)
-                throw new Exception("Telefonnummeret eksisterer ikke i systemet");
-
-            // Agora também expõe a senha (apenas para seus testes)
-            // return Ok(new { user.Id, user.Name, phone = user.Phone, user.IsAdmin, password = user.Password });
+                throw new Exception("Telefonnummeret eksisterer ikke i systemet");             
         }
 
         public void Login( string tlf, LoginRequest req)
         {
-            // Normaliser telefonnummeret før søgning
+            
+            // normalizePhone number for searching
             var user = _repo.GetAll().FirstOrDefault(u => u.Phone == tlf);
-            //  var phone = NormalizePhone(tlf);
+           
             if (string.IsNullOrWhiteSpace(tlf))
-                throw new Exception("Ugyldigt telefonnummer");
-
-
-
-            /*        
-                       // this can't work more because we encypct the numbers
-                        if (!BCrypt.Net.BCrypt.Verify(req.Phone, user.Phone))
-                        {
-                            return Unauthorized("Telefonnummeret eksisterer ikke i systemet");
-                        }
-            */
-
-
+                throw new Exception("Ugyldigt telefonnummer"); 
 
             if (user == null)
                 throw new Exception("Telefonnummeret eksisterer ikke i systemet");
 
 
-
-            // Tjek om brugeren har en åben registration (dvs. FkCheckOutId er 0 eller null)
+            // check if users has a open registration (e.g. FkCheckOutId is 0 or null)
             var openRegistration = _registrationRepo.GetAll()
             .FirstOrDefault(r => r.FkCheckInId == user.Id && (r.FkCheckOutId == 0 || r.FkCheckOutId == null));
 
@@ -167,7 +132,7 @@ namespace TimeRegistration.Services
             _registrationRepo.Create(registration);
 
 
-            // return Ok(new { name = user.Name });
+            
         }
 
        

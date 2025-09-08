@@ -8,12 +8,10 @@ namespace TimeRegistration.Models
     public record ForceCheckoutRequest(DateTime? When, DateTime? CheckIn);
     public record AdminLoginRequest(string Phone, string Secret, string Password);
 
-    // new line added 
-
-
-
+    /*
     public class Models
     {
 
     }
+    */
 }

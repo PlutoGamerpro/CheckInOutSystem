@@ -13,11 +13,10 @@ namespace TimeRegistration.Services
     public record CreateUserRequest(string? Name, string? Phone, bool? IsAdmin, string? Password);
 
     public interface IUserService
-    {
-        IEnumerable<User> GetAllUsers();
-        //User GetUserById(int id);
-        void CreateUser(CreateUserRequest dto);
-        void GetByPhone(string phone);
-        void Login(string tlf, LoginRequest req);
+    { 
+       IEnumerable<User> GetAllUsers();
+       void CreateUser(CreateUserRequest dto);
+       void GetByPhone(string phone);
+       void Login(string tlf, LoginRequest req);
     }
 }

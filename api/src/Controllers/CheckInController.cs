@@ -43,7 +43,7 @@ namespace TimeRegistration.Controllers
         {
             try
             {
-                _checkInService.UpdateCheckIn(checkIn.Id, checkIn); // evt. lav en separat Create metode i servicen
+                _checkInService.UpdateCheckIn(checkIn.Id, checkIn); // possibly create a separate Create method in the service
                 return CreatedAtAction(nameof(Get), new { id = checkIn.Id }, checkIn);
             }
             catch (Exception e)
@@ -118,4 +118,3 @@ namespace TimeRegistration.Controllers
 
     }
 }
-// cspell:ignore Tilføj byphone Telefonnummeret eksisterer ikke systemet seneste brugeren allerede checket igen

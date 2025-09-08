@@ -1,10 +1,10 @@
 using Microsoft.EntityFrameworkCore; // manter única ocorrência
-using Npgsql.EntityFrameworkCore.PostgreSQL; // necessário para extensão UseNpgsql
+using Npgsql.EntityFrameworkCore.PostgreSQL; 
 using TimeRegistration.Data;
-using Microsoft.Extensions.DependencyInjection; // ...existing code...
-using Microsoft.Extensions.DependencyInjection.Extensions; // para RemoveAll
+using Microsoft.Extensions.DependencyInjection; 
+using Microsoft.Extensions.DependencyInjection.Extensions; 
 
-// cspell:ignore Npgsql Tillad Brug policyen altid ikke
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,15 +27,9 @@ builder.Services.AddCors(options =>
     });
 });
 
-
-// Remove qualquer registro anterior de IAdminAuthService (p.ex. registrado por AddRepositories)
-// e re-registra como scoped para evitar que um singleton consuma serviços scoped (IUserRepo).
-//builder.Services.RemoveAll<TimeRegistration.Services.IAdminAuthService>();
-//builder.Services.AddScoped<TimeRegistration.Services.IAdminAuthService, TimeRegistration.Services.AdminAuthService>();
-
 var app = builder.Build();
 
-// Brug CORS-policyen altid (ikke kun i development)
+// Use CORS-POLICY always (not only in development)
 app.UseCors("AllowAll");
 
 // Configure the HTTP request pipeline.
@@ -49,8 +43,3 @@ app.UseHttpsRedirection();
 
 app.MapControllers();
 app.Run();
-//app.UseHttpsRedirection();
-
-//app.MapControllers();
-//app.Run();
-//app.Run();

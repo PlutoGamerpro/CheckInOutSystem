@@ -11,7 +11,7 @@ namespace TimeRegistration.Services
         private readonly IRegistrationRepo _repo;
         private readonly AppDbContext _ctx;
 
-        // Construtor simplificado: não depende de controllers nem de HttpContextAccessor
+     
         public RegistrationService(IRegistrationRepo repo, AppDbContext ctx)
         {
             _repo = repo;
@@ -21,9 +21,14 @@ namespace TimeRegistration.Services
 
         public void CreateRegistration(Registration registration)
         {
-            _repo.Create(registration);
-
-            // return CreatedAtAction(nameof(Get), new { id = registration.Id }, registration);
+            try
+            {
+                _repo.Create(registration);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error creating registration: " + ex.Message);
+            }         
         }
 
 
@@ -43,18 +48,7 @@ namespace TimeRegistration.Services
             var t = updated.GetType();
             DateTime? checkIn =
                 t.GetProperty("CheckIn")?.GetValue(updated) as DateTime? ??
-                t.GetProperty("Start")?.GetValue(updated) as DateTime?;
-
-
-            /*
-            return Ok(new
-            {
-                id = updated.Id,
-                checkIn,
-                forcedAt = when,
-
-            });
-            */
+                t.GetProperty("Start")?.GetValue(updated) as DateTime?;           
         }
 
 
@@ -78,9 +72,8 @@ namespace TimeRegistration.Services
                         .ToList();
 
             return list;
-            //return Ok(list);
-
         }
+             
 
         public IEnumerable<object> GetAllRegistrations()
         {
@@ -109,36 +102,25 @@ namespace TimeRegistration.Services
                         .ToList();
 
             return list;
-            //return Ok(list);
+            
         }
 
         public void GetRegistrationById(int id)
         {
             Registration? registration = _repo.Get(id);
             if (registration == null)
-                throw new Exception("NotFound");
-
-
-            // return registration != null ? Ok(registration) : NotFound();
+                throw new Exception("NotFound");             
         }
 
 
         public void UpdateRegistration(int id, Registration registration)
         {
-
-
             var existing = _repo.Update(id, registration);
 
             if (existing == null)
-                throw new Exception("NotFound");
-
-            //return AcceptedAtAction(nameof(Get), new { id = existing.Id }, existing);
+                throw new Exception("NotFound");           
         }
-
-
-
-
-    }
+   }
 }
 
         

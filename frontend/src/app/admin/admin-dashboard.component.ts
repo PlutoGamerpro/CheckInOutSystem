@@ -12,7 +12,7 @@ interface AdminReg {
   checkIn: string | null;
   checkOut: string | null;
   isOpen: boolean;
-  isAdmin?: boolean; // novo
+  isAdmin?: boolean; 
 }
 
 @Component({
@@ -29,10 +29,10 @@ export class AdminDashboardComponent implements OnInit {
   error = '';
   debug = false;
   networkDown = false;
-  lastUrl = ''; // removido 'private' para acesso no template
+  lastUrl = ''; // removed 'private' for access in template
   private readonly base = environment.baseApiUrl.replace(/\/$/, '');
-  includeAdmins = true; // definir false para excluir admins
-  currentPeriod: string | null = 'all'; // Adicionada propriedade currentPeriod
+  includeAdmins = true; // define false to exclude admins from list
+  currentPeriod: string | null = 'all'; 
 
   // Estado de calendário
   calendarYear = new Date().getUTCFullYear();
@@ -77,7 +77,7 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   private normalize(raw: any): AdminReg {
-    // Requer backend retornando userName e phone (corrigido no AdminController + criação de registro com FkUserId)
+    // Require backend returning userName and phone (fixed in admincontroller 'getall' + create registration with fkuserid)
     if (!raw) {
       return { id: 0, userName: null, phone: null, checkIn: null, checkOut: null, isOpen: false };
     }
@@ -106,13 +106,13 @@ export class AdminDashboardComponent implements OnInit {
     const checkInValue = this.parseDateList([
       raw.checkIn, raw.check_in, raw.startTime, raw.startedAt,
       raw.createdAt, raw.created_at, raw.openedAt, raw.opened_at,
-      raw.timeStart, raw.timestart, raw.TimeStart // adicionados
+      raw.timeStart, raw.timestart, raw.TimeStart 
     ]);
 
     const checkOutValue = this.parseDateList([
       raw.checkOut, raw.check_out, raw.endTime, raw.endedAt,
       raw.closedAt, raw.closed_at, raw.finishedAt, raw.finished_at,
-      raw.timeEnd, raw.timeend, raw.TimeEnd // adicionados
+      raw.timeEnd, raw.timeend, raw.TimeEnd 
     ]);
 
     const statusRaw = (raw.status ?? raw.state ?? raw.currentStatus);
@@ -157,12 +157,11 @@ export class AdminDashboardComponent implements OnInit {
     this.lastUrl = `${this.base}/admin/registrations`;
     console.debug('[admin-dashboard] requesting ALL via service:', this.lastUrl);
 
-    // Ajustado para usar wrapper simplificado (sem options)
     this.registrationsService.getAllRegistrations().subscribe({
       next: (raw: any[]) => {
         console.debug('[admin-dashboard] raw response:', raw);
         this.originalRaw = Array.isArray(raw) ? raw : [];
-        this.normalizeAndAssign(); // << substitui lógica inline
+        this.normalizeAndAssign(); // replaces inline logic
         this.loading = false;
       },
       error: (err: HttpErrorResponse) => {
@@ -207,7 +206,8 @@ export class AdminDashboardComponent implements OnInit {
     this.lastUrl = `${this.base}/admin/registrations/${period}`;
     console.debug('[admin-dashboard] requesting period via service:', period, this.lastUrl);
 
-    // Mapear para o wrapper correspondente
+   
+    // mapped to corresponding wrappers
     let obs;
     switch (period) {
       case 'today': obs = this.registrationsService.getToday(); break;
@@ -219,7 +219,7 @@ export class AdminDashboardComponent implements OnInit {
     obs.subscribe({
       next: raw => {
         this.originalRaw = Array.isArray(raw) ? raw : [];
-        this.normalizeAndAssign(); // << substitui lógica inline
+        this.normalizeAndAssign(); // replaces inline logic
         this.loading = false;
       },
       error: (err: HttpErrorResponse) => {
@@ -247,12 +247,12 @@ export class AdminDashboardComponent implements OnInit {
     }
   }
 
-  deleteRegistration(id: string | number): void { // renomeado (antes DeleteRegistration)
+  deleteRegistration(id: string | number): void { 
     if (id === undefined || id === null) return;
     if (!confirm(`Remover registro ${id}?`)) return;
     this.registrationsService.deleteRegistration(id).subscribe({
       next: () => {
-        // Atualiza listas locais sem reload completo (mais rápido)
+        // updates local list without full reload (faster)
         this.registrations = this.registrations.filter(r => r.id !== id);
         this.originalRaw = this.originalRaw.filter((r: any) => (r.id ?? r.ID) !== id);
       },
@@ -304,7 +304,7 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   onMonthInput(ev: Event) {
-    const val = (ev.target as HTMLInputElement).value; // formato yyyy-MM
+    const val = (ev.target as HTMLInputElement).value; // format yyyy-MM
     if (!val) return;
     const [year, month] = val.split('-').map(Number);
     if (!year || !month) return;
@@ -327,7 +327,7 @@ export class AdminDashboardComponent implements OnInit {
     const startIso = start.toISOString();
     const endIso = end.toISOString();
     this.loading = true;
-    // Corrigido: antes tinha /api/admin (duplicava /api). Agora apenas /admin/...
+   
     const url = `${this.base}/admin/registrations/range?start=${encodeURIComponent(startIso)}&end=${encodeURIComponent(endIso)}`;
     this.lastUrl = url;
     this.http.get<any[]>(url).subscribe({
@@ -338,14 +338,14 @@ export class AdminDashboardComponent implements OnInit {
       },
       error: err => {
         this.loading = false;
-        // Evitar flooding de erro se endpoint não existir (depois da correção backend deve existir)
+        // avoids flooding of error if endpoint does not exist (after backend fix it should exist)
         this.error = err?.status === 404 ? '' : 'Failed loading calendar month';
         this.networkDown = !!(err.status === 0);
       }
     });
   }
 
-  // Certifique-se que normalizeAndAssign() existe; se não, substitua pela lógica que você usa em load().
+ 
 }
 
 

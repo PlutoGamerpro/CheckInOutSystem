@@ -4,7 +4,7 @@ using TimeRegistration.Classes;
 
 namespace TimeRegistration.Services
 {
-    // DTO retornado pelo serviço para evitar que controller faça nova busca
+    // DTO returned by the service to prevent the controller from searching again
     public record CheckInResult(int CheckInId, string? Name, string Phone);
 
     public interface ICheckInService
