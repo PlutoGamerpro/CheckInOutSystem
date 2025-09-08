@@ -45,9 +45,11 @@
   <div *ngIf="!loading && allFieldsEmpty" class="info info-error">
     registrations were loaded but normalized fields are empty.
       <div *ngIf="detectedKeys.length">
-        fields detected in the raw data
-     
-    </div>
+        fields detected in the raw data:
+        <ul style="margin:0 0 .5rem 1.5rem;padding:0;list-style:disc;">
+          <li *ngFor="let key of detectedKeys">{{ key }}</li>
+        </ul>
+      </div>
     <details style="margin-top:.5rem">
       <summary style="cursor:pointer">Ver primeiro objeto bruto</summary>
       <pre style="white-space:pre-wrap;font-size:.65rem">{{ firstRawSample | json }}</pre>
