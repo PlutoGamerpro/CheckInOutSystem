@@ -252,7 +252,7 @@ export class AdminDashboardComponent implements OnInit {
     if (!confirm(`Remover registro ${id}?`)) return;
     this.registrationsService.deleteRegistration(id).subscribe({
       next: () => {
-        // updates local list without ful reload(faster)
+        // updates local list without full reload (faster)
         this.registrations = this.registrations.filter(r => r.id !== id);
         this.originalRaw = this.originalRaw.filter((r: any) => (r.id ?? r.ID) !== id);
       },
