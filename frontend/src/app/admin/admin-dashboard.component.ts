@@ -31,7 +31,7 @@ export class AdminDashboardComponent implements OnInit {
   networkDown = false;
   lastUrl = ''; // removed 'private' for access in template
   private readonly base = environment.baseApiUrl.replace(/\/$/, '');
-  includeAdmins = true; // define false to exclude adminds from list
+  includeAdmins = true; // define false to exclude admins from list
   currentPeriod: string | null = 'all'; 
 
   // Estado de calendário
