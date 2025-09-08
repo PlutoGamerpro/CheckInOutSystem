@@ -28,36 +28,10 @@ namespace TimeRegistration.Repositories
                 return user;
             }
             return null;
-        }
-
-        public IEmailSender<Registration> GetAllFromTheMonth()
-        {
-            throw new NotImplementedException();
-        }
-
-        public IEnumerator<Registration> GetAllFromTheWeek()
-        {
-            throw new NotImplementedException();
-        }
-
-        public IEmailSender<Registration> GetAllFromTheYear()
-        {
-            throw new NotImplementedException();
-        }
-
-        public IEnumerable<Registration> GetAllFromYesterday()
-        {
-            throw new NotImplementedException();
-        }
-
-        public IEnumerable<Registration> GetAllToday()
-        {
-            throw new NotImplementedException();
-        }
-
+        }      
         public User? UpdateUser(int id, User user)
         {
-            // Apenas salva as alterações no contexto, sem lógica de atualização de campos
+            // Just saves changes to the context, no field update logic
             _ctx.SaveChanges();
             return user;
         }

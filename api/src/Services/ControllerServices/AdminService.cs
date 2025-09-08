@@ -39,33 +39,6 @@ namespace TimeRegistration.Services
 
         public AdminLoginResult? Login(AdminLoginRequest req)
         {
-            
-            
-       
-        /*
-        if (req is null) return BadRequest("Requisição inválida");
-        var phone = (req.Phone ?? "").Trim();
-        if (string.IsNullOrWhiteSpace(phone)) return BadRequest("Phone required");
-        if (string.IsNullOrWhiteSpace(req.Secret)) return BadRequest("Secret required");
-        if (string.IsNullOrWhiteSpace(req.Password)) return BadRequest("Password required");
-
-        var user = _ctx.Users.FirstOrDefault(u => u.Phone == phone);
-        if (user == null) return Unauthorized();
-
-        var configSecret = _cfg["Admin:Secret"] ?? "";
-
-
-        if (!BCrypt.Net.BCrypt.Verify(req.Password, user.Password))
-        {
-            return Unauthorized("Invalid password");
-        }
-
-
-        var token = _auth.IssueTokenFor(phone, user.IsAdmin, req.Secret, configSecret, req.Password);
-        if (token == null) return Unauthorized();
-        return Ok(new { token, user = user.Name });
-        */
-
             if (req is null) return null;
             var phone = req.Phone;
             var secret = req.Secret;
@@ -77,9 +50,7 @@ namespace TimeRegistration.Services
             {
                 throw new Exception("Phone, secret and password are required");
             }
-
-            // Verifica se o usuário existe
-        
+           
             var user = _ctx.Users.FirstOrDefault(u => u.Phone == phone);
             if (user == null) throw new Exception("Invalid password");
 
@@ -91,9 +62,6 @@ namespace TimeRegistration.Services
             var token = _auth.IssueTokenFor(phone, user.IsAdmin, secret, configSecret, password);
             if (token == null) throw new Exception("Failed to issue token");
             return new AdminLoginResult(token, user.Name);
-            /*
-            return _auth.IssueTokenFor(phone, user.IsAdmin, secret, configSecret, password);
-            */
         }
 
         public void DeleteUser(int id)
@@ -116,12 +84,10 @@ namespace TimeRegistration.Services
         }
 
        
-                // new added record to the paramenter                                          
-        public IEnumerable<object> GetRegistrationsRange(DateTime? startInclusiveUtc, DateTime? endExclusiveUtc)
-        {
-         
-        
-        
+                                                    
+        public IEnumerable<object> GetRegistrationsRange(DateTime? startInclusiveUtc, DateTime? endExclusiveUtc) 
+        {        
+              
             var query =
                 from r in _ctx.Registrations
                 join ci in _ctx.CheckIns on r.FkCheckInId equals ci.Id
@@ -143,11 +109,9 @@ namespace TimeRegistration.Services
             if (endExclusiveUtc.HasValue)
                 query = query.Where(x => x.checkIn < endExclusiveUtc.Value);
 
-            /// 
+            
             return query.OrderByDescending(x => x.checkIn).ToList();
-        }
-
-        // método privado de exemplo: lê o header e usa o serviço de auth
+        }      
       
     }
 }

@@ -9,11 +9,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using TimeRegistration.Data;
 
-
-
-
-
-
 namespace TimeRegistration.Services
 {
     public class CheckOutService : ICheckOutService
@@ -42,32 +37,22 @@ namespace TimeRegistration.Services
         public CheckOutResult CreateCheckOut(string tlf)
         {
 
-            var phone = AuthService.NormalizePhone(tlf);
-            // cspell:ignore byphone Telefonnummeret eksisterer ikke systemet seneste checkin brugeren Ingen fundet
-            var user = _userRepo.GetAll().FirstOrDefault(u => u.Phone == tlf);
-
-            /*
-            if (!BCrypt.Net.BCrypt.Verify(tlf, user.Phone))
-            {
-                return Unauthorized("Telefonnummeret eksisterer ikke i systemet");
-            }
-*/
-            /*
-        if (user == null)
-            return NotFound("Telefonnummeret eksisterer ikke i systemet");
-*/
-            // Find åben tilmelding (tilmeld dig CheckIn -> Bruger)
+            var phone = AuthService.NormalizePhone(tlf);        
+            var user = _userRepo.GetAll().FirstOrDefault(u => u.Phone == tlf); 
+          
+            // Find open registration (registration with CheckIn -> User)
             var openReg = _registrationRepo.GetAll()
                 .Where(r => r.FkCheckOutId == null)
                 .Join(
                     _checkInRepo.GetAll(),
-                    r => r.FkCheckInId, // Brug indtjeknings-id'et for posten
-                    ci => ci.Id, // Sammenlign med eller tjek ind
-                    (r, ci) => new { r, ci } // Opretter et objekt med registrering og check-in
+                    r => r.FkCheckInId, // use check-in id for the post
+                    ci => ci.Id, // compare with check-in id
+                    (r, ci) => new { r, ci } // Create a object with registration and check-in 
                 )
-                .Where(x => x.ci.FkUserId == user.Id) // Kun nuværende bruger
-                .OrderByDescending(x => x.ci.TimeStart) // tager det seneste check-in
-                .FirstOrDefault()?.r; // Hent posten (eller nullen)
+                .Where(x => x.ci.FkUserId == user.Id) // use currently user
+                .OrderByDescending(x => x.ci.TimeStart) // takes the latest check-in
+                .FirstOrDefault()?.r; // Get post (or null)
+               
 
             if (openReg == null)
                 throw new InvalidOperationException("Ingen åben check-in fundet for bruger.");
@@ -77,18 +62,15 @@ namespace TimeRegistration.Services
                 TimeEnd = DateTime.UtcNow,
                 FkUserId = user.Id
             };
-            _repo.Create(checkOut);
+            _repo.Create(checkOut);            
 
-            // Opdater eller åbn registrering til dato med ny checkout
-
+            // updates or opens registration to date with new checkout             
             openReg.FkCheckOutId = checkOut.Id;
             _registrationRepo.Update(openReg.Id, openReg);
 
-            return new CheckOutResult(checkOut.Id, user.Name, user.Phone);
-            // return Ok(new { name = user.Name });
+            return new CheckOutResult(checkOut.Id, user.Name, user.Phone);          
         }
-        // should not be in the file ,,, the method under...
-
+        
         public void DeleteCheckOut(int id)
         {
             var checkout = _ctx.CheckOuts.Find(id);
@@ -97,8 +79,6 @@ namespace TimeRegistration.Services
                 throw new Exception("CheckOut not found");
             }
             _repo.Delete(id);
-
-            //return AcceptedAtAction(nameof(Get), new { id = checkOut.Id }, checkOut);
         }
 
         public IEnumerable<CheckOut> GetAllCheckOuts()

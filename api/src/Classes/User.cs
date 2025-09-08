@@ -12,8 +12,8 @@ public class User
     [JsonPropertyName("name")]
     public string? Name { get; set; }
 
-    //Det ENESTE telefonfelt, der eksponeres via API.
-    // Den fysiske kolonne kaldes stadig "Tlf" i databasen (ældre). Udfør en omdøbningsmigrering, hvis du vil forene.
+    //The ONLY phone field exposed via API.
+    // The physical column is still called "Phone" in the database (legacy). Perform a rename migration if you want to merge.
     [JsonPropertyName("phone")]
     [Column("Tlf")] // Fysisk kolonne forbliver Tlf
     public string? Phone
