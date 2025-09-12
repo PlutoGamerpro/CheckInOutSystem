@@ -31,7 +31,7 @@ export class AdminDashboardComponent implements OnInit {
   networkDown = false;
   lastUrl = ''; // removed 'private' for access in template
   private readonly base = environment.baseApiUrl.replace(/\/$/, '');
-  includeAdmins = true; // define false to exclude adminds from list
+  includeAdmins = true; // define false to exclude admins from list
   currentPeriod: string | null = 'all'; 
 
   // Estado de calendário
@@ -77,7 +77,7 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   private normalize(raw: any): AdminReg {
-    // Require backend returning userName and phone(fixed in admincontroller 'getall' + create registration with fkuserid)
+    // Require backend returning userName and phone (fixed in admincontroller 'getall' + create registration with fkuserid)
     if (!raw) {
       return { id: 0, userName: null, phone: null, checkIn: null, checkOut: null, isOpen: false };
     }
@@ -252,7 +252,7 @@ export class AdminDashboardComponent implements OnInit {
     if (!confirm(`Remover registro ${id}?`)) return;
     this.registrationsService.deleteRegistration(id).subscribe({
       next: () => {
-        // updates local list without ful reload(faster)
+        // updates local list without full reload (faster)
         this.registrations = this.registrations.filter(r => r.id !== id);
         this.originalRaw = this.originalRaw.filter((r: any) => (r.id ?? r.ID) !== id);
       },

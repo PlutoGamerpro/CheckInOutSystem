@@ -79,7 +79,8 @@ namespace TimeRegistration.Controllers
             }
         }
 
-        // possibly create a separate Create method in the service Helper for midnight UTC avoiding Kind=Unspecified (corrects Npgsql error)
+        // Possibly create a separate Create method in the service helper for midnight UTC.
+        // This avoids Kind=Unspecified and corrects the Npgsql error.
         private static DateTime MidnightUtc(DateTime refUtc)
             => new DateTime(refUtc.Year, refUtc.Month, refUtc.Day, 0, 0, 0, DateTimeKind.Utc);
 
