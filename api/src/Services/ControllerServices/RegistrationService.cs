@@ -3,6 +3,7 @@ using TimeRegistration.Classes;
 using TimeRegistration.Data;
 using System;
 using System.Linq;
+using TimeRegistration.Models;
 
 namespace TimeRegistration.Services
 {
@@ -113,9 +114,9 @@ namespace TimeRegistration.Services
         }
 
 
-        public void UpdateRegistration(int id, Registration registration)
+        public void UpdateRegistration( UpdateRegistrationRecord record/*int id, Registration registration*/)
         {
-            var existing = _repo.Update(id, registration);
+            var existing = _repo.Update(record);
 
             if (existing == null)
                 throw new Exception("NotFound");           

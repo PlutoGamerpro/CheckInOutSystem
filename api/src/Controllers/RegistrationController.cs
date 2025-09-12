@@ -7,7 +7,8 @@ using System.Reflection;
 using TimeRegistration.Services;
 using System.Linq;
 using Microsoft.AspNetCore.Authorization;
-using TimeRegistration.Filters; 
+using TimeRegistration.Filters;
+using TimeRegistration.Models;
 
 
 
@@ -67,12 +68,13 @@ namespace TimeRegistration.Controllers
         }
 
         [HttpPut("{id}")]
-        public ActionResult<Registration> Update(int id, Registration registration)
+        public ActionResult<Registration> Update([FromBody] UpdateRegistrationRecord record/*int id, Registration registration*/)
         {
             try
             {
-                _registrationService.UpdateRegistration(id, registration);
-                return AcceptedAtAction(nameof(Get), new { id = registration.Id }, registration);
+                //   _registrationService.UpdateRegistration(id, registration);
+                _registrationService.UpdateRegistration(record);
+                return AcceptedAtAction(nameof(Get), new{ id = record.Registration.Id}, record);
             }
             catch (Exception ex)
             {

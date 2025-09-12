@@ -1,6 +1,7 @@
 using TimeRegistration.Classes;
 using TimeRegistration.Interfaces;
 using TimeRegistration.Data;
+using TimeRegistration.Models;
 
 namespace TimeRegistration.Repositories
 {
@@ -20,15 +21,27 @@ namespace TimeRegistration.Repositories
             return registration;
         }
 
-        public Registration? Update(int id, Registration registration)
+        public Registration? Update(UpdateRegistrationRecord record) // new apporch
         {
-            var existing = _context.Registrations.Find(id);
+            var registration = record.Registration;
+            var existing = _context.Registrations.Find(record.Registration.Id);
             if (existing == null) return null;
             existing.FkCheckInId = registration.FkCheckInId;
             existing.FkCheckOutId = registration.FkCheckOutId;
             _context.SaveChanges();
             return existing;
-        }
+        } 
+/*
+                public Registration? Update(int id, Registration registration)
+                {
+                    var existing = _context.Registrations.Find(id);
+                    if (existing == null) return null;
+                    existing.FkCheckInId = registration.FkCheckInId;
+                    existing.FkCheckOutId = registration.FkCheckOutId;
+                    _context.SaveChanges();
+                    return existing;
+                }
+                */
 
         public Registration? Delete(int id)
         {

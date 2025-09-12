@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using TimeRegistration.Classes;
+using TimeRegistration.Models;
 
 namespace TimeRegistration.Services
 {
