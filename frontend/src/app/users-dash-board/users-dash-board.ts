@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { FormsModule } from '@angular/forms'
 
@@ -29,30 +29,37 @@ export class UsersDashBoard {
 
   editUser: any = null;
 
-startEdit(user: any): void {
-  this.editUser = { ...user }; // clone to avoid direct mutation
-}
+  startEdit(user: any): void {
+    this.editUser = { ...user }; // clone to avoid direct mutation
+  }
 
-cancelEdit(): void {
-  this.editUser = null;
-}
+  cancelEdit(): void {
+    this.editUser = null;
+  }
 
-saveEdit(): void {
-  if (!this.editUser) return;
-  this.loading = true;
-  this.error = '';
-  this.http.put(`${environment.baseApiUrl}/admin/user/${this.editUser.id}`, this.editUser).subscribe({
-    next: () => {
-      this.editUser = null;
-      this.load();
-    },
-    error: () => {
-      this.error = 'Failed to update user';
-      this.loading = false;
-    }
-  });
-}
+  private get adminHeaders() {
+    const token = localStorage.getItem('adminToken') || '';
+    return { headers: new HttpHeaders({ 'X-Admin-Token': token }) };
+  }
 
+  saveEdit(): void {
+    if (!this.editUser) return;
+    const token = localStorage.getItem('adminToken');
+    if (!token) { this.error = 'Not authorized'; return; }
+    this.loading = true;
+    this.error = '';
+    // backend espera PUT /api/admin/user com o body UserRecordRequest
+    this.http.put(`${environment.baseApiUrl}/admin/user`, this.editUser, this.adminHeaders).subscribe({
+      next: () => {
+        this.editUser = null;
+        this.load();
+      },
+      error: () => {
+        this.error = 'Failed to update user';
+        this.loading = false;
+      }
+    });
+  }
 
   load(): void {
     this.loading = true;
@@ -79,9 +86,11 @@ saveEdit(): void {
   }
 
   DeleteUser(id: number): void {
+    const token = localStorage.getItem('adminToken');
+    if (!token) { this.error = 'Not authorized'; return; }
     this.loading = true;
     this.error = '';
-    this.http.delete(`${environment.baseApiUrl}/admin/user/${id}`).subscribe({
+    this.http.delete(`${environment.baseApiUrl}/admin/user/${id}`, this.adminHeaders).subscribe({
       next: () => {
         this.load();
       },

@@ -45,7 +45,7 @@ namespace TimeRegistration.Controllers
             try
             {
                 _registrationService.GetRegistrationById(id);
-                return Ok();
+                return NoContent();
             }
             catch (Exception)
             {
@@ -67,14 +67,15 @@ namespace TimeRegistration.Controllers
             }
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{id}")] // this code part is not tested and is not possible ingame...
         public ActionResult<Registration> Update([FromBody] UpdateRegistrationRecord record/*int id, Registration registration*/)
         {
             try
             {
                 //   _registrationService.UpdateRegistration(id, registration);
                 _registrationService.UpdateRegistration(record);
-                return AcceptedAtAction(nameof(Get), new{ id = record.Registration.Id}, record);
+                return Ok(record);
+              //  return AcceptedAtAction(nameof(Get), new{ id = record.Registration.Id}, record);
             }
             catch (Exception ex)
             {

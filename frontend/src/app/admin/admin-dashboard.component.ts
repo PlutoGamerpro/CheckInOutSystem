@@ -277,7 +277,7 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   exitCalendarMode() {
-    this.currentPeriod = 'all';
+    this.currentPeriod = 'all';  
     this.load();
   }
 

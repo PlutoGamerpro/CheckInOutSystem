@@ -71,16 +71,16 @@ namespace TimeRegistration.Services
             _adminRepo.DeleteUser(id, user);
         }
 
-        public void UpdateUser(int id, User user)
+        public void UpdateUser(/*int id, User user*/ UserRecordRequest userRecordRequest) // if error check old branch for old version 
         {
-            var existingUser = _ctx.Users.Find(id);
+            var existingUser = _ctx.Users.Find(userRecordRequest.Id);
             if (existingUser == null) throw new KeyNotFoundException("User not found");
 
-            existingUser.Name = user.Name;
-            existingUser.Phone = user.Phone;
-            existingUser.IsAdmin = user.IsAdmin;
+            existingUser.Name = userRecordRequest.Name;
+            existingUser.Phone = userRecordRequest.Phone;
+            existingUser.IsAdmin = userRecordRequest.IsAdmin;
 
-            _adminRepo.UpdateUser(id, existingUser);
+            _adminRepo.UpdateUser(userRecordRequest);
         }
 
        

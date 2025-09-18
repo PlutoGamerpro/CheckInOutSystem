@@ -13,7 +13,8 @@ namespace TimeRegistration.Services
   { 
     AdminLoginResult? Login(AdminLoginRequest req);
     void DeleteUser(int id);
-    void UpdateUser(int id, User user); 
+    //void UpdateUser(int id, User user); 
+    void UpdateUser(UserRecordRequest userRecordRequest); // new apporch
     IEnumerable<object> GetRegistrationsRange(DateTime? startInclusiveUtc, DateTime? endExclusiveUtc);
 
   }

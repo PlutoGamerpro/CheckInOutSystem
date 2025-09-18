@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using TimeRegistration.Classes;
 using TimeRegistration.Data;
 using TimeRegistration.Interfaces;
+using TimeRegistration.Models;
 
 namespace TimeRegistration.Repositories
 {
@@ -28,12 +29,25 @@ namespace TimeRegistration.Repositories
                 return user;
             }
             return null;
-        }      
+        }
+
+        public User? UpdateUser(UserRecordRequest userRecordRequest) // logic implement in other file
+        {
+            // could be erorr in this file! 
+            var user = _ctx.Users.Find(userRecordRequest.Id);
+            _ctx.SaveChanges();
+            return user; // maybe not here?
+           // return _ctx.Users.Update(user)
+        }
+
+
+        /*
         public User? UpdateUser(int id, User user)
         {
             // Just saves changes to the context, no field update logic
             _ctx.SaveChanges();
             return user;
         }
+        */
     }
 }

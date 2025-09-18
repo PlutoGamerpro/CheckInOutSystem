@@ -27,10 +27,11 @@ namespace TimeRegistration.Controllers
         {
             try
             {
-                var result = _adminservice.Login(req); 
-                return CreatedAtAction(nameof(Login), new { result.Token, result.UserName }, req);
+                var result = _adminservice.Login(req);
+                // Retorna o token no body para o frontend salvar e usar no header X-Admin-Token
+                return Ok(new { token = result.Token, userName = result.UserName });
             }
-            catch (KeyNotFoundException) 
+            catch (KeyNotFoundException)
             {
                 return NotFound("User not found");
             }
@@ -52,13 +53,15 @@ namespace TimeRegistration.Controllers
 
         }
 
-        [HttpPut("user/{id}")]
-        [AdminAuthorize]
-        public IActionResult UpdateUser(int id, User user)
+        // [HttpPut("user/{id}")]
+       [HttpPut("user")]
+        [AdminAuthorize] // could return a token instead change call to take record 
+        public IActionResult UpdateUser([FromBody] UserRecordRequest userRecordRequest /* int id, User user*/)
         {
             try
             {
-                _adminservice.UpdateUser(id, user);
+                _adminservice.UpdateUser(userRecordRequest);
+              //  _adminservice.UpdateUser(id, user);
                 return NoContent();
             }
             catch (KeyNotFoundException)
@@ -77,6 +80,16 @@ namespace TimeRegistration.Controllers
             {
                 return Enumerable.Empty<object>();
             }
+            /*
+            try
+            {
+                return _adminservice.GetRegistrationsRange(startInclusiveUtc, endExclusiveUtc);
+            }
+            catch (Exception e)
+            {
+                return Enumerable.Empty<object>();
+            }
+            */
         }
 
         // Possibly create a separate Create method in the service helper for midnight UTC.
