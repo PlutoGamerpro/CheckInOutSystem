@@ -68,6 +68,7 @@ namespace TimeRegistration.Controllers
         }
 
         [HttpPut("{id}")] // this code part is not tested and is not possible ingame...
+        [AdminAuthorize]
         public ActionResult<Registration> Update([FromBody] UpdateRegistrationRecord record/*int id, Registration registration*/)
         {
             try
@@ -75,7 +76,7 @@ namespace TimeRegistration.Controllers
                 //   _registrationService.UpdateRegistration(id, registration);
                 _registrationService.UpdateRegistration(record);
                 return Ok(record);
-              //  return AcceptedAtAction(nameof(Get), new{ id = record.Registration.Id}, record);
+                //  return AcceptedAtAction(nameof(Get), new{ id = record.Registration.Id}, record);
             }
             catch (Exception ex)
             {
@@ -98,7 +99,7 @@ namespace TimeRegistration.Controllers
             }
         }
 
-        [HttpGet("admin")]
+        [HttpGet("admin")] // this should not be in this file 
         [AdminAuthorize]
         public ActionResult<IEnumerable<object>> GetAllAdmin()
         {

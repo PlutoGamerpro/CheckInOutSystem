@@ -11,19 +11,29 @@ using TimeRegistration.Services;
 
 namespace TimeRegistration.Repositories
 {
-    public class OwnerRepo : IOwnerRepo
+    public class ManagerRepo : IManagerRepo
     {
         private readonly AppDbContext _ctx;
 
-        public OwnerRepo(AppDbContext ctx)
+        public ManagerRepo(AppDbContext ctx)
         {
             _ctx = ctx;
         }
-        public List<User> GetAllAdmins()
+
+        public List<User> GetAllManagers()
         {
-            return _ctx.Users.Where(u => u.IsAdmin).ToList();
+            // i havnt't add the manger role in usrs 
+            //  return _ctx.Users.Where(u => u.Role == "Manager").ToList();
+          return _ctx.Users.ToList(); 
         }
-        public User? DeleteAdmin(DeleteAdminRecord record /*int id, User user*/)
+
+        public User? UpdateUser(UserRecordRequest userRecordRequest)
+        {
+            throw new NotImplementedException();
+        }
+
+        /*
+        public User? DeleteAdmin(DeleteAdminRecord record)
         {
             if (record.user != null)
             {
@@ -37,17 +47,19 @@ namespace TimeRegistration.Repositories
             }
             return null;
         }
+        */
+        /*
+                public void CreateAdmin(User user)
+                {
+                    _ctx.Users.Add(user);
+                    _ctx.SaveChanges();
+                }
 
-        public void CreateAdmin(User user)
-        {
-            _ctx.Users.Add(user);
-            _ctx.SaveChanges();
-        }
+                public void RemoteAdmin(int id)
+                {
 
-        public void RemoteAdmin(int id)
-        {
-
-        }
+                }
+                */
     }
 }
 

@@ -29,12 +29,12 @@ public class User
     [JsonPropertyName("isAdmin")]
     public bool IsAdmin { get; set; } = false;
 
-    [JsonPropertyName("isOwner")]
-    public bool IsOwner { get; set; } = false;
+    [JsonPropertyName("isManager")] 
+    public bool IsManager { get; set; } = false;
 
-    public string? Password { get; set; } // only admins need an password 
+    public string? Password { get; set; } // only admins and managers need an password 
 
-    private static string? NormalizePhone(string? value)
+    private static string? NormalizePhone(string? value) // this method also appers in other class dont rememeber the name
     {
         if (string.IsNullOrWhiteSpace(value)) return null;
         return new string(value.Where(char.IsDigit).ToArray());

@@ -7,15 +7,18 @@ using TimeRegistration.Models;
 
 namespace TimeRegistration.Services
 {
-   public record AdminLoginResult(string Token, string UserName);
+  public record AdminLoginResult(string Token, string UserName);
 
   public interface IAdminService
-  { 
+  {
     AdminLoginResult? Login(AdminLoginRequest req);
-    void DeleteUser(int id);
-    //void UpdateUser(int id, User user); 
     void UpdateUser(UserRecordRequest userRecordRequest); // new apporch
     IEnumerable<object> GetRegistrationsRange(DateTime? startInclusiveUtc, DateTime? endExclusiveUtc);
 
+    void DeleteUser(int id);
+
   }
 }
+
+
+//    //void UpdateUser(int id, User user); 

@@ -38,7 +38,7 @@ namespace TimeRegistration.Controllers
             }
         }
 
-        [HttpPost]
+        [HttpPost]      // change this to a record 
         public ActionResult<CheckIn> Create(CheckIn checkIn)
         {
             try
@@ -51,6 +51,8 @@ namespace TimeRegistration.Controllers
                 return StatusCode(500, e.Message);
             }
         }
+
+
 
 
         [HttpPost("byphone/{tlf}")]

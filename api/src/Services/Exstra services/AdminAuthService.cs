@@ -10,7 +10,7 @@ public interface IAdminAuthService // replace this with json token for more secu
     bool Validate(string token);
 }
 
-public class AdminAuthService : IAdminAuthService
+public class AdminAuthService : IAdminAuthService // name should not be admin
 {
     private readonly IUserRepo _repo;
     private static readonly ConcurrentDictionary<string, DateTime> _tokens = new();
@@ -30,6 +30,17 @@ public class AdminAuthService : IAdminAuthService
         _tokens[token] = DateTime.UtcNow.Add(Lifetime);
         return token;
     }
+    public string? IssueTokenForManager(string phone, bool isManager, string secret, string configSecret, string password)
+    {
+        if (!isManager) return null;
+        
+        if (string.IsNullOrWhiteSpace(secret) || secret != configSecret) return null;
+        var token = Guid.NewGuid().ToString("N");
+        _tokens[token] = DateTime.UtcNow.Add(Lifetime);
+        return token;
+    }
+
+    
 
     public bool Validate(string token)
     {

@@ -46,8 +46,7 @@ namespace TimeRegistration.Services
                 if (hasOpen)
                     throw new InvalidOperationException("Du er allerede checket ind! Check ud før du kan checke ind igen.");
             }
-
-          
+         
             var checkIn = new CheckIn
             {
                 TimeStart = DateTime.UtcNow,
@@ -68,7 +67,6 @@ namespace TimeRegistration.Services
             return new CheckInResult(checkIn.Id, name, phone);
         }
 
-
         public void DeleteCheckIn(int id)
         {
             var checkin = _ctx.CheckIns.Find(id);
@@ -76,7 +74,6 @@ namespace TimeRegistration.Services
             {
                 throw new Exception("CheckIn not found");
             }
-
             _repo.Delete(id);
         }
     
@@ -98,8 +95,7 @@ namespace TimeRegistration.Services
             {
                 throw new KeyNotFoundException($"CheckIn with id {id} not found.");
             }
-            return checkIn;
-           
+            return checkIn;           
         }
 
         public CheckIn? UpdateCheckIn(int id, CheckIn checkIn)
@@ -130,7 +126,6 @@ namespace TimeRegistration.Services
                 isCheckedIn = _registrationRepo.GetAll()
                     .Any(r => r.FkCheckInId == lastCheckIn.Id && r.FkCheckOutId == null);
             }
-
             return isCheckedIn;
         }
 

@@ -20,9 +20,16 @@ namespace TimeRegistration.Repositories
             _ctx = ctx;
         }
 
-        public User? DeleteUser(int id, User user)
+        public void CreateManager(User user)
         {
-            if (user != null || user.Id == id)
+            _ctx.Users.Add(user);
+            _ctx.SaveChanges();
+        }
+
+        public User? DeleteManager(DeleteAdminRecord record)
+        {
+            var user = _ctx.Users.Find(record.user.Id);
+            if (user != null)
             {
                 _ctx.Users.Remove(user);
                 _ctx.SaveChanges();
@@ -31,15 +38,36 @@ namespace TimeRegistration.Repositories
             return null;
         }
 
-        public User? UpdateUser(UserRecordRequest userRecordRequest) // logic implement in other file
+        public List<User> GetAllAdmins()
         {
-            // could be erorr in this file! 
-            var user = _ctx.Users.Find(userRecordRequest.Id);
-            _ctx.SaveChanges();
-            return user; // maybe not here?
-           // return _ctx.Users.Update(user)
+            throw new NotImplementedException();
         }
 
+        public User? UpdateUser(UserRecordRequest userRecordRequest)
+        {
+            throw new NotImplementedException();
+        }
+        /*
+public User? DeleteUser(int id, User user)
+{
+  if (user != null || user.Id == id)
+  {
+      _ctx.Users.Remove(user);
+      _ctx.SaveChanges();
+      return user;
+  }
+  return null;
+}
+
+public User? UpdateUser(UserRecordRequest userRecordRequest) // logic implement in other file
+{
+  // could be erorr in this file! 
+  var user = _ctx.Users.Find(userRecordRequest.Id);
+  _ctx.SaveChanges();
+  return user; // maybe not here?
+ // return _ctx.Users.Update(user)
+}
+*/
 
         /*
         public User? UpdateUser(int id, User user)

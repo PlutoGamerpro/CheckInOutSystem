@@ -8,14 +8,10 @@ using TimeRegistration.Models;
 
 namespace TimeRegistration.Services
 {
-    public interface IOwnerService
+    public interface IExternalService
     {
-        List<User> GetAllAdmins();
-        User? DeleteAdmin(DeleteAdminRecord record);
-        // recprd
-        
-        void CreateAdmin(User user); 
-        void RemoteAdmin(int id);       
+        void DeleteUser(int id);  
+              
                       
     }
 }   

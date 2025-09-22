@@ -37,8 +37,10 @@ namespace TimeRegistration.Controllers
             }
 
         }
+        /*
         [HttpDelete("user/{id}")]
         [AdminAuthorize]
+      
         public IActionResult DeleteUser(int id)
         {
             try
@@ -52,10 +54,11 @@ namespace TimeRegistration.Controllers
             }
 
         }
+     */
 
         // [HttpPut("user/{id}")]
        [HttpPut("user")]
-        [AdminAuthorize] // could return a token instead change call to take record 
+       [AdminAuthorize] // could return a token instead change call to take record 
         public IActionResult UpdateUser([FromBody] UserRecordRequest userRecordRequest /* int id, User user*/)
         {
             try

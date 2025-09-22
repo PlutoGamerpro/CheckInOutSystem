@@ -17,6 +17,7 @@ namespace TimeRegistration.Services
     {
         private readonly IRegistrationRepo _repo;
         private readonly IAdminRepo _adminRepo;
+        private readonly IExternalRepo _externalRepo;
         private readonly IAdminAuthService _auth;
         private readonly IConfiguration _cfg;
         private readonly AppDbContext _ctx;
@@ -25,12 +26,14 @@ namespace TimeRegistration.Services
         public AdminService(
             IRegistrationRepo repo,
             IAdminRepo adminRepo,
+            IExternalRepo externalRepo,
             IAdminAuthService auth,
             IConfiguration cfg,
             AppDbContext ctx)
         {
             _repo = repo;
             _adminRepo = adminRepo;
+            _externalRepo = externalRepo;
             _auth = auth;
             _cfg = cfg;
             _ctx = ctx;
@@ -68,7 +71,9 @@ namespace TimeRegistration.Services
         {
             var user = _ctx.Users.Find(id);
             if (user == null) throw new KeyNotFoundException("User not found");
-            _adminRepo.DeleteUser(id, user);
+            _externalRepo.DeleteUser(id, user);
+
+           // _adminRepo.DeleteUser(id, user);
         }
 
         public void UpdateUser(/*int id, User user*/ UserRecordRequest userRecordRequest) // if error check old branch for old version 

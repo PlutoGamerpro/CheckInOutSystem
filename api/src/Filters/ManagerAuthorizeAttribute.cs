@@ -8,13 +8,18 @@ using TimeRegistration.Services;
 
 namespace TimeRegistration.Filters
 {
-	// Reusable owner authorization attribute
+	// Reusable manager authorization attribute
 	[AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
-	public class OwnerAuthorizeAttribute : Attribute, IAsyncActionFilter
+	public class ManagerAuthorizeAttribute : Attribute, IAsyncActionFilter
 	{
 		public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
 		{
-			// logic in here have to work with the owner !
+			// token is not maded 
+			var token = context.HttpContext.Request.Headers["X-Manager-Token"].FirstOrDefault() ?? "";
+
+
+
+			// logic in here have to work with the manager !
 
 			/*
 			var token = context.HttpContext.Request.Headers["X-Admin-Token"].FirstOrDefault() ?? "";

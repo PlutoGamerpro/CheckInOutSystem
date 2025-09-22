@@ -10,10 +10,16 @@ namespace TimeRegistration.Interfaces
 {
     public interface IAdminRepo
     {
-        User? DeleteUser(int id, User user);
-        //User? UpdateUser(int id, User user);
 
-        // User? UpdateUser(User user); // new apporch
+        List<User> GetAllAdmins(); // maybe add managers too          
+        User? DeleteManager(DeleteAdminRecord record);
+        void CreateManager(User user);        
         User? UpdateUser(UserRecordRequest userRecordRequest);
+        
+
+       // void RemoteManager(int id); // not secure or delete better 
+        // should admin be able to create admins 
+
+
     }
 }
