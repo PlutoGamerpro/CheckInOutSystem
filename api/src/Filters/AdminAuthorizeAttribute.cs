@@ -14,14 +14,18 @@ namespace TimeRegistration.Filters
 	{
 		public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
 		{
-			var token = context.HttpContext.Request.Headers["X-Admin-Token"].FirstOrDefault() ?? "";
+			var headers = context.HttpContext.Request.Headers;
+			// Accept both admin and manager tokens (mesmo validador)
+			var token = headers["X-Admin-Token"].FirstOrDefault()
+						?? headers["X-Manager-Token"].FirstOrDefault()
+						?? "";
 			var auth = context.HttpContext.RequestServices.GetService<IAdminAuthService>();
 			if (auth == null || !auth.Validate(token))
 			{
 				context.Result = new UnauthorizedResult();
 				return;
 			}
-
+			// FUTURO: extrair role do token e checar permissões específicas.
 			await next();
 		}
 	}

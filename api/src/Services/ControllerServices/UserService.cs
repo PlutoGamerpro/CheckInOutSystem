@@ -8,6 +8,7 @@ using TimeRegistration.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using TimeRegistration.Data;
+using TimeRegistration.Contracts.Requests;
 using System.Text.RegularExpressions;
 
 
@@ -17,9 +18,7 @@ namespace TimeRegistration.Services
     public class UserService : IUserService
     {
         private readonly IUserRepo _repo;
-
-        private readonly IRegistrationRepo _registrationRepo;
-
+        private readonly IRegistrationRepo _registrationRepo; 
         private readonly AppDbContext _ctx;
 
         public UserService(IUserRepo repo, IRegistrationRepo registrationRepo, AppDbContext ctx)
@@ -31,7 +30,7 @@ namespace TimeRegistration.Services
 
         public void CreateUser(CreateUserRequest dto)
         {
-            if (dto == null) throw new Exception("Body required");
+            if (dto == null) throw new Exception("Body required");          
 
             var name = NormalizeName(dto.Name);
             if (string.IsNullOrWhiteSpace(name))
@@ -42,7 +41,6 @@ namespace TimeRegistration.Services
                 throw new Exception("Phone required");
             if (!Regex.IsMatch(phone, @"^\d{8}$"))
                 throw new Exception("Phone must be 8 digits");
-
 
             if (_repo.GetAll().Any(u => u.Phone != null && u.Phone == phone))
                 throw new Exception("Phone number already exists!");
@@ -57,9 +55,15 @@ namespace TimeRegistration.Services
             {
                 Name = name,
                 Phone = phone,
-                IsAdmin = dto.IsAdmin ?? false
+                IsAdmin = dto.IsAdmin ?? false,
+                IsManager = dto.IsManager 
             };
 
+            if (user.IsManager)
+            {
+                if (string.IsNullOrWhiteSpace(dto.Password))
+                    throw new Exception("Password required for manager users");
+            }
             if (user.IsAdmin)
             {
                 if (string.IsNullOrWhiteSpace(dto.Password))
@@ -82,6 +86,7 @@ namespace TimeRegistration.Services
             return users;
         }
 
+        // these two methods are only used internally in the service, if used in other places make them public or add to external service. 
         private static string? NormalizePhone(string? v)
         {
             if (string.IsNullOrWhiteSpace(v)) return null;
@@ -103,7 +108,7 @@ namespace TimeRegistration.Services
                 throw new Exception("Telefonnummeret eksisterer ikke i systemet");             
         }
 
-        public void Login( string tlf, LoginRequest req)
+        public void Login( string tlf, UserLoginRequest req)
         {
             
             // normalizePhone number for searching

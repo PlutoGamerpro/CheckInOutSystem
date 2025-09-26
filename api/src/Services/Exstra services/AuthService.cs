@@ -17,13 +17,9 @@ namespace TimeRegistration.Services
         {
             _repo = repo;
         }
-
-
-
         public static string NormalizePhone(string phone)
         {
-           
-            return phone.Trim().Replace(" ", "");
+           return phone.Trim().Replace(" ", "");
         }
     
         

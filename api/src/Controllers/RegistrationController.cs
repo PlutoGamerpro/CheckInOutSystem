@@ -7,7 +7,9 @@ using System.Reflection;
 using TimeRegistration.Services;
 using System.Linq;
 using Microsoft.AspNetCore.Authorization;
-using TimeRegistration.Filters; 
+using TimeRegistration.Filters;
+using TimeRegistration.Models;
+using TimeRegistration.Contracts.Requests;
 
 
 
@@ -44,7 +46,7 @@ namespace TimeRegistration.Controllers
             try
             {
                 _registrationService.GetRegistrationById(id);
-                return Ok();
+                return NoContent();
             }
             catch (Exception)
             {
@@ -66,13 +68,17 @@ namespace TimeRegistration.Controllers
             }
         }
 
-        [HttpPut("{id}")]
-        public ActionResult<Registration> Update(int id, Registration registration)
+        [HttpPut("{id}")] // this code part is not tested and is not possible ingame...
+        [AdminAuthorize]
+        [ManagerAuthorize]
+        public ActionResult<Registration> Update([FromBody] UpdateRegistrationRequest record/*int id, Registration registration*/)
         {
             try
             {
-                _registrationService.UpdateRegistration(id, registration);
-                return AcceptedAtAction(nameof(Get), new { id = registration.Id }, registration);
+                //   _registrationService.UpdateRegistration(id, registration);
+                _registrationService.UpdateRegistration(record);
+                return Ok(record);
+                //  return AcceptedAtAction(nameof(Get), new{ id = record.Registration.Id}, record);
             }
             catch (Exception ex)
             {
@@ -82,6 +88,7 @@ namespace TimeRegistration.Controllers
 
         [HttpDelete("{id}")]
         [AdminAuthorize]
+        [ManagerAuthorize]
         public ActionResult<Registration> Delete(int id)
         {
             try
@@ -95,7 +102,7 @@ namespace TimeRegistration.Controllers
             }
         }
 
-        [HttpGet("admin")]
+        [HttpGet("admin")] // this should not be in this file 
         [AdminAuthorize]
         public ActionResult<IEnumerable<object>> GetAllAdmin()
         {
@@ -127,6 +134,7 @@ namespace TimeRegistration.Controllers
 
         [HttpPatch("{id:int}/checkout")]
         [AdminAuthorize]
+        [ManagerAuthorize]
         public ActionResult<object> ForceCheckout(int id, [FromBody] ForceCheckoutRequest body)
         {
             try

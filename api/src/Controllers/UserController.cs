@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using BCrypt.Net;
 using TimeRegistration.Data;
 using TimeRegistration.Services;
+using TimeRegistration.Contracts.Requests;
 
 namespace TimeRegistration.Controllers
 {
@@ -41,7 +42,7 @@ namespace TimeRegistration.Controllers
             try
             {
                 _userService.GetByPhone(phone);
-                return Ok();
+                return NoContent(); // olds return ok 
             }
             catch (Exception ex)
             {
@@ -54,8 +55,14 @@ namespace TimeRegistration.Controllers
         {
             try
             {
-                _userService.CreateUser(dto);
-                return CreatedAtAction(nameof(GetByPhone), new { phone = dto.Phone }, dto);
+               _userService.CreateUser(dto);
+                var safeoption = new
+                {
+                    Name = dto.Name,
+                    Phone = dto.Phone,
+                   
+                };
+                return CreatedAtAction(nameof(GetByPhone), new { phone = dto.Phone }, safeoption);
             }
             catch (Exception ex)
             {
@@ -65,12 +72,12 @@ namespace TimeRegistration.Controllers
 
 
         [HttpPost("login-by-phone/{tlf}")]
-        public IActionResult LoginByPhone(string tlf, [FromBody] LoginRequest? req)
+        public IActionResult LoginByPhone(string tlf, [FromBody] UserLoginRequest? req)
         {
             try
             {
                 _userService.Login(tlf, req!);
-                return Ok();
+                return NoContent(); // old returns ok 
             }
             catch (Exception ex)
             {

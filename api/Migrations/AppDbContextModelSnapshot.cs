@@ -141,6 +141,10 @@ namespace TimeRegistration.Migrations
                         .HasColumnType("boolean")
                         .HasAnnotation("Relational:JsonPropertyName", "isCheckedIn");
 
+                    b.Property<bool>("IsManager")
+                        .HasColumnType("boolean")
+                        .HasAnnotation("Relational:JsonPropertyName", "isManager");
+
                     b.Property<string>("Name")
                         .HasColumnType("text")
                         .HasAnnotation("Relational:JsonPropertyName", "name");

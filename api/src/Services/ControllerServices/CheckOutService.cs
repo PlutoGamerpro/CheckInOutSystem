@@ -8,7 +8,9 @@ using TimeRegistration.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using TimeRegistration.Data;
-
+using TimeRegistration.Models;
+using TimeRegistration.Contracts.Requests;
+using TimeRegistration.Contracts.Results;
 namespace TimeRegistration.Services
 {
     public class CheckOutService : ICheckOutService
@@ -61,12 +63,13 @@ namespace TimeRegistration.Services
             {
                 TimeEnd = DateTime.UtcNow,
                 FkUserId = user.Id
-            };
+            }; 
             _repo.Create(checkOut);            
 
             // updates or opens registration to date with new checkout             
             openReg.FkCheckOutId = checkOut.Id;
-            _registrationRepo.Update(openReg.Id, openReg);
+            // _registrationRepo.Update( /*openReg.Id, openReg*/);
+            _registrationRepo.Update(new UpdateRegistrationRequest(openReg));
 
             return new CheckOutResult(checkOut.Id, user.Name, user.Phone);          
         }
@@ -91,7 +94,7 @@ namespace TimeRegistration.Services
             CheckOut? checkOut = _repo.Get(id);
             return checkOut;
         }
-
+        // error this not used any where  
         public CheckOut UpdateCheckOut(int id, CheckOut checkOut)
         {
             throw new Exception("not implement");

@@ -72,9 +72,11 @@ normalize(item: any) &#123;
     isOpen: typeof item.isOpen === 'boolean'
             ? item.isOpen
             : !(item.checkOut || item.check_out)
-  &#125;;
-
-
+  &#125;
+&#125;
+      </pre>
+    </details>
+  </div>
 
   <table *ngIf="!loading && registrations.length" class="data-table">
     <thead>

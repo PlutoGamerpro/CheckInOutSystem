@@ -8,8 +8,10 @@ using TimeRegistration.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using TimeRegistration.Data;
-using TimeRegistration.Models;
+
 using Microsoft.AspNetCore.Http;
+using TimeRegistration.Contracts.Results;
+using TimeRegistration.Contracts.Requests;
 
 namespace TimeRegistration.Services
 {
@@ -17,6 +19,7 @@ namespace TimeRegistration.Services
     {
         private readonly IRegistrationRepo _repo;
         private readonly IAdminRepo _adminRepo;
+        private readonly IExternalRepo _externalRepo;
         private readonly IAdminAuthService _auth;
         private readonly IConfiguration _cfg;
         private readonly AppDbContext _ctx;
@@ -25,19 +28,22 @@ namespace TimeRegistration.Services
         public AdminService(
             IRegistrationRepo repo,
             IAdminRepo adminRepo,
+            IExternalRepo externalRepo,
             IAdminAuthService auth,
             IConfiguration cfg,
             AppDbContext ctx)
         {
             _repo = repo;
             _adminRepo = adminRepo;
+            _externalRepo = externalRepo;
             _auth = auth;
             _cfg = cfg;
             _ctx = ctx;
        
         }
 
-        public AdminLoginResult? Login(AdminLoginRequest req)
+        
+        public LoginResult? Login(LoginRequest req)
         {
             if (req is null) return null;
             var phone = req.Phone;
@@ -50,7 +56,7 @@ namespace TimeRegistration.Services
             {
                 throw new Exception("Phone, secret and password are required");
             }
-           
+
             var user = _ctx.Users.FirstOrDefault(u => u.Phone == phone);
             if (user == null) throw new Exception("Invalid password");
 
@@ -61,26 +67,30 @@ namespace TimeRegistration.Services
 
             var token = _auth.IssueTokenFor(phone, user.IsAdmin, secret, configSecret, password);
             if (token == null) throw new Exception("Failed to issue token");
-            return new AdminLoginResult(token, user.Name);
+            return new LoginResult(token, user.Name);
         }
 
         public void DeleteUser(int id)
         {
             var user = _ctx.Users.Find(id);
             if (user == null) throw new KeyNotFoundException("User not found");
-            _adminRepo.DeleteUser(id, user);
+            _externalRepo.DeleteUser(id, user);
+
+           // _adminRepo.DeleteUser(id, user);
         }
 
-        public void UpdateUser(int id, User user)
+        public void UpdateUser(/*int id, User user*/ UserRecordRequest userRecordRequest) // if error check old branch for old version 
         {
-            var existingUser = _ctx.Users.Find(id);
+            var existingUser = _ctx.Users.Find(userRecordRequest.Id);
             if (existingUser == null) throw new KeyNotFoundException("User not found");
 
-            existingUser.Name = user.Name;
-            existingUser.Phone = user.Phone;
-            existingUser.IsAdmin = user.IsAdmin;
+            existingUser.Name = userRecordRequest.Name;
+            existingUser.Phone = userRecordRequest.Phone;
+            existingUser.IsAdmin = userRecordRequest.IsAdmin;
 
-            _adminRepo.UpdateUser(id, existingUser);
+            _adminRepo.UpdateUser(userRecordRequest);
+            // this functions is not implemenet in the repo file which mean only frontend update but in backend update does get 
+            // changed
         }
 
        
@@ -111,7 +121,8 @@ namespace TimeRegistration.Services
 
             
             return query.OrderByDescending(x => x.checkIn).ToList();
-        }      
-      
+        }
+
+        
     }
 }

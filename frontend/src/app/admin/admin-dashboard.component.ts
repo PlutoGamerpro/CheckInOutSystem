@@ -45,7 +45,7 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const token = localStorage.getItem('adminToken');
+    const token = localStorage.getItem('adminToken') || localStorage.getItem('managerToken');
     if (!token) { this.router.navigate(['/admin-login']); return; }
     this.load();
   }
@@ -77,6 +77,16 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   private normalize(raw: any): AdminReg {
+    // BACKEND: ideal retornar DTO já plano:
+    // {
+    //   id: number,
+    //   userName: string,
+    //   phone: string,
+    //   checkIn: Date/ISO,
+    //   checkOut: Date/ISO | null,
+    //   isOpen: bool
+    // }
+    // Ajuste seu serviço para projetar explicitamente (Select) evitando depender de múltiplas chaves.
     // Require backend returning userName and phone (fixed in admincontroller 'getall' + create registration with fkuserid)
     if (!raw) {
       return { id: 0, userName: null, phone: null, checkIn: null, checkOut: null, isOpen: false };
@@ -123,7 +133,7 @@ export class AdminDashboardComponent implements OnInit {
 
     const isAdminRaw = this.pickFirst([
       raw.isAdmin, raw.admin, raw.is_admin,
-      raw.role, raw.user?.role, raw.user?.isAdmin
+      raw.user?.isAdmin // removido raw.role / user?.role pois não existem no modelo
     ]);
     const isAdminFlag =
       typeof isAdminRaw === 'boolean'
@@ -277,7 +287,7 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   exitCalendarMode() {
-    this.currentPeriod = 'all';
+    this.currentPeriod = 'all';  
     this.load();
   }
 
