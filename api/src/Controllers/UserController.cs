@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using BCrypt.Net;
 using TimeRegistration.Data;
 using TimeRegistration.Services;
+using TimeRegistration.Contracts.Requests;
 
 namespace TimeRegistration.Controllers
 {
@@ -71,7 +72,7 @@ namespace TimeRegistration.Controllers
 
 
         [HttpPost("login-by-phone/{tlf}")]
-        public IActionResult LoginByPhone(string tlf, [FromBody] LoginRequest? req)
+        public IActionResult LoginByPhone(string tlf, [FromBody] UserLoginRequest? req)
         {
             try
             {

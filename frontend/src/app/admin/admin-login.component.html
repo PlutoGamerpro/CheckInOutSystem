@@ -64,6 +64,14 @@
         </div>
       </div>
 
+      <div class="field">
+        <label for="loginAs" class="floating" style="opacity:.8">Perfil</label>
+        <select id="loginAs" name="loginAs" [(ngModel)]="loginAs" class="text-input">
+          <option value="admin">Admin</option>
+          <option value="manager">Manager</option>
+        </select>
+      </div>
+
       <button id="adminLoginBtn" type="submit" [disabled]="loading || adminLoginForm.invalid" [attr.aria-busy]="loading ? 'true' : null">
         <span *ngIf="!loading">Log ind</span>
         <span *ngIf="loading" class="loader" aria-hidden="true"></span>

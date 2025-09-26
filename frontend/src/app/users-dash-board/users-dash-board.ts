@@ -38,13 +38,15 @@ export class UsersDashBoard {
   }
 
   private get adminHeaders() {
-    const token = localStorage.getItem('adminToken') || '';
+    const token = localStorage.getItem('adminToken')
+      || localStorage.getItem('managerToken')
+      || '';
     return { headers: new HttpHeaders({ 'X-Admin-Token': token }) };
   }
 
   saveEdit(): void {
     if (!this.editUser) return;
-    const token = localStorage.getItem('adminToken');
+    const token = localStorage.getItem('adminToken') || localStorage.getItem('managerToken');
     if (!token) { this.error = 'Not authorized'; return; }
     this.loading = true;
     this.error = '';
@@ -86,7 +88,7 @@ export class UsersDashBoard {
   }
 
   DeleteUser(id: number): void {
-    const token = localStorage.getItem('adminToken');
+    const token = localStorage.getItem('adminToken') || localStorage.getItem('managerToken');
     if (!token) { this.error = 'Not authorized'; return; }
     this.loading = true;
     this.error = '';

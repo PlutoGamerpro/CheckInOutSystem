@@ -8,8 +8,10 @@ using TimeRegistration.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using TimeRegistration.Data;
-using TimeRegistration.Models;
+
 using Microsoft.AspNetCore.Http;
+using TimeRegistration.Contracts.Results;
+using TimeRegistration.Contracts.Requests;
 
 namespace TimeRegistration.Services
 {
@@ -40,7 +42,8 @@ namespace TimeRegistration.Services
        
         }
 
-        public AdminLoginResult? Login(AdminLoginRequest req)
+        
+        public LoginResult? Login(LoginRequest req)
         {
             if (req is null) return null;
             var phone = req.Phone;
@@ -53,7 +56,7 @@ namespace TimeRegistration.Services
             {
                 throw new Exception("Phone, secret and password are required");
             }
-           
+
             var user = _ctx.Users.FirstOrDefault(u => u.Phone == phone);
             if (user == null) throw new Exception("Invalid password");
 
@@ -64,7 +67,7 @@ namespace TimeRegistration.Services
 
             var token = _auth.IssueTokenFor(phone, user.IsAdmin, secret, configSecret, password);
             if (token == null) throw new Exception("Failed to issue token");
-            return new AdminLoginResult(token, user.Name);
+            return new LoginResult(token, user.Name);
         }
 
         public void DeleteUser(int id)
@@ -86,6 +89,8 @@ namespace TimeRegistration.Services
             existingUser.IsAdmin = userRecordRequest.IsAdmin;
 
             _adminRepo.UpdateUser(userRecordRequest);
+            // this functions is not implemenet in the repo file which mean only frontend update but in backend update does get 
+            // changed
         }
 
        
@@ -116,7 +121,8 @@ namespace TimeRegistration.Services
 
             
             return query.OrderByDescending(x => x.checkIn).ToList();
-        }      
-      
+        }
+
+        
     }
 }

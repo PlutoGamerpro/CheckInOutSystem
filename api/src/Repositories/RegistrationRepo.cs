@@ -2,6 +2,7 @@ using TimeRegistration.Classes;
 using TimeRegistration.Interfaces;
 using TimeRegistration.Data;
 using TimeRegistration.Models;
+using TimeRegistration.Contracts.Requests;
 
 namespace TimeRegistration.Repositories
 {
@@ -21,7 +22,7 @@ namespace TimeRegistration.Repositories
             return registration;
         }
 
-        public Registration? Update(UpdateRegistrationRecord record) // new apporch
+        public Registration? Update(UpdateRegistrationRequest record) // new apporch
         {
             var registration = record.Registration;
             var existing = _context.Registrations.Find(record.Registration.Id);

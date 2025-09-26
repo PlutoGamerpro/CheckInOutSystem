@@ -8,6 +8,7 @@ using TimeRegistration.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using TimeRegistration.Data;
+using TimeRegistration.Contracts.Requests;
 using System.Text.RegularExpressions;
 
 
@@ -54,9 +55,15 @@ namespace TimeRegistration.Services
             {
                 Name = name,
                 Phone = phone,
-                IsAdmin = dto.IsAdmin ?? false
+                IsAdmin = dto.IsAdmin ?? false,
+                IsManager = dto.IsManager 
             };
 
+            if (user.IsManager)
+            {
+                if (string.IsNullOrWhiteSpace(dto.Password))
+                    throw new Exception("Password required for manager users");
+            }
             if (user.IsAdmin)
             {
                 if (string.IsNullOrWhiteSpace(dto.Password))
@@ -101,7 +108,7 @@ namespace TimeRegistration.Services
                 throw new Exception("Telefonnummeret eksisterer ikke i systemet");             
         }
 
-        public void Login( string tlf, LoginRequest req)
+        public void Login( string tlf, UserLoginRequest req)
         {
             
             // normalizePhone number for searching

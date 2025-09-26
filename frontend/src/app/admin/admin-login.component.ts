@@ -21,6 +21,7 @@ export class AdminLoginComponent {
   secret = '';
   loading = false;
   errorMessage = '';
+  loginAs: 'admin' | 'manager' = 'admin';
   private readonly base = environment.baseApiUrl.replace(/\/$/, '');
 
   constructor(private http: HttpClient, private router: Router) {}
@@ -64,13 +65,21 @@ export class AdminLoginComponent {
     }
 
     this.loading = true;
-    this.http.post<{token:string,user:string}>(`${this.base}/admin/login`, {
+    // Backend ikke har brug for at vide om det er admin eller manager - vi bruger det kun lokalt.
+    this.http.post<{ token:string; user?:string; userName?:string }>(`${this.base}/admin/login`, {
       phone: phoneDigits,
       password: this.password,
       secret: this.secret
     }).subscribe({
       next: res => {
-        localStorage.setItem('adminToken', res.token);
+        if (this.loginAs === 'admin') {
+          localStorage.setItem('adminToken', res.token);
+          localStorage.removeItem('managerToken');
+        } else {
+          // Fallback: salva como managerToken e também como adminToken para telas que só verificam adminToken
+            localStorage.setItem('managerToken', res.token);
+            localStorage.setItem('adminToken', res.token);
+        }
         this.loading = false;
         this.adminLoginForm?.resetForm();
         this.router.navigate(['/admin']);
@@ -86,4 +95,3 @@ export class AdminLoginComponent {
     this.router.navigate(['/']);
   }
 }
-    

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using TimeRegistration.Classes;
+using TimeRegistration.Contracts.Requests;
 using TimeRegistration.Data;
 using TimeRegistration.Interfaces;
 using TimeRegistration.Models;
@@ -26,7 +27,7 @@ namespace TimeRegistration.Repositories
             _ctx.SaveChanges();
         }
 
-        public User? DeleteManager(DeleteAdminRecord record)
+        public User? DeleteManager(DeleteAdminRequest record)
         {
             var user = _ctx.Users.Find(record.user.Id);
             if (user != null)
@@ -40,12 +41,39 @@ namespace TimeRegistration.Repositories
 
         public List<User> GetAllAdmins()
         {
-            throw new NotImplementedException();
+            return _ctx.Users
+                .Where(u => u.IsAdmin)
+                .AsNoTracking()
+                .ToList();
         }
 
         public User? UpdateUser(UserRecordRequest userRecordRequest)
         {
-            throw new NotImplementedException();
+            if (userRecordRequest == null) return null;
+
+            // Localiza usuário
+            var user = _ctx.Users.FirstOrDefault(u => u.Id == userRecordRequest.Id);
+            if (user == null) return null;
+
+            // Atualizações parciais (somente se valor fornecido)
+            if (!string.IsNullOrWhiteSpace(userRecordRequest.Name))
+                user.Name = userRecordRequest.Name.Trim();
+
+            if (!string.IsNullOrWhiteSpace(userRecordRequest.Phone))
+                user.Phone = userRecordRequest.Phone.Trim();
+
+            // Campos booleanos opcionais (assumindo nullable bool no DTO)
+            // If IsAdmin is not nullable, just assign directly
+
+            // used to be manager 
+            user.IsAdmin = userRecordRequest.IsManager;
+
+        
+            // Caso exista um campo de senha no DTO (ex: PlainPassword), trate aqui (hash recomendado)
+            // if (!string.IsNullOrWhiteSpace(userRecordRequest.PlainPassword)) { ... }
+
+            _ctx.SaveChanges();
+            return user;
         }
         /*
 public User? DeleteUser(int id, User user)

@@ -1,13 +1,10 @@
 using System;
 using System.Collections.Generic;
 using TimeRegistration.Classes;
-using TimeRegistration.Models;
-
+using TimeRegistration.Contracts.Results;
 namespace TimeRegistration.Services
 {
-    // DTO returned by the service to prevent the controller from searching again
-    public record CheckInResult(int CheckInId, string? Name, string Phone);
-
+  
     public interface ICheckInService
     {
         IEnumerable<CheckIn> GetAllCheckIns();

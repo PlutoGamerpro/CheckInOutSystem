@@ -4,14 +4,16 @@ using System.Linq;
 using System.Threading.Tasks;
 using TimeRegistration.Classes;
 using TimeRegistration.Models;
+using TimeRegistration.Contracts.Requests;
+using TimeRegistration.Contracts.Results;
 
 namespace TimeRegistration.Services
 {
-  public record AdminLoginResult(string Token, string UserName);
+
 
   public interface IAdminService
   {
-    AdminLoginResult? Login(AdminLoginRequest req);
+    LoginResult? Login(LoginRequest req);
     void UpdateUser(UserRecordRequest userRecordRequest); // new apporch
     IEnumerable<object> GetRegistrationsRange(DateTime? startInclusiveUtc, DateTime? endExclusiveUtc);
 

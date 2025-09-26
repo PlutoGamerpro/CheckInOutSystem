@@ -9,6 +9,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using TimeRegistration.Filters;
 using TimeRegistration.Models;
+using TimeRegistration.Contracts.Requests;
 
 
 
@@ -69,7 +70,8 @@ namespace TimeRegistration.Controllers
 
         [HttpPut("{id}")] // this code part is not tested and is not possible ingame...
         [AdminAuthorize]
-        public ActionResult<Registration> Update([FromBody] UpdateRegistrationRecord record/*int id, Registration registration*/)
+        [ManagerAuthorize]
+        public ActionResult<Registration> Update([FromBody] UpdateRegistrationRequest record/*int id, Registration registration*/)
         {
             try
             {
@@ -86,6 +88,7 @@ namespace TimeRegistration.Controllers
 
         [HttpDelete("{id}")]
         [AdminAuthorize]
+        [ManagerAuthorize]
         public ActionResult<Registration> Delete(int id)
         {
             try
@@ -131,6 +134,7 @@ namespace TimeRegistration.Controllers
 
         [HttpPatch("{id:int}/checkout")]
         [AdminAuthorize]
+        [ManagerAuthorize]
         public ActionResult<object> ForceCheckout(int id, [FromBody] ForceCheckoutRequest body)
         {
             try

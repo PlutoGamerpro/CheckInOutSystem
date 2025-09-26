@@ -4,6 +4,7 @@ using System.Linq;
 using TimeRegistration.Interfaces;
 using TimeRegistration.Classes;
 using TimeRegistration.Data;
+using TimeRegistration.Contracts.Results;
 
 namespace TimeRegistration.Services
 {
@@ -129,6 +130,6 @@ namespace TimeRegistration.Services
             return isCheckedIn;
         }
 
-        
+       
     }
 }

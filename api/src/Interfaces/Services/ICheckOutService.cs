@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TimeRegistration.Classes;
-
+using TimeRegistration.Contracts.Results;
 namespace TimeRegistration.Services
 {
-    public record CheckOutResult(int CheckOutId, string? Name, string Phone);
+   
     
     public interface ICheckOutService
     {    

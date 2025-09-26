@@ -1,10 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using TimeRegistration.Classes;
-using TimeRegistration.Models;
+using TimeRegistration.Contracts.Requests;
 using TimeRegistration.Services;
 using TimeRegistration.Filters;
 
@@ -27,36 +24,36 @@ namespace TimeRegistration.Controllers
             var managers = _managerService.GetAllManagers();
             return Ok(managers);
         }
-       
+
+        /*
+        LOGIN REMOVIDO/UNIFICADO:
+        Agora o login (admin ou manager) deve ser feito via:
+            POST /api/admin/login
+        Ele tenta admin e se não encontrar tenta manager.
+        Este bloco é mantido comentado para referência.
+        
         [HttpPost("login")]
-        public IActionResult Login([FromBody] AdminLoginRequest req)
+        public IActionResult Login([FromBody] LoginRequest req)
         {
             try
             {
-                var result = _adminservice.Login(req);
-                // Retorna o token no body para o frontend salvar e usar no header X-Admin-Token
-                return Ok(new { token = result.Token, userName = result.UserName });
+                var result = _managerService.Login(req);
+                return Ok(new { token = result.Token, userName = result.UserName, role = "manager" });
             }
             catch (KeyNotFoundException)
             {
                 return NotFound("User not found");
             }
-
         }
+        */
 
-
-
-
-       [HttpPut("user")]
-       [ManagerAuthorize]
-       /*[AdminAuthorize]*/ // could return a token instead change call to take record 
-        public IActionResult UpdateUser([FromBody] UserRecordRequest userRecordRequest /* int id, User user*/)
+        [HttpPut("user")]
+        [ManagerAuthorize]
+        public IActionResult UpdateUser([FromBody] UserRecordRequest userRecordRequest)
         {
             try
             {
                 _managerService.UpdateUser(userRecordRequest);
-              //  _adminservice.UpdateUser(userRecordRequest);
-                //  _adminservice.UpdateUser(id, user);
                 return NoContent();
             }
             catch (KeyNotFoundException)
@@ -64,6 +61,10 @@ namespace TimeRegistration.Controllers
                 return NotFound("User not found");
             }
         }
+    }
+}
+            
+        
 
         /*
                 [HttpDelete("delete-admin")]
@@ -86,5 +87,3 @@ namespace TimeRegistration.Controllers
 
             }
             */
-    }
-}

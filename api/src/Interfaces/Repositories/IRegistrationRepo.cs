@@ -1,5 +1,5 @@
 ﻿using TimeRegistration.Classes;
-using TimeRegistration.Models;
+using TimeRegistration.Contracts.Requests;
 
 namespace TimeRegistration.Interfaces
 {
@@ -18,7 +18,7 @@ namespace TimeRegistration.Interfaces
         Registration? Get(int id);
         Registration Create(Registration registration);
         //Registration? Update(int id, Registration registration);
-        Registration? Update(UpdateRegistrationRecord record); // new apporch
+        Registration? Update(UpdateRegistrationRequest record); // new apporch
         Registration? Delete(int id);              
         IEnumerable<Registration> GetOpen();
 

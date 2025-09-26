@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using TimeRegistration.Services;
 using TimeRegistration.Classes;
-using TimeRegistration.Models;
-using TimeRegistration.Filters; // <-- novo using
+using TimeRegistration.Contracts.Requests;
+using TimeRegistration.Filters;
 using TimeRegistration.Data;
 
 
@@ -14,28 +14,38 @@ namespace TimeRegistration.Controllers
     public class AdminController : ControllerBase
     {
         private readonly IAdminService _adminservice;
-        private readonly AppDbContext _ctx; 
+        private readonly IManagerService _managerService; // <--- adicionado para fallback a manager
+        private readonly AppDbContext _ctx;
 
-        public AdminController(IAdminService adminservice, AppDbContext ctx)
+        public AdminController(IAdminService adminservice, IManagerService managerService, AppDbContext ctx)
         {
             _adminservice = adminservice;
+            _managerService = managerService;
             _ctx = ctx;
         }
 
         [HttpPost("login")]
-        public IActionResult Login([FromBody] AdminLoginRequest req)
+        public IActionResult Login([FromBody] LoginRequest req)
         {
+            // Estratégia: tenta admin; se não achar, tenta manager. Ambos retornam mesmo shape.
             try
             {
                 var result = _adminservice.Login(req);
-                // Retorna o token no body para o frontend salvar e usar no header X-Admin-Token
-                return Ok(new { token = result.Token, userName = result.UserName });
+                return Ok(new { token = result.Token, userName = result.UserName, role = "admin" });
             }
             catch (KeyNotFoundException)
             {
-                return NotFound("User not found");
+                // tenta manager
+                try
+                {
+                    var mgr = _managerService.Login(req);
+                    return Ok(new { token = mgr.Token, userName = mgr.UserName, role = "manager" });
+                }
+                catch (KeyNotFoundException)
+                {
+                    return NotFound("User not found");
+                }
             }
-
         }
         /*
         [HttpDelete("user/{id}")]
@@ -57,14 +67,15 @@ namespace TimeRegistration.Controllers
      */
 
         // [HttpPut("user/{id}")]
-       [HttpPut("user")]
-       [AdminAuthorize] // could return a token instead change call to take record 
+        [HttpPut("user")]
+        [AdminAuthorize] // could return a token instead change call to take record 
+       
         public IActionResult UpdateUser([FromBody] UserRecordRequest userRecordRequest /* int id, User user*/)
         {
             try
             {
                 _adminservice.UpdateUser(userRecordRequest);
-              //  _adminservice.UpdateUser(id, user);
+                //  _adminservice.UpdateUser(id, user);
                 return NoContent();
             }
             catch (KeyNotFoundException)
@@ -79,20 +90,10 @@ namespace TimeRegistration.Controllers
             {
                 return _adminservice.GetRegistrationsRange(startInclusiveUtc, endExclusiveUtc);
             }
-            catch (Exception e)
+            catch
             {
                 return Enumerable.Empty<object>();
             }
-            /*
-            try
-            {
-                return _adminservice.GetRegistrationsRange(startInclusiveUtc, endExclusiveUtc);
-            }
-            catch (Exception e)
-            {
-                return Enumerable.Empty<object>();
-            }
-            */
         }
 
         // Possibly create a separate Create method in the service helper for midnight UTC.
@@ -176,64 +177,64 @@ namespace TimeRegistration.Controllers
             if ((end - start).TotalDays > 400) return BadRequest("Intervalo muito grande (max 400 dias).");
             return Ok(GetRegistrationsJoinRange(start, end));
         }
-    }
-}
 
 
-/*
-[HttpPost("seed-basic")]
-public IActionResult SeedBasic([FromQuery] bool force = false)
-{
-var startOfYear = new DateTime(DateTime.UtcNow.Year, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-var endOfYear = startOfYear.AddYears(1);
 
-var phone = "12345678";
-var user = _ctx.Users.FirstOrDefault(u => u.Phone == phone);
-if (user == null)
-{
-    user = new User
-    {
-        Name = "Seed User",
-        Phone = phone,
-        IsAdmin = false,
-        IsCheckedIn = false
-    };
-    _ctx.Users.Add(user);
-    _ctx.SaveChanges();
-}
 
-bool already = _ctx.Registrations
-    .Join(_ctx.CheckIns, r => r.FkCheckInId, ci => ci.Id, (r, ci) => new { r, ci })
-    .Any(x => x.ci.TimeStart >= startOfYear && x.ci.TimeStart < endOfYear);
 
-if (already && !force)
-    return Ok(new { status = "alreadySeeded", hint = "Use ?force=true para reexecutar." });
+        [HttpPost("seed-basic")]
+        public IActionResult SeedBasic([FromQuery] bool force = false)
+        {
+            var startOfYear = new DateTime(DateTime.UtcNow.Year, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            var endOfYear = startOfYear.AddYears(1);
 
-if (force)
-{
-    // Limpa somente dados do usuário seed (ordem: Registrations -> CheckOuts -> CheckIns)
-    var seedRegs = _ctx.Registrations.Where(r => r.FkUserId == user.Id).ToList();
-    if (seedRegs.Count > 0)
-    {
-        var checkOutIds = seedRegs.Where(r => r.FkCheckOutId != null).Select(r => r.FkCheckOutId!.Value).ToList();
-        var checkInIds = seedRegs.Select(r => r.FkCheckInId).ToList();
+            var phone = "12345678";
+            var user = _ctx.Users.FirstOrDefault(u => u.Phone == phone);
+            if (user == null)
+            {
+                user = new User
+                {
+                    Name = "Seed User",
+                    Phone = phone,
+                    IsAdmin = false,
+                    IsCheckedIn = false
+                };
+                _ctx.Users.Add(user);
+                _ctx.SaveChanges();
+            }
 
-        _ctx.Registrations.RemoveRange(seedRegs);
-        if (checkOutIds.Any())
-            _ctx.CheckOuts.RemoveRange(_ctx.CheckOuts.Where(co => checkOutIds.Contains(co.Id)));
-        if (checkInIds.Any())
-            _ctx.CheckIns.RemoveRange(_ctx.CheckIns.Where(ci => checkInIds.Contains(ci.Id)));
-        _ctx.SaveChanges();
-    }
-}
+            bool already = _ctx.Registrations
+                .Join(_ctx.CheckIns, r => r.FkCheckInId, ci => ci.Id, (r, ci) => new { r, ci })
+                .Any(x => x.ci.TimeStart >= startOfYear && x.ci.TimeStart < endOfYear);
 
-DateTime UtcDate(int year, int month, int day, int h, int m) =>
-    new DateTime(year, month, day, h, m, 0, DateTimeKind.Utc);
+            if (already && !force)
+                return Ok(new { status = "alreadySeeded", hint = "Use ?force=true para reexecutar." });
 
-var today = DateTime.UtcNow;
-var todayMid = new DateTime(today.Year, today.Month, today.Day, 0, 0, 0, DateTimeKind.Utc);
+            if (force)
+            {
+                // Limpa somente dados do usuário seed (ordem: Registrations -> CheckOuts -> CheckIns)
+                var seedRegs = _ctx.Registrations.Where(r => r.FkUserId == user.Id).ToList();
+                if (seedRegs.Count > 0)
+                {
+                    var checkOutIds = seedRegs.Where(r => r.FkCheckOutId != null).Select(r => r.FkCheckOutId!.Value).ToList();
+                    var checkInIds = seedRegs.Select(r => r.FkCheckInId).ToList();
 
-var sessions = new List<(DateTime start, DateTime end, string label)>
+                    _ctx.Registrations.RemoveRange(seedRegs);
+                    if (checkOutIds.Any())
+                        _ctx.CheckOuts.RemoveRange(_ctx.CheckOuts.Where(co => checkOutIds.Contains(co.Id)));
+                    if (checkInIds.Any())
+                        _ctx.CheckIns.RemoveRange(_ctx.CheckIns.Where(ci => checkInIds.Contains(ci.Id)));
+                    _ctx.SaveChanges();
+                }
+            }
+
+            DateTime UtcDate(int year, int month, int day, int h, int m) =>
+                new DateTime(year, month, day, h, m, 0, DateTimeKind.Utc);
+
+            var today = DateTime.UtcNow;
+            var todayMid = new DateTime(today.Year, today.Month, today.Day, 0, 0, 0, DateTimeKind.Utc);
+
+            var sessions = new List<(DateTime start, DateTime end, string label)>
 {
     (UtcDate(todayMid.AddMonths(-5).Year, todayMid.AddMonths(-5).Month, 8, 8, 30),
      UtcDate(todayMid.AddMonths(-5).Year, todayMid.AddMonths(-5).Month, 8, 17,  0), "FiveMonthsAgo"),
@@ -253,50 +254,50 @@ var sessions = new List<(DateTime start, DateTime end, string label)>
      todayMid.AddDays(-1).AddHours(17), "Yesterday")
 };
 
-var created = new List<object>();
+            var created = new List<object>();
 
-foreach (var s in sessions)
-{
-    var start = ForceUtc(s.start);
-    var end = ForceUtc(s.end);
+            foreach (var s in sessions)
+            {
+                var start = ForceUtc(s.start);
+                var end = ForceUtc(s.end);
 
-    bool exists = _ctx.CheckIns.Any(ci =>
-        ci.FkUserId == user.Id &&
-        ci.TimeStart >= start.AddMinutes(-5) &&
-        ci.TimeStart <= start.AddMinutes(5));
+                bool exists = _ctx.CheckIns.Any(ci =>
+                    ci.FkUserId == user.Id &&
+                    ci.TimeStart >= start.AddMinutes(-5) &&
+                    ci.TimeStart <= start.AddMinutes(5));
 
-    if (exists) continue;
+                if (exists) continue;
 
-    var ci = new CheckIn { TimeStart = start, FkUserId = user.Id };
-    _ctx.CheckIns.Add(ci);
-    _ctx.SaveChanges();
+                var ci = new CheckIn { TimeStart = start, FkUserId = user.Id };
+                _ctx.CheckIns.Add(ci);
+                _ctx.SaveChanges();
 
-    var co = new CheckOut { TimeEnd = end, FkUserId = user.Id };
-    _ctx.CheckOuts.Add(co);
-    _ctx.SaveChanges();
+                var co = new CheckOut { TimeEnd = end, FkUserId = user.Id };
+                _ctx.CheckOuts.Add(co);
+                _ctx.SaveChanges();
 
-    var reg = new Registration
-    {
-        FkCheckInId = ci.Id,
-        FkCheckOutId = co.Id,
-        FkUserId = user.Id,
-        TimeStart = start
-    };
-    _ctx.Registrations.Add(reg);
-    _ctx.SaveChanges();
+                var reg = new Registration
+                {
+                    FkCheckInId = ci.Id,
+                    FkCheckOutId = co.Id,
+                    FkUserId = user.Id,
+                    TimeStart = start
+                };
+                _ctx.Registrations.Add(reg);
+                _ctx.SaveChanges();
 
-    created.Add(new { s.label, regId = reg.Id, checkInId = ci.Id, checkOutId = co.Id, start, end });
+                created.Add(new { s.label, regId = reg.Id, checkInId = ci.Id, checkOutId = co.Id, start, end });
+            }
+
+            return Ok(new
+            {
+                status = force ? "seededForced" : "seeded",
+                createdCount = created.Count,
+                created
+            });
+        }
+    }
 }
-
-return Ok(new
-{
-    status = force ? "seededForced" : "seeded",
-    createdCount = created.Count,
-    created
-});
-}
-
 // ...existing code (resto dos endpoints)...
-}
 
-*/
+

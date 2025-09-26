@@ -4,6 +4,7 @@ using TimeRegistration.Data;
 using System;
 using System.Linq;
 using TimeRegistration.Models;
+using TimeRegistration.Contracts.Requests;
 
 namespace TimeRegistration.Services
 {
@@ -114,7 +115,7 @@ namespace TimeRegistration.Services
         }
 
 
-        public void UpdateRegistration( UpdateRegistrationRecord record/*int id, Registration registration*/)
+        public void UpdateRegistration( UpdateRegistrationRequest record/*int id, Registration registration*/)
         {
             var existing = _repo.Update(record);
 

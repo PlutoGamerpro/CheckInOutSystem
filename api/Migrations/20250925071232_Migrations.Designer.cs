@@ -12,8 +12,8 @@ using TimeRegistration.Data;
 namespace TimeRegistration.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250912064858_Migration_")]
-    partial class Migration_
+    [Migration("20250925071232_Migrations")]
+    partial class Migrations
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -144,9 +144,9 @@ namespace TimeRegistration.Migrations
                         .HasColumnType("boolean")
                         .HasAnnotation("Relational:JsonPropertyName", "isCheckedIn");
 
-                    b.Property<bool>("IsOwner")
+                    b.Property<bool>("IsManager")
                         .HasColumnType("boolean")
-                        .HasAnnotation("Relational:JsonPropertyName", "isOwner");
+                        .HasAnnotation("Relational:JsonPropertyName", "isManager");
 
                     b.Property<string>("Name")
                         .HasColumnType("text")

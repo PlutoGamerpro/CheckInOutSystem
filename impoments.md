@@ -4,7 +4,7 @@
 
 #### To users with the same encypted password (make a test)
 
-#### Remove so only one password to loggin to admin dashboard now their is two
+#### Remove so only one password to loggin to admin dashboard now their is twoso the secret does not have to exist 
 
 
 ### should  not encypct phone make it more complex check phone number after spots and not possible to uncypct in dashboard / if dashboard is not a safe optioon
@@ -15,6 +15,8 @@
  #### if (string.IsNullOrWhiteSpace(name))
  ####  if (string.IsNullOrWhiteSpace(phone))
 
+
+## implement json token for better sercuity 
 
 
  ## when manager class is added make secure
