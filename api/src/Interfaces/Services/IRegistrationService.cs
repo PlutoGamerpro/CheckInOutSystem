@@ -5,7 +5,7 @@ using System.Security.AccessControl;
 using System.Threading.Tasks;
 using TimeRegistration.Classes;
 using TimeRegistration.Contracts.Requests;
-using TimeRegistration.Models;
+
 
 namespace TimeRegistration.Services
 {  

@@ -8,7 +8,7 @@ using TimeRegistration.Services;
 using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using TimeRegistration.Filters;
-using TimeRegistration.Models;
+
 using TimeRegistration.Contracts.Requests;
 
 

@@ -8,7 +8,7 @@ using TimeRegistration.Classes;
 using TimeRegistration.Contracts.Requests;
 using TimeRegistration.Data;
 using TimeRegistration.Interfaces;
-using TimeRegistration.Models;
+
 
 namespace TimeRegistration.Repositories
 {

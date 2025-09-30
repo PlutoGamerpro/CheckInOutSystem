@@ -20,6 +20,8 @@ namespace TimeRegistration.Services
         private readonly IUserRepo _repo;
         private readonly IRegistrationRepo _registrationRepo; 
         private readonly AppDbContext _ctx;
+        private static readonly Regex PasswordPolicyRegex =
+            new(@"^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[\W_]).+$", RegexOptions.Compiled);
 
         public UserService(IUserRepo repo, IRegistrationRepo registrationRepo, AppDbContext ctx)
         {
@@ -59,22 +61,9 @@ namespace TimeRegistration.Services
                 IsManager = dto.IsManager 
             };
 
-            if (user.IsManager)
-            {
-                if (string.IsNullOrWhiteSpace(dto.Password))
-                    throw new Exception("Password required for manager users");
-            }
-            if (user.IsAdmin)
-            {
-                if (string.IsNullOrWhiteSpace(dto.Password))
-                    throw new Exception("Password required for admin users");
-            }
-        
-            if (!string.IsNullOrWhiteSpace(dto.Password))
-            {
-                string hashedPassword = BCrypt.Net.BCrypt.HashPassword(dto.Password);
-                user.Password = hashedPassword;
-            }
+            // NOVO: valida e aplica senha (condicional)
+            var hashed = EnsurePasswordValid(user, dto.Password);
+            user.Password = hashed;
 
             _repo.Create(user);
          
@@ -140,6 +129,23 @@ namespace TimeRegistration.Services
             
         }
 
-       
+        private string? EnsurePasswordValid(User user, string? plainPassword)
+        {
+            bool requires = user.IsAdmin || user.IsManager;
+
+            if (requires && string.IsNullOrWhiteSpace(plainPassword))
+                throw new Exception("Password required for admin/manager");
+
+            if (string.IsNullOrWhiteSpace(plainPassword))
+                return null; // usuário comum sem senha
+
+            if (plainPassword.Length < 8)
+                throw new Exception("Password must be at least 8 characters long");
+
+            if (!PasswordPolicyRegex.IsMatch(plainPassword))
+                throw new Exception("Password must contain uppercase, lowercase, number and special character");
+
+            return BCrypt.Net.BCrypt.HashPassword(plainPassword);
+        }
     }
 }
