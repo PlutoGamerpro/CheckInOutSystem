@@ -14,7 +14,7 @@ namespace TimeRegistration.Controllers
     public class AdminController : ControllerBase
     {
         private readonly IAdminService _adminservice;
-        private readonly IManagerService _managerService; // <--- adicionado para fallback a manager
+        private readonly IManagerService _managerService;
         private readonly AppDbContext _ctx;
 
         public AdminController(IAdminService adminservice, IManagerService managerService, AppDbContext ctx)
@@ -27,30 +27,35 @@ namespace TimeRegistration.Controllers
         [HttpPost("login")]
         public IActionResult Login([FromBody] LoginRequest req)
         {
-            // Estratégia: tenta admin; se não achar, tenta manager. Ambos retornam mesmo shape.
+            // 1ª tentativa: admin
             try
             {
-                var result = _adminservice.Login(req);
-                return Ok(new { token = result.Token, userName = result.UserName, role = "admin" });
+                var admin = _adminservice.Login(req);
+                return Ok(new { token = admin.Token, userName = admin.UserName, role = "admin" });
             }
-            catch (KeyNotFoundException)
+            catch (Exception exAdmin)
             {
-                // tenta manager
+                // 2ª tentativa: manager
                 try
                 {
                     var mgr = _managerService.Login(req);
                     return Ok(new { token = mgr.Token, userName = mgr.UserName, role = "manager" });
                 }
-                catch (KeyNotFoundException)
+                catch (Exception exMgr)
                 {
-                    return NotFound("User not found");
+                    // Decisão de erro combinada
+                    if (exAdmin is KeyNotFoundException && exMgr is KeyNotFoundException)
+                        return NotFound("User not found");
+                    if (exAdmin is UnauthorizedAccessException || exMgr is UnauthorizedAccessException)
+                        return Unauthorized("Invalid credentials");
+                    return StatusCode(500, "Login failure");
                 }
             }
         }
-        /*
+
         [HttpDelete("user/{id}")]
         [AdminAuthorize]
-      
+
         public IActionResult DeleteUser(int id)
         {
             try
@@ -64,12 +69,12 @@ namespace TimeRegistration.Controllers
             }
 
         }
-     */
+
 
         // [HttpPut("user/{id}")]
         [HttpPut("user")]
         [AdminAuthorize] // could return a token instead change call to take record 
-       
+
         public IActionResult UpdateUser([FromBody] UserRecordRequest userRecordRequest /* int id, User user*/)
         {
             try
@@ -177,11 +182,10 @@ namespace TimeRegistration.Controllers
             if ((end - start).TotalDays > 400) return BadRequest("Intervalo muito grande (max 400 dias).");
             return Ok(GetRegistrationsJoinRange(start, end));
         }
+    
 
-
-
-
-
+        
+                
         [HttpPost("seed-basic")]
         public IActionResult SeedBasic([FromQuery] bool force = false)
         {

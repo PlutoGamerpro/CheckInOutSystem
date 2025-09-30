@@ -55,10 +55,13 @@ export class AdminLoginComponent {
       this.errorMessage = 'Telefon skal være 8 cifre.';
       return;
     }
+    /*
     if (!this.secret) {
       this.errorMessage = 'Secret er påkrævet.';
       return;
     }
+    */
+
     if (!this.password) {
       this.errorMessage = 'Password er påkrævet.';
       return;
@@ -66,27 +69,24 @@ export class AdminLoginComponent {
 
     this.loading = true;
     // Backend ikke har brug for at vide om det er admin eller manager - vi bruger det kun lokalt.
-    this.http.post<{ token:string; user?:string; userName?:string }>(`${this.base}/admin/login`, {
+    this.http.post<{ token:string; user?:string; userName?:string; role?:string }>(`${this.base}/admin/login`, {
       phone: phoneDigits,
       password: this.password,
       secret: this.secret
     }).subscribe({
       next: res => {
-        if (this.loginAs === 'admin') {
-          localStorage.setItem('adminToken', res.token);
-          localStorage.removeItem('managerToken');
-        } else {
-          // Fallback: salva como managerToken e também como adminToken para telas que só verificam adminToken
-            localStorage.setItem('managerToken', res.token);
-            localStorage.setItem('adminToken', res.token);
-        }
+        if (this.loginAs === 'admin') localStorage.setItem('adminToken', res.token);
+        else localStorage.setItem('managerToken', res.token);
         this.loading = false;
         this.adminLoginForm?.resetForm();
         this.router.navigate(['/admin']);
       },
-      error: () => {
+      error: (err) => {
         this.loading = false;
-        this.errorMessage = 'Uautoriseret eller forkert secret.';
+        const serverMsg = (err?.error && (typeof err.error === 'string') ? err.error : (err?.error?.message || ''));
+        if (err.status === 404) this.errorMessage = serverMsg || 'Bruger ikke fundet.';
+        else if (err.status === 401) this.errorMessage = serverMsg || 'Forkerte legitimationsoplysninger.';
+        else this.errorMessage = serverMsg || 'Login fejl.';
       }
     });
   }

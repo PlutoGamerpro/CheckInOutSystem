@@ -5,5 +5,5 @@ using System.Threading.Tasks;
 
 namespace TimeRegistration.Contracts.Requests
 {
-   public record LoginRequest(string Phone, string Secret, string Password);
+   public record LoginRequest(string Phone /*, string Secret,*/, string Password);
 }

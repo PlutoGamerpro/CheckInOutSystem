@@ -5,8 +5,8 @@ namespace TimeRegistration.Services;
 
 public interface IAdminAuthService // replace this with json token for more security
 {
-    string? IssueTokenFor(string phone, bool isAdmin, string secret, string configSecret, string password);
-    string? IssueTokenForManager(string phone, bool isManager, string secret, string configSecret, string password);
+    string? IssueTokenFor(string phone, bool isAdmin, /*string secret,*/ /*string configSecret,*/ string password);
+    string? IssueTokenForManager(string phone, bool isManager, /*string secret,*/ /*string configSecret*/ string password);
 
     bool Validate(string token);
 }
@@ -22,20 +22,20 @@ public class AdminAuthService : IAdminAuthService // name should not be admin
         _repo = repo;
     }
 
-    public string? IssueTokenFor(string phone, bool isAdmin, string secret, string configSecret, string password)
+    public string? IssueTokenFor(string phone, bool isAdmin, /*string secret,*/ /*string configSecret,*/ string password)
     {
         if (!isAdmin) return null;
 
-        if (string.IsNullOrWhiteSpace(secret) || secret != configSecret) return null;
+       // if (string.IsNullOrWhiteSpace(secret) /*|| secret != configSecret*/) return null;
         var token = Guid.NewGuid().ToString("N");
         _tokens[token] = DateTime.UtcNow.Add(Lifetime);
         return token;
     }
-    public string? IssueTokenForManager(string phone, bool isManager, string secret, string configSecret, string password)
+    public string? IssueTokenForManager(string phone, bool isManager, /*string secret,*/ /*string configSecret,*/ string password)
     {
         if (!isManager) return null;
-        
-        if (string.IsNullOrWhiteSpace(secret) || secret != configSecret) return null;
+
+      //  if (string.IsNullOrWhiteSpace(secret) /*|| secret != configSecret*/) return null;
         var token = Guid.NewGuid().ToString("N");
         _tokens[token] = DateTime.UtcNow.Add(Lifetime);
         return token;

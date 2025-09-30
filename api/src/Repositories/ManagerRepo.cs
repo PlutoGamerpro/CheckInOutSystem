@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using TimeRegistration.Classes;
 using TimeRegistration.Data;
 using TimeRegistration.Interfaces;
-using TimeRegistration.Models;
+
 using TimeRegistration.Services;
 using TimeRegistration.Contracts.Requests;
 

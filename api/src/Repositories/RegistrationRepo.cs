@@ -1,7 +1,7 @@
 using TimeRegistration.Classes;
 using TimeRegistration.Interfaces;
 using TimeRegistration.Data;
-using TimeRegistration.Models;
+
 using TimeRegistration.Contracts.Requests;
 
 namespace TimeRegistration.Repositories

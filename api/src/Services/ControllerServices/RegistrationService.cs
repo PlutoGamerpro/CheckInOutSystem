@@ -3,7 +3,7 @@ using TimeRegistration.Classes;
 using TimeRegistration.Data;
 using System;
 using System.Linq;
-using TimeRegistration.Models;
+
 using TimeRegistration.Contracts.Requests;
 
 namespace TimeRegistration.Services

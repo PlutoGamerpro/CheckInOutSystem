@@ -10,7 +10,8 @@ import { FormsModule } from '@angular/forms'
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './users-dash-board.html',
-  styleUrl: './users-dash-board.scss'
+  styleUrl: './users-dash-board.scss',
+ // styleUrls: ['./users-dash-board.scss']
 })
 export class UsersDashBoard {
   users: any[] = [];
@@ -28,6 +29,10 @@ export class UsersDashBoard {
   }
 
   editUser: any = null;
+  // Helpers de sessão
+  get hasAdminToken(): boolean { return !!localStorage.getItem('adminToken'); }
+  get hasManagerToken(): boolean { return !!localStorage.getItem('managerToken'); }
+  get managerOnly(): boolean { return !this.hasAdminToken && this.hasManagerToken; }
 
   startEdit(user: any): void {
     this.editUser = { ...user }; // clone to avoid direct mutation
@@ -48,10 +53,22 @@ export class UsersDashBoard {
     if (!this.editUser) return;
     const token = localStorage.getItem('adminToken') || localStorage.getItem('managerToken');
     if (!token) { this.error = 'Not authorized'; return; }
+    // Manager não pode promover / alterar isManager
+    if (this.managerOnly && this.editUser.isManager !== undefined && this.editUser.isManager !== false) {
+      this.error = 'Somente admin pode definir isManager.';
+      return;
+    }
     this.loading = true;
     this.error = '';
-    // backend espera PUT /api/admin/user com o body UserRecordRequest
-    this.http.put(`${environment.baseApiUrl}/admin/user`, this.editUser, this.adminHeaders).subscribe({
+    // Monta payload explícito para garantir envio de isManager
+    const payload = {
+      id: this.editUser.id,
+      name: this.editUser.name,
+      phone: this.editUser.phone,
+      isAdmin: this.editUser.isAdmin,
+      isManager: this.hasAdminToken ? this.editUser.isManager : undefined // manager não altera
+    };
+    this.http.put(`${environment.baseApiUrl}/external/user`, payload, this.adminHeaders).subscribe({
       next: () => {
         this.editUser = null;
         this.load();
@@ -87,15 +104,22 @@ export class UsersDashBoard {
     this.router.navigate(['/admin']);
   }
 
+
+
   DeleteUser(id: number): void {
+    if (this.loading) return;
     const token = localStorage.getItem('adminToken') || localStorage.getItem('managerToken');
     if (!token) { this.error = 'Not authorized'; return; }
+
+    const user = this.users.find(u => u.id === id);
+    const label = user ? `${user.name || ''} (ID: ${id})` : `ID: ${id}`;
+    const ok = confirm(`Delete user ${label}?`);
+    if (!ok) return;
+
     this.loading = true;
     this.error = '';
-    this.http.delete(`${environment.baseApiUrl}/admin/user/${id}`, this.adminHeaders).subscribe({
-      next: () => {
-        this.load();
-      },
+    this.http.delete(`${environment.baseApiUrl}/external/user/${id}`, this.adminHeaders).subscribe({
+      next: () => this.load(),
       error: () => {
         this.error = 'Failed to delete user';
         this.loading = false;
@@ -104,4 +128,3 @@ export class UsersDashBoard {
   }
 
 }
-

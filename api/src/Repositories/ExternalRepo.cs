@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using TimeRegistration.Classes;
 using TimeRegistration.Interfaces;
-using TimeRegistration.Models;
+
 using TimeRegistration.Data;
 
 namespace TimeRegistration.Repositories

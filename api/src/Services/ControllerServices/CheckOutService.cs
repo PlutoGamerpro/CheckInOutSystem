@@ -8,7 +8,7 @@ using TimeRegistration.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using TimeRegistration.Data;
-using TimeRegistration.Models;
+
 using TimeRegistration.Contracts.Requests;
 using TimeRegistration.Contracts.Results;
 namespace TimeRegistration.Services

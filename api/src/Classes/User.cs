@@ -1,10 +1,13 @@
 ﻿using System.Text.Json.Serialization;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.ComponentModel.DataAnnotations;
+using System.Text.RegularExpressions;
+using System.Collections.Generic;
 
 namespace TimeRegistration.Classes;
 
-public class User
+public class User 
 {
     [JsonPropertyName("id")]
     public int Id { get; set; }
@@ -29,10 +32,10 @@ public class User
     [JsonPropertyName("isAdmin")]
     public bool IsAdmin { get; set; } = false;
 
-    [JsonPropertyName("isManager")] 
+    [JsonPropertyName("isManager")]
     public bool IsManager { get; set; } = false;
 
-    public string? Password { get; set; } // only admins and managers need an password 
+    public string? Password { get; set; } // only admins and managers need a password 
 
     private static string? NormalizePhone(string? value) // this method also appers in other class dont rememeber the name
     {
@@ -40,3 +43,4 @@ public class User
         return new string(value.Where(char.IsDigit).ToArray());
     }
 }
+

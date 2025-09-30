@@ -12,6 +12,7 @@ using TimeRegistration.Data;
 using Microsoft.AspNetCore.Http;
 using TimeRegistration.Contracts.Results;
 using TimeRegistration.Contracts.Requests;
+using TimeRegistration.Validation;
 
 namespace TimeRegistration.Services
 {
@@ -46,27 +47,16 @@ namespace TimeRegistration.Services
         public LoginResult? Login(LoginRequest req)
         {
             if (req is null) return null;
-            var phone = req.Phone;
-            var secret = req.Secret;
-            var password = req.Password;
-
-            if (string.IsNullOrWhiteSpace(phone) ||
-                string.IsNullOrWhiteSpace(secret) ||
-                string.IsNullOrWhiteSpace(password))
-            {
-                throw new Exception("Phone, secret and password are required");
-            }
+            var phone = LoginRequestValidator.ValidateOrThrow(req);
+            var password = req.Password!.Trim();
 
             var user = _ctx.Users.FirstOrDefault(u => u.Phone == phone);
-            if (user == null) throw new Exception("Invalid password");
+            if (user == null) throw new UnauthorizedAccessException("Invalid password");
 
-            if (!BCrypt.Net.BCrypt.Verify(password, user.Password))
-                throw new Exception("Invalid password");
+            LoginRequestValidator.VerifyPasswordOrThrow(password, user.Password);
 
-            var configSecret = _cfg["Admin:Secret"] ?? "";
-
-            var token = _auth.IssueTokenFor(phone, user.IsAdmin, secret, configSecret, password);
-            if (token == null) throw new Exception("Failed to issue token");
+            var token = _auth.IssueTokenFor(phone, user.IsAdmin, /*secret, */ /*configSecret,*/ password);
+            if (token == null) throw new InvalidOperationException("Failed to issue token");
             return new LoginResult(token, user.Name);
         }
 

@@ -20,42 +20,51 @@
       <th>Name</th>
       <th>Phone</th>
       <th>Is Admin</th>
+      <th>Is Manager</th>
+      <th>Edit</th>
+      <th>Delete</th>
     </tr>
   </thead>
   <tbody>
-   <tbody>
-  <tr *ngFor="let u of users">
-    <ng-container *ngIf="editUser?.id !== u.id; else editRow">
-      <td>{{ u.id }}</td>
-      <td>{{ u.name }}</td>
-      <td>{{ u.phone }}</td>
-      <td>{{ u.isAdmin ? 'Yes' : 'No' }}</td>
-      <td>
-        <button class="btn btn-sm" (click)="startEdit(u)">Edit</button>
-        <button class="btn btn-danger btn-sm" (click)="DeleteUser(u.id)">Delete</button>
-      </td>
-    </ng-container>
-    <ng-template #editRow>
-      <td>{{ editUser.id }}</td>
-      <td>
-        <input [(ngModel)]="editUser.name" class="form-control" />
-      </td>
-      <td>
-        <input [(ngModel)]="editUser.phone" class="form-control" />
-      </td>
-      <td>
-        <select [(ngModel)]="editUser.isAdmin" class="form-control">
-          <option [ngValue]="true">Yes</option>
-          <option [ngValue]="false">No</option>
-        </select>
-      </td>
-      <td>
-        <button class="btn btn-primary btn-sm" (click)="saveEdit()">Save</button>
-        <button class="btn btn-outline btn-sm" (click)="cancelEdit()">Cancel</button>
-      </td>
-    </ng-template>
-  </tr>
-</tbody>
+    <tr *ngFor="let u of users">
+      <ng-container *ngIf="editUser?.id !== u.id; else editRow">
+        <td>{{ u.id }}</td>
+        <td>{{ u.name }}</td>
+        <td>{{ u.phone }}</td>
+        <td>{{ u.isAdmin ? 'Yes' : 'No' }}</td>
+        <td>{{ u.isManager ? 'Yes' : 'No' }}</td>
+        <td><button class="btn btn-sm" (click)="startEdit(u)">Edit</button></td>
+        <td><button class="btn btn-danger btn-sm" (click)="DeleteUser(u.id)">Delete</button></td>
+      </ng-container>
+      <ng-template #editRow>
+        <td>{{ editUser.id }}</td>
+        <td><input [(ngModel)]="editUser.name" class="form-control" /></td>
+        <td><input [(ngModel)]="editUser.phone" class="form-control" /></td>
+        <td>
+          <select [(ngModel)]="editUser.isAdmin" class="form-control">
+            <option [ngValue]="true">Yes</option>
+            <option [ngValue]="false">No</option>
+          </select>
+        </td>
+        <td>
+          <select [(ngModel)]="editUser.isManager" class="form-control" [disabled]="managerOnly">
+            <option [ngValue]="true">Yes</option>
+            <option [ngValue]="false">No</option>
+          </select>
+          <div *ngIf="managerOnly" style="font-size:.65rem;color:#b00;margin-top:2px">
+            Somente admin pode alterar isManager.
+          </div>
+        </td>
+        <td>
+          <button class="btn btn-primary btn-sm" (click)="saveEdit()">Save</button>
+          <button class="btn btn-outline btn-sm" (click)="cancelEdit()">Cancel</button>
+        </td>
+        <td>
+          <button class="btn btn-danger btn-sm" (click)="DeleteUser(editUser.id)" [disabled]="loading">Delete</button>
+        </td>
+      </ng-template>
+    </tr>
+  </tbody>
 </table>
 
 
