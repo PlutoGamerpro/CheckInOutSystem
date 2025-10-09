@@ -28,15 +28,16 @@ namespace TimeRegistration.Services
         private readonly IExternalRepo _externalRepo;
         private readonly AppDbContext _ctx;
         private readonly IConfiguration _cfg;
-          private readonly IAdminAuthService _auth;
+        private readonly ITokenService _tokenService;
 
-        public ManagerService(IManagerRepo managerRepo, IExternalRepo externalRepo, AppDbContext ctx, IConfiguration cfg, IAdminAuthService auth)
+        public ManagerService(IManagerRepo managerRepo, IExternalRepo externalRepo, AppDbContext ctx, IConfiguration cfg, ITokenService tokenService /*IAdminAuthService auth*/)
         {
             _managerRepo = managerRepo;
             _externalRepo = externalRepo;
             _ctx = ctx;
             _cfg = cfg;
-            _auth = auth;
+            _tokenService = tokenService;
+        //    _auth = auth;
         }
 
         public void DeleteUser(int id)
@@ -54,20 +55,17 @@ namespace TimeRegistration.Services
 
         public LoginResult? Login(LoginRequest req)
         {
-              if (req is null) return null;
+            if (req is null) return null;
             var phone = LoginRequestValidator.ValidateOrThrow(req);
             var password = req.Password!.Trim();
 
             var user = _ctx.Users.FirstOrDefault(u => u.Phone == phone);
-            if (user == null) throw new UnauthorizedAccessException("Invalid password");
+            if (user == null || !user.IsManager) throw new UnauthorizedAccessException("Invalid credentials");
 
             LoginRequestValidator.VerifyPasswordOrThrow(password, user.Password);
 
-            var token = _auth.IssueTokenForManager(phone, user.IsManager, /*secret, */ /*configSecret,*/ password);
-            if (token == null) throw new InvalidOperationException("Failed to issue token");
+            var token = _tokenService.CreateToken(user);
             return new LoginResult(token, user.Name);
-        
-
         }
         
 
@@ -96,4 +94,5 @@ namespace TimeRegistration.Services
 
                 }
             */
-     
+
+                   

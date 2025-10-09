@@ -19,12 +19,6 @@ Decrypting them in the dashboard should not be possible (dashboard is not a safe
 ### Admin extra class with additional features
 #### External class / Manager class
 
-### Example:
-```csharp
-if (!BCrypt.Net.BCrypt.Verify(password, user.Password))
-    throw new UnauthorizedAccessException("Invalid password");
-```
-
 ### Password rules
 
 ####  1 Minimum one uppercase letter and one lowercase letter
@@ -38,20 +32,20 @@ if (!BCrypt.Net.BCrypt.Verify(password, user.Password))
 #### Example: Run!1000
 
 
-
-## not fixed 
-
+## not fixed/implementet
 
 
+## change all sports their is something on danish to english. 
 
+## some letter like x probaly other can't be typed in (Fornavn, Efternavn)
 
 ### Create methods for the items below (to avoid repeating code)
 ##### implement json token for better sercuity  
+## hardcoded-credentials Embedding credentials in source code risks unauthorized access (app settings) 
 
-### OPEN QUESTIONS
+## make an manager only manager and also only manager
 
-#### Is this necessary? Admin is already the highest role, and there aren’t many admins.
+## then try to run api calls where admin only can , and do the same for the manager and test .. 
 
-#### Should roles higher than Admin be able to delete Admins (and roles below Admin+)?
-
-
+## add so a admin can't delete a other admin but only a manager
+## add so a manager can't delete a other manager but only a users. 

@@ -1,88 +1,233 @@
-<form (ngSubmit)="submit()" #adminLoginForm="ngForm" novalidate [class.loading]="loading">
-  <div id="admin-login-container">
-    <div class="adminLoginContainer">
-      <button id="homeBtn" type="button" (click)="goToMain()" aria-label="Tilbage"></button>
-      <h1 id="admin-login-title">Staff Login</h1>
-
-      <div class="field">
-        <input
-          id="adminPhone"
-          class="text-input"
-          name="phone"
-          type="tel"
-          [(ngModel)]="phone"
-          required
-          minlength="8"
-          maxlength="8"
-          pattern="^[0-9]{8}$"
-          inputmode="numeric"
-          placeholder=" "
-          (keydown)="allowOnlyNumbers($event)"
-          (paste)="onPasteNumbersOnly($event)"
-          #phoneCtrl="ngModel"
-          [attr.aria-invalid]="phoneCtrl.invalid && phoneCtrl.touched ? true : null"
-        />
-        <label class="floating" for="adminPhone">Telefon (8 cifre)</label>
-        <div class="field-error" *ngIf="phoneCtrl.touched && phoneCtrl.invalid">
-          Indtast 8 cifre.
+<form
+  (ngSubmit)="submit()"
+  #adminLoginForm="ngForm"
+  novalidate
+  [class.loading]="loading"
+  aria-live="polite"
+>
+  <div class="admin-login-shell">
+    <div class="hero-pane" aria-hidden="true">
+      <div class="hero-content">
+        <div class="hero-illustration" [attr.data-state]="illustrationState"></div>
+        <h2>Smart check-in</h2>
+        <p>
+          Fast, secure and frictionless. Receive codes, magic links or authenticate with a password in one seamless flow.
+        </p>
+        <ul class="hero-benefits">
+          <li>Instant confirmation with clear visual feedback.</li>
+          <li>Protected for kiosks, events and on-the-go teams.</li>
+          <li>Flexible options: password, OTP, guest or biometrics.</li>
+        </ul>
+        <div class="recent-strip">
+          <span>Recent check-ins</span>
+          <div class="recent-item" *ngFor="let item of recentCheckIns">
+            <strong>{{ item.name }}</strong>
+            <span>{{ item.time }}</span>
+          </div>
         </div>
       </div>
+    </div>
 
-      <div class="field">
-      <input
-        id="adminPassword"
-        class="text-input"
-        name="password" 
-        type="password"
-        [(ngModel)]="password"
-        required
-        placeholder=" "
-        #passwordCtrl="ngModel"
-        [attr.aria-invalid]="passwordCtrl.invalid && passwordCtrl.touched ? true : null"
-      />
-      <label class="floating" for="adminPassword">Your Password</label>
-      <div class="field-error" *ngIf="passwordCtrl.touched && passwordCtrl.invalid">
-        Password påkrævet.
-  </div>
+    <div class="interaction-pane">
+      <div class="offline-banner" *ngIf="offline" role="status" aria-live="assertive">
+        <span>⚠️ Offline mode. We will queue your check-in and sync once you reconnect.</span>
+        <button type="button" (click)="dismissOffline()">Got it</button>
+      </div>
 
-  <!---->
-</div>
-
-<!--
-      <div class="field">
-        <input
-          id="adminSecret"
-            class="text-input"
-            name="secret"
-            type="password"
-            [(ngModel)]="secret"
-            required
-            placeholder=" "
-            #secretCtrl="ngModel"
-            [attr.aria-invalid]="secretCtrl.invalid && secretCtrl.touched ? true : null"
-        />
-        <label class="floating" for="adminSecret">Secret</label>
-        <div class="field-error" *ngIf="secretCtrl.touched && secretCtrl.invalid">
-          Secret påkrævet.
+      <div class="progress-strip" role="progressbar" [attr.aria-valuenow]="progressValue" aria-valuemin="0" aria-valuemax="100">
+        <div class="progress-rail">
+          <div class="progress-value" [style.width]="progressPercent"></div>
         </div>
+        <div class="stage-label">{{ stageLabel }}</div>
       </div>
-    -->  
-<!--
-      <div class="field">
-        <label for="loginAs" class="floating" style="opacity:.8">Perfil</label>
-        <select id="loginAs" name="loginAs" [(ngModel)]="loginAs" class="text-input">
-          <option value="admin">Admin</option>
-          <option value="manager">Manager</option>
-        </select>
-      </div>
--->
-      <button id="adminLoginBtn" type="submit" [disabled]="loading || adminLoginForm.invalid" [attr.aria-busy]="loading ? 'true' : null">
-        <span *ngIf="!loading">Log ind</span>
-        <span *ngIf="loading" class="loader" aria-hidden="true"></span>
-      </button>
 
-      <div *ngIf="errorMessage" id="admin-errorMessage" role="alert" aria-live="assertive">
-        {{ errorMessage }}
+      <div id="admin-login-container">
+        <div class="adminLoginContainer" [attr.data-step]="step">
+          <button id="homeBtn" type="button" (click)="goToMain()" aria-label="Tilbage"></button>
+          <h1 id="admin-login-title">
+            {{ step === 'success' ? 'Welcome back!' : 'Staff Login' }}
+          </h1>
+          <p class="microcopy" *ngIf="step !== 'success'">
+            We only use this to verify your session. No spam — ever.
+          </p>
+          <div class="status-strip" *ngIf="statusMessage || step === 'otp'">
+            <span>{{ statusMessage || 'Enter the code sent via SMS' }}</span>
+            <div class="status-actions" *ngIf="step === 'otp'">
+              <button type="button" (click)="resendCode()">Resend code</button>
+              <button type="button" (click)="changeNumber()">Change number</button>
+              <button type="button" (click)="needHelp()">Need help?</button>
+            </div>
+          </div>
+
+          <ng-container [ngSwitch]="step">
+            <!-- STEP 1: PHONE -->
+            <ng-container *ngSwitchCase="'phone'">
+              <div class="field pill">
+                <span class="field-icon">📱</span>
+                <input
+                  id="adminPhone"
+                  class="text-input"
+                  name="phone"
+                  type="tel"
+                  [(ngModel)]="phone"
+                  (ngModelChange)="updatePhoneFeedback($event)"
+                  required
+                  minlength="4"
+                  maxlength="16"
+                  inputmode="tel"
+                  placeholder=" "
+                  (keydown)="allowOnlyNumbers($event)"
+                  (paste)="onPasteNumbersOnly($event)"
+                  #phoneCtrl="ngModel"
+                  [attr.aria-invalid]="phoneCtrl.invalid && phoneCtrl.touched ? 'true' : 'false'"
+                />
+                <label class="floating" for="adminPhone">Phone (E.164)</label>
+              </div>
+
+              <div class="helper-row">
+                <span class="ghost-preview" *ngIf="phonePreview">Preview: {{ phonePreview }}</span>
+                <span class="helper-text" [attr.data-state]="phoneHelperState">{{ phoneHelperMessage }}</span>
+              </div>
+
+              <div class="toggle-row">
+                <label class="toggle">
+                  <input type="checkbox" [(ngModel)]="useMagicLink" name="magicLinkToggle" />
+                  <span class="slider"></span>
+                  <span class="toggle-label">Use magic link / OTP instead of password</span>
+                </label>
+              </div>
+
+              <div class="toggle-row">
+                <label class="toggle small">
+                  <input type="checkbox" [(ngModel)]="rememberDevice" name="rememberDevice" />
+                  <span class="slider"></span>
+                  <span class="toggle-label">Remember this device (30 days)</span>
+                </label>
+              </div>
+
+              <div class="helper-inline">
+                <small>Example: +45 12 34 56 78 • Carrier standard rates may apply.</small>
+              </div>
+            </ng-container>
+
+            <!-- STEP 2: PASSWORD -->
+            <ng-container *ngSwitchCase="'password'">
+              <div class="field pill">
+                <span class="field-icon">🔒</span>
+                <input
+                  id="adminPassword"
+                  class="text-input"
+                  name="password"
+                  type="password"
+                  [(ngModel)]="password"
+                  required
+                  placeholder=" "
+                  #passwordCtrl="ngModel"
+                  #passwordInput
+                  [attr.aria-invalid]="passwordCtrl.invalid && passwordCtrl.touched ? 'true' : 'false'"
+                />
+                <label class="floating" for="adminPassword">Password</label>
+              </div>
+              <div class="field-hint">
+                <span *ngIf="passwordCtrl.invalid && passwordCtrl.touched" class="field-error">
+                  Password required.
+                </span>
+                <small *ngIf="!passwordCtrl.invalid || !passwordCtrl.touched">
+                  Tip: use your shared team password. You can switch to OTP above.
+                </small>
+              </div>
+            </ng-container>
+
+            <!-- STEP 2 (ALTERNATIVE): OTP -->
+            <ng-container *ngSwitchCase="'otp'">
+              <div class="otp-wrapper" role="group" aria-labelledby="otpLabel">
+                <label id="otpLabel">Verification code</label>
+                <div class="otp-inputs">
+                  <input
+                    *ngFor="let digit of otpDigits; let i = index"
+                    #otpBox
+                    type="tel"
+                    maxlength="1"
+                    inputmode="numeric"
+                    [value]="digit"
+                    (input)="handleOtpInput(i, $event)"
+                    (keydown)="handleOtpKeydown(i, $event)"
+                    [attr.aria-label]="'Dígito ' + (i + 1) + ' do código'"
+                  />
+                </div>
+                <small class="otp-hint">Auto-advances per digit. Code expires in 2 minutes.</small>
+              </div>
+            </ng-container>
+
+            <!-- STEP 3: SUCCESS -->
+            <ng-container *ngSwitchCase="'success'">
+              <div class="success-state">
+                <div class="success-illustration" aria-hidden="true"></div>
+                <h2>Check-in complete</h2>
+                <p>{{ successDetails.name }} • {{ successDetails.time }}</p>
+                <div class="success-meta">
+                  <span>Token: {{ successDetails.role | uppercase }}</span>
+                  <span>Session ID: {{ successDetails.sessionId }}</span>
+                </div>
+                <div class="success-actions">
+                  <button type="button" (click)="continueToDashboard()" class="primary">
+                    Go to dashboard
+                  </button>
+                  <button type="button" (click)="shareConfirmation()">Share confirmation</button>
+                </div>
+                <div class="biometric-hint">
+                  <strong>Enable biometric unlock</strong>
+                  <p>Use face or fingerprint for even faster check-ins.</p>
+                  <label class="toggle small">
+                    <input type="checkbox" [(ngModel)]="enableBiometric" name="enableBiometric" />
+                    <span class="slider"></span>
+                    <span class="toggle-label">Turn on next time</span>
+                  </label>
+                </div>
+              </div>
+            </ng-container>
+          </ng-container>
+
+          <div class="guest-mode" *ngIf="step !== 'success'">
+            <button type="button" class="ghost-link" (click)="toggleGuestMode()">
+              {{ guestModeExpanded ? 'Hide guest mode' : 'Check in as guest' }}
+            </button>
+            <div class="guest-form" *ngIf="guestModeExpanded">
+              <div class="field">
+                <input
+                  type="text"
+                  name="guestName"
+                  [(ngModel)]="guestForm.name"
+                  placeholder="Guest name"
+                />
+              </div>
+              <div class="field">
+                <input
+                  type="email"
+                  name="guestEmail"
+                  [(ngModel)]="guestForm.email"
+                  placeholder="Email (optional)"
+                />
+              </div>
+              <button type="button" (click)="queueGuestCheckIn()">Queue guest check-in</button>
+            </div>
+          </div>
+
+          <button
+            id="adminLoginBtn"
+            type="submit"
+            [disabled]="loading || disableSubmit"
+            [attr.aria-busy]="loading ? 'true' : null"
+            *ngIf="step !== 'success'"
+          >
+            <span *ngIf="!loading">{{ primaryCtaLabel }}</span>
+            <span *ngIf="loading" class="loader" aria-hidden="true"></span>
+          </button>
+
+          <div *ngIf="errorMessage" id="admin-errorMessage" role="alert" aria-live="assertive">
+            {{ errorMessage }}
+          </div>
+        </div>
       </div>
     </div>
   </div>

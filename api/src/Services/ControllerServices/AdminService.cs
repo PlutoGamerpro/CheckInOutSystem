@@ -21,29 +21,33 @@ namespace TimeRegistration.Services
         private readonly IRegistrationRepo _repo;
         private readonly IAdminRepo _adminRepo;
         private readonly IExternalRepo _externalRepo;
-        private readonly IAdminAuthService _auth;
+        //private readonly IAdminAuthService _auth;
         private readonly IConfiguration _cfg;
         private readonly AppDbContext _ctx;
 
+        private readonly ITokenService _tokenService;
 
         public AdminService(
             IRegistrationRepo repo,
             IAdminRepo adminRepo,
             IExternalRepo externalRepo,
-            IAdminAuthService auth,
+            //  IAdminAuthService auth,
             IConfiguration cfg,
-            AppDbContext ctx)
+            AppDbContext ctx,
+            ITokenService tokenService
+            )
         {
             _repo = repo;
             _adminRepo = adminRepo;
             _externalRepo = externalRepo;
-            _auth = auth;
+            //  _auth = auth;
             _cfg = cfg;
             _ctx = ctx;
-       
+            _tokenService = tokenService;
+
         }
 
-        
+
         public LoginResult? Login(LoginRequest req)
         {
             if (req is null) return null;
@@ -51,13 +55,19 @@ namespace TimeRegistration.Services
             var password = req.Password!.Trim();
 
             var user = _ctx.Users.FirstOrDefault(u => u.Phone == phone);
-            if (user == null) throw new UnauthorizedAccessException("Invalid password");
-
+            // if (user == null) throw new UnauthorizedAccessException("Invalid password");
+            if (user == null || !user.IsManager) throw new UnauthorizedAccessException("Invalid credentials");
             LoginRequestValidator.VerifyPasswordOrThrow(password, user.Password);
 
-            var token = _auth.IssueTokenFor(phone, user.IsAdmin, /*secret, */ /*configSecret,*/ password);
-            if (token == null) throw new InvalidOperationException("Failed to issue token");
+            // just to skip error
+            // var token = "";
+            // return new LoginResult(token, user.Name);
+            var token = _tokenService.CreateToken(user);
             return new LoginResult(token, user.Name);
+
+            // var token = _auth.IssueTokenFor(phone, user.IsAdmin, /*secret, */ /*configSecret,*/ password);
+            //  if (token == null) throw new InvalidOperationException("Failed to issue token");
+            //return new LoginResult(token, user.Name);
         }
 
         public void DeleteUser(int id)

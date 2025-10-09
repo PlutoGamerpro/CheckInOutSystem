@@ -3,73 +3,37 @@ using TimeRegistration.Classes;
 using TimeRegistration.Interfaces;
 namespace TimeRegistration.Services;
 
-public interface IAdminAuthService // replace this with json token for more security
+
+public class AdminAuthService : AuthService
 {
-    string? IssueTokenFor(string phone, bool isAdmin, /*string secret,*/ /*string configSecret,*/ string password);
-    string? IssueTokenForManager(string phone, bool isManager, /*string secret,*/ /*string configSecret*/ string password);
+      private readonly IUserRepo _repo;
+    private readonly ITokenService _tokenService;
 
-    bool Validate(string token);
-}
-
-public class AdminAuthService : IAdminAuthService // name should not be admin
-{
-    private readonly IUserRepo _repo;
-    private static readonly ConcurrentDictionary<string, DateTime> _tokens = new();
-    private static readonly TimeSpan Lifetime = TimeSpan.FromHours(2);
-
-    public AdminAuthService(IUserRepo repo)
+    public AdminAuthService(IUserRepo repo, ITokenService tokenService) : base(repo) // bassed added 
     {
         _repo = repo;
+        _tokenService = tokenService;
     }
-
-    public string? IssueTokenFor(string phone, bool isAdmin, /*string secret,*/ /*string configSecret,*/ string password)
+  public string Login(string rawPhone, string? password)
     {
-        if (!isAdmin) return null;
-
-       // if (string.IsNullOrWhiteSpace(secret) /*|| secret != configSecret*/) return null;
-        var token = Guid.NewGuid().ToString("N");
-        _tokens[token] = DateTime.UtcNow.Add(Lifetime);
-        return token;
-    }
-    public string? IssueTokenForManager(string phone, bool isManager, /*string secret,*/ /*string configSecret,*/ string password)
-    {
-        if (!isManager) return null;
-
-      //  if (string.IsNullOrWhiteSpace(secret) /*|| secret != configSecret*/) return null;
-        var token = Guid.NewGuid().ToString("N");
-        _tokens[token] = DateTime.UtcNow.Add(Lifetime);
-        return token;
-    }
-
-    
-
-    public bool Validate(string token)
-    {
-        if (string.IsNullOrWhiteSpace(token)) return false;
-        if (_tokens.TryGetValue(token, out var exp))
-        {
-            if (exp > DateTime.UtcNow) return true;
-            _tokens.TryRemove(token, out _);
-        }
-        return false;
-    }
-       public User? LoginByPhone(string rawPhone, string? password)
-    {
-        var phone = AuthService.NormalizePhone(rawPhone);
+        var phone = NormalizePhone(rawPhone);
         if (string.IsNullOrWhiteSpace(phone))
-            return null;
+            throw new Exception("Invalid phone number");
 
-        var user = _repo.GetAll().FirstOrDefault(u => u.Phone != null && 
-            BCrypt.Net.BCrypt.Verify(phone, u.Phone));
-
+        var user = _repo.GetAll().FirstOrDefault(u => u.Phone == phone);
         if (user == null)
-            return null;
+            throw new Exception("User not found");
 
-        if (!BCrypt.Net.BCrypt.Verify(password, user.Password))
-            return null;
+        // Só exige senha se admin ou manager
+        if (user.IsAdmin || user.IsManager)
+        {
+            if (string.IsNullOrWhiteSpace(password) || string.IsNullOrWhiteSpace(user.Password))
+                throw new Exception("Password required");
+            if (!BCrypt.Net.BCrypt.Verify(password, user.Password))
+                throw new Exception("Invalid password");
+        }
 
-        return user;
+        return _tokenService.CreateToken(user);
     }
-
     
 }

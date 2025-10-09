@@ -1,37 +1,39 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.DependencyInjection;
 using TimeRegistration.Services;
 
-namespace TimeRegistration.Filters
+namespace TimeRegistration.Filters // file looks like adminauthorize
 {
-	// Reusable manager authorization attribute
-	[AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
-	public class ManagerAuthorizeAttribute : Attribute, IAsyncActionFilter
-	{
-		public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
-		{
-			// token is not maded 
-			var token = context.HttpContext.Request.Headers["X-Manager-Token"].FirstOrDefault() ?? "";
+    // Reusable manager authorization attribute
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
+    public class ManagerAuthorizeAttribute : Attribute, IAsyncActionFilter
+    {
+        public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
+        {
+            var authService = context.HttpContext.RequestServices.GetRequiredService<IAuthenticationService>();
 
+            var authResult = await authService.AuthenticateAsync(context.HttpContext, JwtBearerDefaults.AuthenticationScheme);
+            if (!authResult.Succeeded || authResult.Principal is null)
+            {
+                context.Result = new UnauthorizedResult();
+                return;
+            }
 
+            context.HttpContext.User = authResult.Principal;
 
-			// logic in here have to work with the manager !
+            if (!authResult.Principal.IsInRole("Manager") && !authResult.Principal.IsInRole("Admin"))
+            {
+                context.Result = new ForbidResult();
+                return;
+            }
 
-			/*
-			var token = context.HttpContext.Request.Headers["X-Admin-Token"].FirstOrDefault() ?? "";
-			var auth = context.HttpContext.RequestServices.GetService<IAdminAuthService>();
-			if (auth == null || !auth.Validate(token))
-			{
-				context.Result = new UnauthorizedResult();
-				return;
-			}
-			*/
-			await next();
-			
-		}
-	}
+            await next();
+        }
+    }
 }

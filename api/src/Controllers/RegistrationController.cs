@@ -70,7 +70,7 @@ namespace TimeRegistration.Controllers
 
         [HttpPut("{id}")] // this code part is not tested and is not possible ingame...
         [AdminAuthorize]
-        [ManagerAuthorize]
+        
         public ActionResult<Registration> Update([FromBody] UpdateRegistrationRequest record/*int id, Registration registration*/)
         {
             try
@@ -88,7 +88,7 @@ namespace TimeRegistration.Controllers
 
         [HttpDelete("{id}")]
         [AdminAuthorize]
-        [ManagerAuthorize]
+      
         public ActionResult<Registration> Delete(int id)
         {
             try
@@ -134,7 +134,7 @@ namespace TimeRegistration.Controllers
 
         [HttpPatch("{id:int}/checkout")]
         [AdminAuthorize]
-        [ManagerAuthorize]
+        
         public ActionResult<object> ForceCheckout(int id, [FromBody] ForceCheckoutRequest body)
         {
             try

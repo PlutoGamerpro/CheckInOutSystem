@@ -20,6 +20,7 @@ namespace TimeRegistration.Services
         private readonly IUserRepo _repo;
         private readonly IRegistrationRepo _registrationRepo; 
         private readonly AppDbContext _ctx;
+    
         private static readonly Regex PasswordPolicyRegex =
             new(@"^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[\W_]).+$", RegexOptions.Compiled);
 
@@ -28,6 +29,7 @@ namespace TimeRegistration.Services
             _repo = repo;
             _registrationRepo = registrationRepo;
             _ctx = ctx;
+            
         }
 
         public void CreateUser(CreateUserRequest dto)
@@ -52,6 +54,8 @@ namespace TimeRegistration.Services
                 .Where(u => !string.IsNullOrWhiteSpace(u.Name))
                 .Any(u => NormalizeName(u.Name) == name))
                 throw new Exception("Name already exists!");
+
+            
 
             var user = new User
             {

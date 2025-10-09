@@ -130,7 +130,7 @@ export class Signup {
       next: () => {
         this.successMessage = 'Bruger oprettet!';
         this.loading = false;
-         this.signupForm?.resetForm({ name: '', phone: '' }); // evita mensagens pós-sucesso
+         this.signupForm?.resetForm({ name: '', phone: '' }); // avoid post-success messages
         this.name = '';
         this.phone = '';
         setTimeout(() => {

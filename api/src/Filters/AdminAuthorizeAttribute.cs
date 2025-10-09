@@ -5,6 +5,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.DependencyInjection;
 using TimeRegistration.Services;
+using TimeRegistration.Interfaces;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace TimeRegistration.Filters
 {
@@ -14,25 +17,21 @@ namespace TimeRegistration.Filters
 	{
 		public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
 		{
-			var headers = context.HttpContext.Request.Headers;
-			var token = headers["X-Admin-Token"].FirstOrDefault()
-						?? headers["X-Manager-Token"].FirstOrDefault()
-						?? "";
+			var sp = context.HttpContext.RequestServices;
+			var authService = sp.GetRequiredService<IAuthenticationService>();
 
-			if (string.IsNullOrWhiteSpace(token))
+			var authResult = await authService.AuthenticateAsync(context.HttpContext, JwtBearerDefaults.AuthenticationScheme);
+			if (!authResult.Succeeded || authResult.Principal is null)
 			{
 				context.Result = new UnauthorizedResult();
 				return;
 			}
 
-			var sp = context.HttpContext.RequestServices;
-			var adminAuth = sp.GetService<IAdminAuthService>();
+			context.HttpContext.User = authResult.Principal;
 
-			var ok = adminAuth != null && adminAuth.Validate(token);
-
-			if (!ok)
+			if (!authResult.Principal.IsInRole("Admin") && !authResult.Principal.IsInRole("Manager"))
 			{
-				context.Result = new UnauthorizedResult();
+				context.Result = new ForbidResult();
 				return;
 			}
 

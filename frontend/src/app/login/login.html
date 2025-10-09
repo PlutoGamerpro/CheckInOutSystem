@@ -3,7 +3,7 @@
   <div id="login-container">
     <div class="loginContainer">
       <!-- Login page title -->
-      <h1 id="login-title">Check ind/ud</h1>
+      <h1 id="login-title">Check in/out</h1>
 
       <!-- Phone number input field with floating label and validation -->
       <div class="field">
@@ -26,16 +26,16 @@
           [attr.aria-invalid]="phoneCtrl.invalid && phoneCtrl.touched ? true : null"
           [attr.aria-describedby]="(phoneCtrl.invalid && phoneCtrl.touched) ? 'phoneError' : null"
         />
-        <label for="loginField" class="floating">Telefonnummer (8 cifre)</label>
+        <label for="loginField" class="floating">Phone number (8 digits)</label>
         <!-- Error message for invalid phone input -->
         <div class="field-error" *ngIf="phoneCtrl.touched && phoneCtrl.invalid" id="phoneError" aria-live="assertive">
-          Indtast et gyldigt telefonnummer med 8 cifre.
+          Please enter a valid phone number with 8 digits.
         </div>
       </div>
 
       <!-- Submit button with loading spinner -->
       <button id="loginBtn" type="submit" [disabled]="loading || loginForm.invalid" [attr.aria-busy]="loading ? 'true' : null">
-        <span *ngIf="!loading">Check ind/ud</span>
+        <span *ngIf="!loading">Check in/out</span>
         <span *ngIf="loading" class="loader" aria-hidden="true"></span>
       </button>
 
@@ -53,8 +53,8 @@
 
       <!-- Signup link section -->
       <div id="signUpContainer">
-        <span class="signUpLabel">Har du ikke en konto?</span>
-        <button type="button" id="signUpBtn" (click)="goToSignup()">Tilmeld dig</button>
+        <span class="signUpLabel">Don't have an account?</span>
+        <button type="button" id="signUpBtn" (click)="goToSignup()">Signup</button>
       </div>
     </div>
   </div>

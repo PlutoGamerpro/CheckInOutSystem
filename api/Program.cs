@@ -2,9 +2,10 @@ using Microsoft.EntityFrameworkCore; // manter única ocorrência
 using Npgsql.EntityFrameworkCore.PostgreSQL; 
 using TimeRegistration.Data;
 using Microsoft.Extensions.DependencyInjection; 
-using Microsoft.Extensions.DependencyInjection.Extensions; 
-
-
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using TimeRegistration.Extensions;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -40,6 +41,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapControllers();
 app.Run();

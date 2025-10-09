@@ -8,7 +8,7 @@
       <button id="homeBtn" type="button" (click)="goToLogin()" aria-label="Tilbage til login"></button>
 
       <!-- Signup page title -->
-      <h1 id="signup-title">Tilmeld dig</h1>
+      <h1 id="signup-title">Signup</h1>
 
       <!-- Name input field with floating label and validation -->
       <div class="field">
@@ -30,10 +30,10 @@
           [attr.aria-invalid]="nameCtrl.invalid && nameCtrl.touched ? true : null"
           [attr.aria-describedby]="(nameCtrl.invalid && nameCtrl.touched) ? 'nameError' : null"
         />
-        <label for="nameField" class="floating">Fornavn & Efternavn</label>
+        <label for="nameField" class="floating">First name & Last name</label>
         <!-- Error message for invalid name input -->
         <div class="field-error" *ngIf="nameCtrl.touched && nameCtrl.invalid" id="nameError" aria-live="assertive">
-          Indtast fornavn og efternavn.
+          Please enter your first and last name.
         </div>
       </div>
 
@@ -59,16 +59,16 @@
           [attr.aria-invalid]="phoneCtrl.invalid && phoneCtrl.touched ? true : null"
           [attr.aria-describedby]="(phoneCtrl.invalid && phoneCtrl.touched) ? 'phoneError' : null"
         />
-        <label for="phoneField" class="floating">Telefonnummer (8 cifre)</label>
+        <label for="phoneField" class="floating">Phone number (8 digits)</label>
         <!-- Error message for invalid phone input -->
         <div class="field-error" *ngIf="phoneCtrl.touched && phoneCtrl.invalid" id="phoneError" aria-live="assertive">
-          Indtast et gyldigt telefonnummer med 8 cifre.
+          Please enter a valid phone number with 8 digits.
         </div>
       </div>
 
       <!-- Signup submit button with loading spinner -->
       <button id="signupBtn" type="submit" [disabled]="loading || signupForm.invalid" [attr.aria-busy]="loading ? 'true' : null">
-        <span *ngIf="!loading">Tilmeld dig</span>
+        <span *ngIf="!loading">Signup</span>
         <span *ngIf="loading" class="loader" aria-hidden="true"></span>
       </button>
 
@@ -76,7 +76,7 @@
       <div *ngIf="errorMessage" id="signup-errorMessage" role="alert" aria-live="assertive">{{ errorMessage }}</div>
       <!-- Success message for signup process -->
       <div *ngIf="successMessage" id="signup-successMessage" aria-live="polite">
-        {{ successMessage }}<span> Du bliver sendt til login...</span>
+        {{ successMessage }}<span> You will be sent to login....</span>
       </div>
     </div>
   </div>

@@ -18,7 +18,7 @@ namespace TimeRegistration.Controllers
         }
 
         [HttpGet("managers")]
-        [ManagerAuthorize]
+        // needs to add [ManagerAuthorize] when filter is fixed
         public IActionResult GetAllManagers()
         {
             var managers = _managerService.GetAllManagers();
@@ -48,7 +48,7 @@ namespace TimeRegistration.Controllers
         */
 
         [HttpPut("user")]
-        [ManagerAuthorize]
+        // needs to add [ManagerAuthorize] when filter is fixed
         public IActionResult UpdateUser([FromBody] UserRecordRequest userRecordRequest)
         {
             try
