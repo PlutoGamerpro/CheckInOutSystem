@@ -1,9 +1,30 @@
 <!-- Login form with phone number input and check in/out button -->
-<form (ngSubmit)="checkInOrOut()" #loginForm="ngForm" novalidate [class.loading]="loading">
+<form
+  (ngSubmit)="checkInOrOut()"
+  #loginForm="ngForm"
+  novalidate
+  [class.loading]="loading"
+>
   <div id="login-container">
     <div class="loginContainer">
+      <!-- Home button to navigate back to the home page -->
+      <button
+        id="homeBtn"
+        type="button"
+        (click)="goHome()"
+        aria-label="Tilbage til forsiden"
+      ></button>
+
       <!-- Login page title -->
       <h1 id="login-title">Check in/out</h1>
+
+      <!-- Subtitle for the login form -->
+      <p class="login-subtitle">
+        Indtast dit 8-cifrede telefonnummer for at checke ind eller ud.
+      </p>
+
+      <!-- Status chip to display dynamic status messages -->
+      <div class="status-chip" *ngIf="statusText">{{ statusText }}</div>
 
       <!-- Phone number input field with floating label and validation -->
       <div class="field">
@@ -28,15 +49,27 @@
         />
         <label for="loginField" class="floating">Phone number (8 digits)</label>
         <!-- Error message for invalid phone input -->
-        <div class="field-error" *ngIf="phoneCtrl.touched && phoneCtrl.invalid" id="phoneError" aria-live="assertive">
+        <div
+          class="field-error"
+          *ngIf="phoneCtrl.touched && phoneCtrl.invalid"
+          id="phoneError"
+          aria-live="assertive"
+        >
           Please enter a valid phone number with 8 digits.
         </div>
       </div>
 
-      <!-- Submit button with loading spinner -->
-      <button id="loginBtn" type="submit" [disabled]="loading || loginForm.invalid" [attr.aria-busy]="loading ? 'true' : null">
-        <span *ngIf="!loading">Check in/out</span>
+      <!-- Submit button with loading spinner and dynamic label -->
+      <button
+        id="loginBtn"
+        type="submit"
+        [disabled]="loading || loginForm.invalid"
+        [attr.aria-busy]="loading ? 'true' : null"
+        [class.is-loading]="loading"
+      >
+        <span *ngIf="!loading">{{ actionLabel }}</span>
         <span *ngIf="loading" class="loader" aria-hidden="true"></span>
+        <span *ngIf="loading" class="sr-only">Behandler forespørgslen</span>
       </button>
 
       <!-- Show check-in time if available -->
@@ -49,12 +82,16 @@
       </div>
 
       <!-- Feedback message for login result -->
-      <div *ngIf="message" class="feedback" role="alert" aria-live="polite">{{ message }}</div>
+      <div *ngIf="message" class="feedback" role="alert" aria-live="polite">
+        {{ message }}
+      </div>
 
       <!-- Signup link section -->
       <div id="signUpContainer">
         <span class="signUpLabel">Don't have an account?</span>
-        <button type="button" id="signUpBtn" (click)="goToSignup()">Signup</button>
+        <button type="button" id="signUpBtn" (click)="goToSignup()">
+          Signup
+        </button>
       </div>
     </div>
   </div>
