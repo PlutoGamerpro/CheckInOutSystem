@@ -10,13 +10,15 @@ namespace TimeRegistration.Filters
 {
 	// Reusable administrator authorization attribute
 	[AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
+
+	// old name AdminAuthorizeAttribute
 	public class AdminAuthorizeAttribute : Attribute, IAsyncActionFilter
 	{
 		public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
 		{
 			var headers = context.HttpContext.Request.Headers;
 			var token = headers["X-Admin-Token"].FirstOrDefault()
-						?? headers["X-Manager-Token"].FirstOrDefault()
+					//	?? headers["X-Manager-Token"].FirstOrDefault()
 						?? "";
 
 			if (string.IsNullOrWhiteSpace(token))

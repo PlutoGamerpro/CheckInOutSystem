@@ -54,8 +54,7 @@ namespace TimeRegistration.Controllers
         }
 
         [HttpDelete("user/{id}")]
-        [AdminAuthorize]
-
+        [StaffAuthorize]
         public IActionResult DeleteUser(int id)
         {
             try
@@ -73,7 +72,8 @@ namespace TimeRegistration.Controllers
 
         // [HttpPut("user/{id}")]
         [HttpPut("user")]
-        [AdminAuthorize] // could return a token instead change call to take record 
+        [AdminAuthorize] // could return a token instead change call to take record
+        // only admin can undtil other update is made for manager 
 
         public IActionResult UpdateUser([FromBody] UserRecordRequest userRecordRequest /* int id, User user*/)
         {
@@ -182,10 +182,12 @@ namespace TimeRegistration.Controllers
             if ((end - start).TotalDays > 400) return BadRequest("Intervalo muito grande (max 400 dias).");
             return Ok(GetRegistrationsJoinRange(start, end));
         }
+    }
+}
     
 
         
-                
+    /*
         [HttpPost("seed-basic")]
         public IActionResult SeedBasic([FromQuery] bool force = false)
         {
@@ -305,3 +307,4 @@ namespace TimeRegistration.Controllers
 // ...existing code (resto dos endpoints)...
 
 
+*/

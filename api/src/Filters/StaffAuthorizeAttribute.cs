@@ -8,16 +8,18 @@ using TimeRegistration.Services;
 
 namespace TimeRegistration.Filters
 {
-	// Reusable manager authorization attribute
+	// Reusable administrator authorization attribute
 	[AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
-	public class ManagerAuthorizeAttribute : Attribute, IAsyncActionFilter
+
+	// old name AdminAuthorizeAttribute
+	public class StaffAuthorizeAttribute : Attribute, IAsyncActionFilter
 	{
 		public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
 		{
-
-		var headers = context.HttpContext.Request.Headers;
-			var token = headers["X-Manager-Token"].FirstOrDefault()
-			?? "";
+			var headers = context.HttpContext.Request.Headers;
+			var token = headers["X-Admin-Token"].FirstOrDefault()
+						?? headers["X-Manager-Token"].FirstOrDefault()
+						?? "";
 
 			if (string.IsNullOrWhiteSpace(token))
 			{
@@ -36,10 +38,7 @@ namespace TimeRegistration.Filters
 				return;
 			}
 
-			await next();	
-
-
-		
+			await next();
 		}
 	}
 }

@@ -19,7 +19,7 @@ namespace TimeRegistration.Controllers
         }
 
         [HttpDelete("user/{id}")]
-        [AdminAuthorize]
+        [StaffAuthorize]
         public IActionResult DeleteUser(int id)
         {
             try

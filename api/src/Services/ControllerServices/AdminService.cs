@@ -18,11 +18,11 @@ namespace TimeRegistration.Services
 {
     public class AdminService : IAdminService
     {
-        private readonly IRegistrationRepo _repo;
+       // private readonly IRegistrationRepo _repo;
         private readonly IAdminRepo _adminRepo;
         private readonly IExternalRepo _externalRepo;
         private readonly IAdminAuthService _auth;
-        private readonly IConfiguration _cfg;
+       // private readonly IConfiguration _cfg;
         private readonly AppDbContext _ctx;
 
 
@@ -31,14 +31,14 @@ namespace TimeRegistration.Services
             IAdminRepo adminRepo,
             IExternalRepo externalRepo,
             IAdminAuthService auth,
-            IConfiguration cfg,
+          //  IConfiguration cfg,
             AppDbContext ctx)
         {
-            _repo = repo;
+           // _repo = repo;
             _adminRepo = adminRepo;
             _externalRepo = externalRepo;
             _auth = auth;
-            _cfg = cfg;
+         //   _cfg = cfg;
             _ctx = ctx;
        
         }

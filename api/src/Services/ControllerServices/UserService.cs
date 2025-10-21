@@ -61,7 +61,7 @@ namespace TimeRegistration.Services
                 IsManager = dto.IsManager 
             };
 
-            // NOVO: valida e aplica senha (condicional)
+            
             var hashed = EnsurePasswordValid(user, dto.Password);
             user.Password = hashed;
 
@@ -139,8 +139,8 @@ namespace TimeRegistration.Services
             if (string.IsNullOrWhiteSpace(plainPassword))
                 return null; // usuário comum sem senha
 
-            if (plainPassword.Length < 8)
-                throw new Exception("Password must be at least 8 characters long");
+            if (plainPassword.Length < 6)
+                throw new Exception("Password must be at least 6 characters long");
 
             if (!PasswordPolicyRegex.IsMatch(plainPassword))
                 throw new Exception("Password must contain uppercase, lowercase, number and special character");
