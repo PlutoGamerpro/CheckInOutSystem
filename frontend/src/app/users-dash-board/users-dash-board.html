@@ -1,40 +1,58 @@
-<h2>All Users</h2>
+<div class="dashboard-header">
+  <h2 class="page-title">Brugeroversigt</h2>
+  <span class="api-chip" id="api-chip">
+    <span class="dot"></span>
+    <span class="txt">API: checker…</span>
+  </span>
+</div>
 
+<div class="toolbar">
+  <button class="btn btn-primary" (click)="load()">Reload</button>
+  <button class="btn btn-outline" (click)="Home()">Home</button>
+  <button class="btn btn-outline" (click)="Registrations()">Registrations</button>
+</div>
 
-
-  <div class="toolbar">
-    <button class="btn btn-primary" (click)="load()">Reload</button>
-    <button class="btn btn-outline" (click)="Home()">Home</button>
-    <button class="btn btn-outline" (click)="Registrations()">Registrations</button>
- </div>
-
-
-
-<div *ngIf="loading" class="info info-loading">Loading users...</div>
+<div *ngIf="loading" class="info info-loading">Indlæser brugere…</div>
 <div *ngIf="error" class="info info-error">{{ error }}</div>
 
 <table class="data-table" *ngIf="!loading && users.length">
   <thead>
     <tr>
       <th>ID</th>
-      <th>Name</th>
-      <th>Phone</th>
-      <th>Is Admin</th>
-      <th>Is Manager</th>
+      <th>Navn</th>
+      <th>Telefon</th>
+      <th>Admin</th>
+      <th>Manager</th>
       <th>Edit</th>
-      <th>Delete</th>
+      <th>Slet</th>
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let u of users">
+    <tr *ngFor="let u of users" [class.row-highlight]="editUser?.id === u.id">
       <ng-container *ngIf="editUser?.id !== u.id; else editRow">
         <td>{{ u.id }}</td>
-        <td>{{ u.name }}</td>
-        <td>{{ u.phone }}</td>
-        <td>{{ u.isAdmin ? 'Yes' : 'No' }}</td>
-        <td>{{ u.isManager ? 'Yes' : 'No' }}</td>
-        <td><button class="btn btn-sm" (click)="startEdit(u)">Edit</button></td>
-        <td><button class="btn btn-danger btn-sm" (click)="DeleteUser(u.id)">Delete</button></td>
+        <td>
+          <span class="user-name">{{ u.name }}</span>
+        </td>
+        <td>
+          <span class="user-phone">{{ u.phone }}</span>
+        </td>
+        <td>
+          <span class="status-pill" [class.is-open]="u.isAdmin" [class.is-closed]="!u.isAdmin">
+            {{ u.isAdmin ? 'Ja' : 'Nej' }}
+          </span>
+        </td>
+        <td>
+          <span class="status-pill" [class.is-open]="u.isManager" [class.is-closed]="!u.isManager">
+            {{ u.isManager ? 'Ja' : 'Nej' }}
+          </span>
+        </td>
+        <td>
+          <button class="btn btn-sm" (click)="startEdit(u)">Rediger</button>
+        </td>
+        <td>
+          <button class="btn btn-danger btn-sm" (click)="DeleteUser(u.id)">Slet</button>
+        </td>
       </ng-container>
       <ng-template #editRow>
         <td>{{ editUser.id }}</td>
@@ -42,48 +60,54 @@
         <td><input [(ngModel)]="editUser.phone" class="form-control" /></td>
         <td>
           <select [(ngModel)]="editUser.isAdmin" class="form-control">
-            <option [ngValue]="true">Yes</option>
-            <option [ngValue]="false">No</option>
+            <option [ngValue]="true">Ja</option>
+            <option [ngValue]="false">Nej</option>
           </select>
         </td>
         <td>
           <select [(ngModel)]="editUser.isManager" class="form-control" [disabled]="managerOnly">
-            <option [ngValue]="true">Yes</option>
-            <option [ngValue]="false">No</option>
+            <option [ngValue]="true">Ja</option>
+            <option [ngValue]="false">Nej</option>
           </select>
           <div *ngIf="managerOnly" style="font-size:.65rem;color:#b00;margin-top:2px">
-            Somente admin pode alterar isManager.
+            Kun admin kan ændre manager-status.
           </div>
         </td>
         <td>
-          <button class="btn btn-primary btn-sm" (click)="saveEdit()">Save</button>
-          <button class="btn btn-outline btn-sm" (click)="cancelEdit()">Cancel</button>
+          <button class="btn btn-primary btn-sm" (click)="saveEdit()">Gem</button>
+          <button class="btn btn-outline btn-sm" (click)="cancelEdit()">Annuller</button>
         </td>
         <td>
-          <button class="btn btn-danger btn-sm" (click)="DeleteUser(editUser.id)" [disabled]="loading">Delete</button>
+          <button class="btn btn-danger btn-sm" (click)="DeleteUser(editUser.id)" [disabled]="loading">Slet</button>
         </td>
       </ng-template>
     </tr>
   </tbody>
 </table>
 
-
-<!--
-  <div *ngIf="loading" class="info info-loading">Loading...</div>
-  <div *ngIf="error && !networkDown" class="info info-error">{{ error }}</div>
-  <div *ngIf="networkDown" class="info info-error">
-    Não foi possível conectar ao backend.<br>
-    Verifique se o servidor está rodando e a URL base.<br>
-    <small>{{ lastUrl }}</small><br>
-    <button class="btn btn-outline btn-sm" (click)="load()">Retry</button>
-  </div>
-  <div *ngIf="!loading && allFieldsEmpty" class="info info-error">
-    Registros carregados mas campos normalizados estão vazios.
-    <div *ngIf="detectedKeys.length">
-      Campos recebidos: {{ detectedKeys.join(', ') }}
-    </div>
-
-
-  </div>
-
-<!--  <table *ngIf="!loading && registrations.length" class="data-table"></table> -->
+<script>
+  // API status badge logic
+  (() => {
+    const chip = document.getElementById('api-chip');
+    if (!chip) return;
+    const dot = chip.querySelector('.dot');
+    const txt = chip.querySelector('.txt');
+    function setState(state, message) {
+      chip.classList.remove('online', 'offline');
+      chip.classList.add(state);
+      txt.textContent = message;
+      dot.style.background = state === 'online' ? '#27ae60' : '#e03131';
+    }
+    async function ping() {
+      try {
+        const res = await fetch('/api/health', { method: 'GET', cache: 'no-store' });
+        if (res.ok) setState('online', 'API: online');
+        else setState('offline', 'API: fejl');
+      } catch {
+        setState('offline', 'API: offline');
+      }
+    }
+    ping();
+    setInterval(ping, 30000);
+  })();
+</script>

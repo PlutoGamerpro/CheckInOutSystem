@@ -2,8 +2,16 @@
 <form (ngSubmit)="checkInOrOut()" #loginForm="ngForm" novalidate [class.loading]="loading">
   <div id="login-container">
     <div class="loginContainer">
-      <!-- Login page title -->
-      <h1 id="login-title">Check ind/ud</h1>
+      <div class="login-header">
+        <!-- Login page title -->
+        <h1 id="login-title">Check ind/ud</h1>
+        <p class="subtitle">Hold styr på din arbejdstid med et enkelt tap.</p>
+      </div>
+      <!-- Status chip indicating check-in or check-out status -->
+      <div *ngIf="checkInTime || checkOutTime" class="status-chip" [class.checked-in]="isCheckedIn" [class.checked-out]="!isCheckedIn" aria-live="polite">
+        <span class="dot"></span>
+        <span>{{ isCheckedIn ? 'Du er checket ind' : 'Du er checket ud' }}</span>
+      </div>
 
       <!-- Phone number input field with floating label and validation -->
       <div class="field">
@@ -31,6 +39,7 @@
         <div class="field-error" *ngIf="phoneCtrl.touched && phoneCtrl.invalid" id="phoneError" aria-live="assertive">
           Indtast et gyldigt telefonnummer med 8 cifre.
         </div>
+        <small class="helper-text">Dit nummer bruges kun til at registrere dine ind- og udtjekninger.</small>
       </div>
 
       <!-- Submit button with loading spinner -->
@@ -51,10 +60,10 @@
       <!-- Feedback message for login result -->
       <div *ngIf="message" class="feedback" role="alert" aria-live="polite">{{ message }}</div>
 
-      <!-- Signup link section -->
-      <div id="signUpContainer">
-        <span class="signUpLabel">Har du ikke en konto?</span>
-        <button type="button" id="signUpBtn" (click)="goToSignup()">Tilmeld dig</button>
+      <!-- Extra action row with profile creation and support link -->
+      <div class="action-row">
+        <button type="button" class="ghost-btn" (click)="goToSignup()">Opret profil</button>
+        <a class="support-link" href="mailto:support@example.com">Har du brug for hjælp?</a>
       </div>
     </div>
   </div>
