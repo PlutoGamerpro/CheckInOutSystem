@@ -15,63 +15,55 @@ import { environment } from '../../environments/environment';
 })
 export class Signup {
   @ViewChild('signupForm') signupForm?: NgForm;
-  name: string = '';
+  username: string = '';
   phone: string = '';
   errorMessage: string = '';
   successMessage: string = '';
   loading = false;
 
-  @ViewChild('nameInput') nameInput?: ElementRef<HTMLInputElement>;
+  @ViewChild('usernameInput') usernameInput?: ElementRef<HTMLInputElement>;
   @ViewChild('phoneInput') phoneInput?: ElementRef<HTMLInputElement>;
-
-  private nameRegex = /^[A-Za-zÀ-ÖØ-öø-ÿ]+(?:\s+[A-Za-zÀ-ÖØ-öø-ÿ'-]+)+$/;
 
   constructor(private http: HttpClient, private router: Router) {}
   
 
-   // Allow only number keys and control keys in the phone input
- allowOnlyNumbers(event: KeyboardEvent): void {
-    const allowedKeys = [
-      'Backspace', 'ArrowLeft', 'ArrowRight', 'Tab', 'Delete', 'Enter', 'Home', 'End'
-    ];
-    const ctrlCombo =
-      event.ctrlKey || event.metaKey
-        ? ['a', 'c', 'v', 'x', 'A', 'C', 'V', 'X'].includes(event.key)
-        : false;
+  // handles the login redirection
+  goToLogin() {
+    this.router.navigate(['/']);
+  }
 
-    if (allowedKeys.includes(event.key) || ctrlCombo) return;
-
-    if (event.key.length === 1) {
-      const isDigit = /^[0-9]$/.test(event.key);
-      if (!isDigit) event.preventDefault();
+  private focusFirstInvalid() {
+    if (!this.username || this.username.trim().length === 0) {
+      this.usernameInput?.nativeElement.focus();
+      return;
+    }
+    const digits = (this.phone ?? '').replace(/\D/g, '');
+    if (digits.length !== 8) {
+      this.phoneInput?.nativeElement.focus();
     }
   }
 
+  // Allow only letters, spaces, hyphen and apostrophe in the name field
   allowOnlyLetters(event: KeyboardEvent): void {
-      const allowedKeys = [
-      'Backspace', 'ArrowLeft', 'ArrowRight', 'Tab', 'Delete', 'Enter', 'Home', 'End'
-    ];
-    const ctrlCombo =
-      event.ctrlKey || event.metaKey
-        ? ['a', 'c', 'v', 'x', 'A', 'C', 'V', 'X'].includes(event.key)
-        : false;
+    const allowed = ['Backspace','ArrowLeft','ArrowRight','Tab','Delete','Enter','Home','End'];
+    const combo = (event.ctrlKey || event.metaKey) && /[acvx]/i.test(event.key);
+    if (allowed.includes(event.key) || combo) return;
+    if (event.key.length === 1 && !/^[A-Za-zÀ-ÖØ-öø-ÿ' -]$/.test(event.key)) event.preventDefault();
+  }
 
-    if (allowedKeys.includes(event.key) || ctrlCombo) return;
-
-    if (event.key.length === 1) {
-      const isAllowedChar = /^[A-Za-zÀ-ÖØ-öø-ÿ' -]$/.test(event.key);
-      if (!isAllowedChar) event.preventDefault();
-    }
+  // Allow only number keys and control keys in the phone input
+  allowOnlyNumbers(event: KeyboardEvent): void {
+    const allowed = ['Backspace','ArrowLeft','ArrowRight','Tab','Delete','Enter','Home','End'];
+    const combo = (event.ctrlKey || event.metaKey) && /[acvx]/i.test(event.key);
+    if (allowed.includes(event.key) || combo) return;
+    if (event.key.length === 1 && !/^[0-9]$/.test(event.key)) event.preventDefault();
   }
 
   // Only allow pasting numbers into the phone input
   onPasteNumbersOnly(event: ClipboardEvent): void {
     const data = event.clipboardData?.getData('text') ?? '';
     const digits = data.replace(/\D/g, '');
-    if (digits.length === 0) {
-      event.preventDefault();
-      return;
-    }
+    if (!digits) { event.preventDefault(); return; }
     event.preventDefault();
     const target = event.target as HTMLInputElement;
     const start = target.selectionStart ?? target.value.length;
@@ -81,43 +73,20 @@ export class Signup {
     this.phone = target.value;
   }
 
-  // handles the login redirection
-  goToLogin() {
-    this.router.navigate(['/']);
-  }
-
-  private focusFirstInvalid() {
-  
-    if (!this.isValidName(this.name)) {
-      this.nameInput?.nativeElement.focus();
-      return;
-    }
-    const phoneDigits = (this.phone ?? '').replace(/\D/g, '');
-    if (phoneDigits.length !== 8) {
-      this.phoneInput?.nativeElement.focus();
-    }
-  }
-
-  private isValidName(value: string): boolean {
-    const v = (value ?? '').trim();
-    return v.length > 0 && this.nameRegex.test(v);
-  }
-
   // onsubmit creating a user 
   onSubmit() { 
     this.errorMessage = '';
     this.successMessage = '';
 
-    const nameTrimmed = (this.name ?? '').trim();
+    const usernameTrimmed = (this.username ?? '').trim();
     const phoneDigits = (this.phone ?? '').replace(/\D/g, '');
-    this.phone = phoneDigits; 
 
-    if (!this.isValidName(nameTrimmed)) {
-      this.errorMessage = 'Fornavn & Efternavn skal udfyldes (indtast mindst to ord).';
+    const nameRegex = /^[A-Za-zÀ-ÖØ-öø-ÿ]+(?:\s+[A-Za-zÀ-ÖØ-öø-ÿ'-]+)+$/;
+    if (!usernameTrimmed || !nameRegex.test(usernameTrimmed)) {
+      this.errorMessage = 'Fornavn & efternavn skal udfyldes (mindst to ord).';
       this.focusFirstInvalid();
       return;
     }
-
     if (phoneDigits.length !== 8) {
       this.errorMessage = 'Telefonnummer skal være 8 cifre.';
       this.focusFirstInvalid();
@@ -126,12 +95,12 @@ export class Signup {
 
     this.loading = true;
     // Use environment.baseApiUrl for the API endpoint
-    this.http.post(`${environment.baseApiUrl}/user`, { name: nameTrimmed, phone: phoneDigits }).subscribe({
+    this.http.post(`${environment.baseApiUrl}/user`, { name: usernameTrimmed, phone: phoneDigits }).subscribe({
       next: () => {
-        this.successMessage = 'Bruger oprettet!';
+        this.successMessage = 'User created!';
         this.loading = false;
-         this.signupForm?.resetForm({ name: '', phone: '' }); // avoid post-success messages
-        this.name = '';
+        this.signupForm?.resetForm({ username: '', phone: '' });
+        this.username = '';
         this.phone = '';
         setTimeout(() => {
           this.router.navigate(['/']);
@@ -143,7 +112,7 @@ export class Signup {
           const raw = typeof err.error === 'string'
             ? err.error
             : (err.error?.message || JSON.stringify(err.error || ''));
-          if (/name/i.test(raw)) {
+          if (/name|username/i.test(raw)) {
             this.errorMessage = 'Navnet eksisterer allerede!';
           } else if (/phone|telefon/i.test(raw)) {
             this.errorMessage = 'Telefonnummeret eksisterer allerede!';

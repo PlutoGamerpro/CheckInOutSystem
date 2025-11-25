@@ -1,43 +1,36 @@
-<!-- Signup form with name and phone number fields -->
+<!-- Simple signup form with username and password fields -->
 <form (ngSubmit)="onSubmit()" #signupForm="ngForm" novalidate [class.loading]="loading">
   <div id="signup-container">
-
-
     <div id="signupContainer" class="signupContainer" #signupContainer>
       <!-- Back button to return to login -->
       <button id="homeBtn" type="button" (click)="goToLogin()" aria-label="Tilbage til login"></button>
-
       <!-- Signup page title -->
       <h1 id="signup-title">Signup</h1>
-
-      <!-- Name input field with floating label and validation -->
+      <!-- Name input field (first + last) -->
       <div class="field">
         <input
-          id="nameField"
-          #nameInput
+          id="usernameField"
+          #usernameInput
           class="text-input"
           type="text"
-          name="name"
-          [(ngModel)]="name"
+          name="username"
+          [(ngModel)]="username"
           required
-          autocomplete="name"
           autocapitalize="words"
-          spellcheck="false"
+          autocomplete="username"
           placeholder=" "
           pattern="^[A-Za-zÀ-ÖØ-öø-ÿ]+(?:\s+[A-Za-zÀ-ÖØ-öø-ÿ'-]+)+$"
           (keydown)="allowOnlyLetters($event)"
-          #nameCtrl="ngModel"
-          [attr.aria-invalid]="nameCtrl.invalid && nameCtrl.touched ? true : null"
-          [attr.aria-describedby]="(nameCtrl.invalid && nameCtrl.touched) ? 'nameError' : null"
+          #usernameCtrl="ngModel"
+          [attr.aria-invalid]="usernameCtrl.invalid && usernameCtrl.touched ? true : null"
+          [attr.aria-describedby]="(usernameCtrl.invalid && usernameCtrl.touched) ? 'usernameError' : null"
         />
-        <label for="nameField" class="floating">First name & Last name</label>
-        <!-- Error message for invalid name input -->
-        <div class="field-error" *ngIf="nameCtrl.touched && nameCtrl.invalid" id="nameError" aria-live="assertive">
+        <label for="usernameField" class="floating">First name & Last name</label>
+        <div class="field-error" *ngIf="usernameCtrl.touched && usernameCtrl.invalid" id="usernameError" aria-live="assertive">
           Please enter your first and last name.
         </div>
       </div>
-
-      <!-- Phone number input field with floating label and validation -->
+      <!-- Phone number input field -->
       <div class="field">
         <input
           id="phoneField"
@@ -60,18 +53,15 @@
           [attr.aria-describedby]="(phoneCtrl.invalid && phoneCtrl.touched) ? 'phoneError' : null"
         />
         <label for="phoneField" class="floating">Phone number (8 digits)</label>
-        <!-- Error message for invalid phone input -->
         <div class="field-error" *ngIf="phoneCtrl.touched && phoneCtrl.invalid" id="phoneError" aria-live="assertive">
           Please enter a valid phone number with 8 digits.
         </div>
       </div>
-
       <!-- Signup submit button with loading spinner -->
       <button id="signupBtn" type="submit" [disabled]="loading || signupForm.invalid" [attr.aria-busy]="loading ? 'true' : null">
         <span *ngIf="!loading">Signup</span>
         <span *ngIf="loading" class="loader" aria-hidden="true"></span>
       </button>
-
       <!-- Error message for signup process -->
       <div *ngIf="errorMessage" id="signup-errorMessage" role="alert" aria-live="assertive">{{ errorMessage }}</div>
       <!-- Success message for signup process -->

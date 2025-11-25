@@ -1,6 +1,11 @@
 
 
 
+## User for testing
+## phone: number: 99999991
+## password %Rest!10KE
+
+
 ##### FIXED LIST
 
 #### Delete users without confirmation (FIXED)

@@ -11,16 +11,18 @@ $shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
 
 .admin-login-shell {
   min-height: 100vh;
-  display: grid;
-  grid-template-columns: minmax(320px, 520px) minmax(320px, 1fr);
-  background: linear-gradient(135deg, rgba($bg1, .96), rgba($bg2, .98));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(1rem, 4vw, 3rem);
+  background:
+    radial-gradient(800px 600px at 15% 10%, rgba($accent, .18), transparent 60%),
+    radial-gradient(900px 700px at 85% 90%, rgba($accent2, .14), transparent 60%),
+    linear-gradient(135deg, rgba($bg1, .96), rgba($bg2, .98));
   color: $white;
   position: relative;
   overflow: hidden;
-
-  @media (max-width: 980px) {
-    grid-template-columns: 1fr;
-  }
+  animation: bgShift 16s ease-in-out infinite alternate;
 }
 
 .hero-pane {
@@ -171,6 +173,8 @@ form.loading { cursor: progress; }
 #admin-login-container {
   display: flex;
   justify-content: center;
+  align-items: center;
+  width: 100%;
 }
 
 .adminLoginContainer {
@@ -185,6 +189,7 @@ form.loading { cursor: progress; }
   box-shadow: $shadow;
   border: 1px solid rgba(255, 255, 255, 0.12);
   color: $white;
+  animation: popIn .7s cubic-bezier(.2,.75,.2,1);
 
   &[data-step='success'] { gap: 1.6rem; }
 }
@@ -298,7 +303,8 @@ form.loading { cursor: progress; }
 
   &:focus-within {
     border-color: rgba($accent, .8);
-    box-shadow: 0 0 0 3px rgba($accent, .2);
+    box-shadow: 0 0 0 3px rgba($accent, .25), 0 10px 28px rgba(0,0,0,.25);
+    transform: translateY(-1px);
   }
 
   .field-icon { color: rgba(255,255,255,.85); }
@@ -312,6 +318,7 @@ form.loading { cursor: progress; }
     padding: 1.1rem .75rem .5rem .2rem;
 
     &::placeholder { color: rgba(255,255,255,.5); }
+    transition: color .18s ease;
   }
 }
 
@@ -353,6 +360,8 @@ form.loading { cursor: progress; }
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  position: relative;
+  overflow: hidden;
 
   &:hover:not(:disabled) {
     transform: translateY(-2px) scale(1.02);
@@ -363,6 +372,17 @@ form.loading { cursor: progress; }
 }
 
 #adminLoginBtn::before { content: "🔐 "; font-size: 1.15rem; margin-right: .15rem; }
+
+#adminLoginBtn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, transparent 0%, rgba(255,255,255,.15) 50%, transparent 100%);
+  transform: translateX(-120%);
+  transition: transform .5s ease;
+}
+
+#adminLoginBtn:hover::after { transform: translateX(120%); }
 
 .loader {
   border: 3px solid rgba(255,255,255,.36);
@@ -378,6 +398,16 @@ form.loading { cursor: progress; }
 #admin-errorMessage { color: $error; margin-top: .4rem; font-weight: 600; text-align: center; font-size: .9rem; }
 
 @keyframes spin { to { transform: rotate(360deg); } }
+
+@keyframes popIn {
+  from { opacity: 0; transform: translateY(16px) scale(.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes bgShift {
+  0% { background-position: 0% 0%, 100% 100%, 50% 50%; }
+  100% { background-position: 10% 5%, 90% 95%, 50% 50%; }
+}
 
 @media (prefers-color-scheme: light) {
   .admin-login-shell {
