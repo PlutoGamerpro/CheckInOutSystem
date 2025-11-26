@@ -71,6 +71,12 @@ namespace TimeRegistration.Controllers
         }
 
 
+
+     
+
+
+
+
         [HttpPost("login-by-phone/{tlf}")]
         public IActionResult LoginByPhone(string tlf, [FromBody] UserLoginRequest? req)
         {

@@ -1,6 +1,6 @@
 
 
-
+## ADMIN
 ## User for testing
 ## phone: number: 99999991
 ## password %Rest!10KE
@@ -36,21 +36,58 @@ Decrypting them in the dashboard should not be possible (dashboard is not a safe
 
 #### Example: Run!1000
 
+## can not deletet user error because your is foregin / primary key probaly the problem
 
 ## not fixed/implementet
 
+## import can, delete user without confirmation, / registartion
 
-## change all sports their is something on danish to english. 
 
-## some letter like x probaly other can't be typed in (Fornavn, Efternavn)
+-----------------------------------------------------------------------------------------------------------
 
-### Create methods for the items below (to avoid repeating code)
-##### implement json token for better sercuity  
+# LIST DOES NOT MATTER /// FIX LIST 
+
+## change all sports their is something on danish to english. (does not matter)
+
+## some letter like x probaly other can't be typed in (Fornavn, Efternavn) (does not matter)
+
+## make an manager only manager and also only manager (still errors not maded)
+  ### then try to run api calls where admin only can , and do the same for the manager and test .. 
+  ### add so a admin can't delete a other admin but only a manager
+  ### add so a manager can't delete a other manager but only a users. 
+  ### add so a admin can't delete a other admin but only a manager
+  ### add so a manager can't delete a other manager but only a users. 
+
+
+## implement json token for better sercuity  
 ## hardcoded-credentials Embedding credentials in source code risks unauthorized access (app settings) 
+## Create methods for the items below (to avoid repeating code)
 
-## make an manager only manager and also only manager
 
-## then try to run api calls where admin only can , and do the same for the manager and test .. 
+-----------------------------------------------------------------------------------------------------------
 
-## add so a admin can't delete a other admin but only a manager
-## add so a manager can't delete a other manager but only a users. 
+
+## Importans fixes
+
+## do i need a manger role??? or is it not needed???
+
+## should add some phone number policy so not just randoms number likes +4444444
+## plus language emoj
+
+## create profil ui problmes
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -9,8 +9,14 @@ using TimeRegistration.Data;
 
 namespace TimeRegistration.Controllers
 {
+    
     [ApiController]
     [Route("api/admin")]
+    
+    /*
+  [Route("api/[controller]")]
+    [ApiController]
+*/
     public class AdminController : ControllerBase
     {
         private readonly IAdminService _adminservice;
@@ -23,6 +29,13 @@ namespace TimeRegistration.Controllers
             _managerService = managerService;
             _ctx = ctx;
         }
+
+
+     
+
+    
+
+
 
         [HttpPost("login")]
         public IActionResult Login([FromBody] LoginRequest req)
@@ -52,6 +65,11 @@ namespace TimeRegistration.Controllers
                 }
             }
         }
+
+
+
+
+
 
         [HttpDelete("user/{id}")]
         [AdminAuthorize]

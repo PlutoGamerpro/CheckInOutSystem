@@ -1,13 +1,32 @@
 <h2>All Users</h2>
 
+<!--  DELETE USER [username].... No way to undo! after actions done-->
 
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Delete User</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body"> {{ labelTextToDisplay }}
+       
+      
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-danger" [disabled]="selectedUserId === null" (click)="selectedUserId !== null && DeleteUserPost(selectedUserId)">Delete User</button>
+      </div>
+    </div>
+  </div>
+</div>
 
-  <div class="toolbar">
+<div class="toolbar">
     <button class="btn btn-primary" (click)="load()">Reload</button>
     <button class="btn btn-outline" (click)="Home()">Home</button>
     <button class="btn btn-outline" (click)="Registrations()">Registrations</button>
  </div>
-
 
 
 <div *ngIf="loading" class="info info-loading">Loading users...</div>
@@ -34,7 +53,8 @@
         <td>{{ u.isAdmin ? 'Yes' : 'No' }}</td>
         <td>{{ u.isManager ? 'Yes' : 'No' }}</td>
         <td><button class="btn btn-sm" (click)="startEdit(u)">Edit</button></td>
-        <td><button class="btn btn-danger btn-sm" (click)="DeleteUser(u.id)">Delete</button></td>
+        <td><button type="button" class="btn btn-danger" (click)="selectedUserId = u.id; DeleteUser(u.id)" data-bs-toggle="modal" data-bs-target="#exampleModal">Delete</button></td>
+       <!-- <td><button class="btn btn-danger btn-sm" (click)="DeleteUser(u.id)">Delete</button></td> -->
       </ng-container>
       <ng-template #editRow>
         <td>{{ editUser.id }}</td>
@@ -60,12 +80,16 @@
           <button class="btn btn-outline btn-sm" (click)="cancelEdit()">Cancel</button>
         </td>
         <td>
-          <button class="btn btn-danger btn-sm" (click)="DeleteUser(editUser.id)" [disabled]="loading">Delete</button>
+       
+        <!--  <button class="btn btn-danger btn-sm" (click)="DeleteUser(editUser.id)" [disabled]="loading">Delete</button>-->
         </td>
       </ng-template>
     </tr>
   </tbody>
 </table>
+
+
+
 
 
 <!--

@@ -1,93 +1,215 @@
 @use '../../base' as styles;
 
 // Color and style variables for the signup page
-$bg1: #232526;
-$bg2: #414345;
-$glass: rgba(40, 44, 52, 0.68);
+$bg1: #14181d;
+$bg2: #1f2a32;
+$glass: rgba(20, 24, 31, 0.86);
 $white: #ffffff;
-$text: #e8e8e8;
+$text: #f5f5f7;
 $muted: #a6a8ab;
+$muted-strong: #8a8d94;
 $success: #27ae60;
 $error: #ff5252;
 $primary: #00c853;
 $primary-2: #00e676;
-$shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+$accent: #56ccf2;
+$accent-2: #2f80ed;
+$shadow: 0 28px 60px rgba(0, 0, 0, 0.38);
 
 
 // Main container for the signup page, with background gradients and image
 #signup-container {
   // Full viewport height, center content, background effects
-  transform: scale(1.5);
   min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 3vh 2vw;
+  display: grid;
+  place-items: center;
+  padding: 6vh 2vw;
   background-image:
-    radial-gradient(1200px 600px at 10% -10%, rgba(0, 200, 83, 0.18), transparent 60%),
-    radial-gradient(800px 500px at 100% 20%, rgba(0, 230, 118, 0.12), transparent 60%),
+    radial-gradient(1200px 620px at 10% -10%, rgba(0, 200, 83, 0.22), transparent 65%),
+    radial-gradient(960px 640px at 110% 25%, rgba(86, 204, 242, 0.2), transparent 72%),
     url(../../../public/background.jpg),
     linear-gradient(120deg, $bg1 0%, $bg2 100%);
   background-size: cover, cover, cover, cover;
+  background-position: center;
   background-blend-mode: screen, screen, overlay, normal;
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+  color: $text;
+}
+
+// Ambient decorative glows behind the card
+.signupDecor {
+  position: absolute;
+  border-radius: 999px;
+  opacity: 0.8;
+  pointer-events: none;
+  mix-blend-mode: screen;
+
+  &--primary {
+    width: 420px;
+    height: 420px;
+    top: -160px;
+    right: -120px;
+    background: radial-gradient(circle at 30% 30%, rgba(0, 230, 118, 0.35), transparent 65%);
+  }
+
+  &--secondary {
+    width: 360px;
+    height: 360px;
+    bottom: -140px;
+    left: -90px;
+    background: radial-gradient(circle at 70% 30%, rgba(86, 204, 242, 0.38), transparent 68%);
+  }
 }
 
 // Signup form container with glassmorphism effect
 .signupContainer {
   // Centered, rounded, blurred background, shadow, padding
-  width: 100%;
-  max-width: 480px;
+  width: min(100%, 540px);
   position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 0.25rem;
+  align-items: stretch;
+  gap: 1.4rem;
   background: $glass;
-  backdrop-filter: blur(10px) saturate(120%);
-  border-radius: 18px;
-  padding: 2.25rem 1.75rem 2.25rem;
+  backdrop-filter: blur(24px) saturate(160%);
+  border-radius: 24px;
+  padding: 2.75rem 2.5rem 2.5rem;
   box-shadow: $shadow;
-  border: 1px solid rgba(255, 255, 255, 0.09);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   animation: fadeIn 0.8s ease;
+  color: $text;
+}
+
+.signupContainer::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.2px;
+  background: linear-gradient(135deg, rgba(0, 200, 83, 0.65), rgba(86, 204, 242, 0.45));
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  pointer-events: none;
+  z-index: -1;
+}
+
+// Subtle gradient halo behind the glass card
+.signupContainer::after {
+  content: '';
+  position: absolute;
+  inset: -20% -25%;
+  background: radial-gradient(circle at 50% 0%, rgba(86, 204, 242, 0.25), transparent 60%);
+  filter: blur(40px);
+  z-index: -2;
+  opacity: 0.85;
 }
 
 // Signup page title style
+.signupHeader {
+  display: grid;
+  gap: 0.75rem;
+  text-align: left;
+  padding-top: 0.5rem;
+}
+
+.signupBadge {
+  align-self: flex-start;
+  font-size: 0.75rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 0.38rem 0.8rem;
+  border-radius: 999px;
+  background: rgba(86, 204, 242, 0.16);
+  border: 1px solid rgba(86, 204, 242, 0.35);
+  color: rgba(214, 239, 255, 0.9);
+}
+
 #signup-title {
   // Large, bold, white text with shadow
-  font-size: 2.4rem;
+  font-size: clamp(2.2rem, 2.8vw, 2.6rem);
   font-weight: 800;
   color: $white;
-  letter-spacing: 0.5px;
-  margin: 0 0 0.75rem 0;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+  letter-spacing: -0.02em;
+  margin: 0;
+  text-shadow: 0 12px 30px rgba(0, 0, 0, 0.36);
+}
+
+.signupSubtitle {
+  margin: 0;
+  color: rgba(225, 232, 237, 0.82);
+  font-size: 1.05rem;
+  line-height: 1.6;
+}
+
+.card-divider {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(86, 204, 242, 0.5), transparent);
+  border: none;
+  margin: 0.5rem 0 0.75rem;
+  align-self: stretch;
 }
 
 // Field wrapper for input and label
 .field {
   // Controls width and spacing for each input field
-  width: 86%;
-  margin: 0.5rem 0 0.25rem;
+  width: 100%;
+  margin: 0.35rem 0 0;
   position: relative;
+}
+
+.field.has-icon .text-input {
+  padding-left: 3.15rem;
+}
+
+.input-icon {
+  position: absolute;
+  top: 50%;
+  left: 1.15rem;
+  transform: translateY(-50%);
+  width: 1.4rem;
+  height: 1.4rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  opacity: 0.75;
+}
+
+.input-icon svg {
+  width: 100%;
+  height: 100%;
+  fill: rgba(214, 239, 255, 0.8);
 }
 
 // Style for text input fields
 .text-input {
   // Rounded, shadow, white background, padding, transitions
   width: 100%;
-  height: 3.1rem;
-  border-radius: 12px;
-  border: 2px solid transparent;
-  background: rgba(255, 255, 255, 0.9);
-  color: #232526;
+  height: 3.25rem;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(12, 16, 22, 0.82);
+  color: $text;
   font-size: 1.05rem;
   padding: 1.2rem 1rem 0.6rem 1rem;
-  box-shadow: 0 2px 14px rgba(0, 0, 0, 0.1);
-  transition: border-color 0.15s ease, box-shadow 0.2s ease, transform 0.04s ease;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.02), 0 18px 32px rgba(0, 0, 0, 0.32);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.1s ease, background 0.2s ease;
 }
 
 // Hide placeholder text for floating label effect
 .text-input::placeholder {
-  // ...existing code...
+  color: transparent;
+}
+
+.text-input:hover {
+  border-color: rgba(86, 204, 242, 0.45);
 }
 
 // Highlight input on focus
@@ -95,7 +217,8 @@ $shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
   // Green border and subtle shadow on focus
   outline: none;
   border-color: rgba(0, 200, 83, 0.8);
-  box-shadow: 0 0 0 3px rgba(0, 200, 83, 0.2);
+  background: rgba(16, 24, 30, 0.9);
+  box-shadow: 0 0 0 3px rgba(0, 200, 83, 0.22), 0 16px 38px rgba(0, 200, 83, 0.12);
 }
 
 // Floating label for inputs
@@ -105,22 +228,37 @@ $shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
   left: 1rem;
   top: 50%;
   transform: translateY(-50%);
-  color: #666;
+  color: rgba(198, 206, 214, 0.82);
   pointer-events: none;
-  transition: all 0.15s ease;
-  padding: 0 0.25rem;
+  transition: top 0.18s ease, font-size 0.18s ease, color 0.18s ease, background 0.18s ease;
+  padding: 0 0.35rem;
   background: transparent;
+  font-size: 1rem;
+  letter-spacing: 0.01em;
+  z-index: 1;
+}
+
+// When field has icon, position label after the icon
+.field.has-icon .floating {
+  left: 3.15rem;
 }
 
 // Move label above input when focused or filled
 .text-input:focus + .floating,
 .text-input:not(:placeholder-shown) + .floating {
   // Label shrinks and moves up, colored green
-  top: 6px;
-  font-size: 0.8rem;
+  top: 8px;
+  font-size: 0.78rem;
   color: $primary;
-  background: rgba(255, 255, 255, 0.85);
+  background: rgba(10, 16, 22, 0.92);
   border-radius: 6px;
+  transform: translateY(0);
+  left: 1rem;
+}
+
+// When field is not filled and not focused, keep label at icon position
+.field.has-icon .text-input:not(:focus):placeholder-shown + .floating {
+  left: 3.15rem;
 }
 
 // Error message for individual fields
@@ -128,50 +266,67 @@ $shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
   // Red text, smaller font, margin for error messages
   color: $error;
   font-size: 0.9rem;
-  margin-top: 0.25rem;
-  padding-left: 0.25rem;
+  margin-top: 0.4rem;
+  padding: 0.45rem 0.85rem;
+  background: rgba(255, 82, 82, 0.1);
+  border-radius: 10px;
+  border-left: 2px solid rgba(255, 82, 82, 0.5);
 }
 
 // Signup button styles
 #signupBtn {
   // Green gradient, rounded, bold, shadow, transitions
-  width: 86%;
-  height: 2.9rem;
-  border-radius: 12px;
-  font-size: 1.1rem;
-  font-weight: 700;
-  background: linear-gradient(90deg, $success 0%, $primary 100%);
+  width: 100%;
+  height: 3.2rem;
+  border-radius: 14px;
+  font-size: 1.05rem;
+  font-weight: 600;
+  background: linear-gradient(135deg, $primary 0%, $primary-2 45%, $accent 100%);
   color: $white;
   border: none;
-  margin-top: 0.35rem;
   cursor: pointer;
   user-select: none;
-  box-shadow: 0 8px 20px rgba(0, 200, 83, 0.18);
-  transition: background 0.18s, transform 0.08s, box-shadow 0.18s, opacity 0.18s;
+  box-shadow: 0 24px 38px rgba(0, 200, 83, 0.22);
+  transition: background 0.18s ease, transform 0.12s ease, box-shadow 0.2s ease, opacity 0.18s ease;
   position: relative;
   overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 0 1.4rem;
 }
 
-// Add icon before signup button text
 #signupBtn::before {
-  // Pencil emoji before button text
-  content: "📝 ";
-  font-size: 1.2rem;
-  margin-right: 0.25rem;
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, rgba(255, 255, 255, 0.25), transparent 55%);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  pointer-events: none;
 }
 
 // Hover effect for signup button
 #signupBtn:hover {
   // Brighter gradient, larger shadow, slight scale up
-  background: linear-gradient(90deg, $primary-2 0%, $primary 100%);
-  box-shadow: 0 10px 24px rgba(0, 200, 83, 0.25);
-  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 28px 48px rgba(0, 200, 83, 0.28);
+  transform: translateY(-3px) scale(1.01);
+}
+
+#signupBtn:hover::before {
+  opacity: 1;
 }
 
 // Active/clicked effect for signup button
 #signupBtn:active {
   // Slight scale down on click
-  transform: scale(0.98);
+  transform: translateY(0) scale(0.985);
+}
+
+#signupBtn:focus-visible {
+  outline: 3px solid rgba(86, 204, 242, 0.7);
+  outline-offset: 3px;
 }
 
 // Disabled state for signup button
@@ -181,6 +336,37 @@ $shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
   cursor: not-allowed;
   transform: none;
   box-shadow: none;
+  background: linear-gradient(135deg, rgba(0, 200, 83, 0.4) 0%, rgba(0, 230, 118, 0.5) 50%, rgba(86, 204, 242, 0.45) 100%);
+  pointer-events: none;
+}
+
+#signupBtn[disabled]::before {
+  opacity: 0;
+}
+
+.btn-content {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.7rem;
+}
+
+.btn-icon {
+  display: inline-flex;
+  width: 1.15rem;
+  height: 1.15rem;
+}
+
+.btn-icon svg {
+  width: 100%;
+  height: 100%;
+  fill: $white;
+}
+
+.btn-text {
+  letter-spacing: 0.02em;
 }
 
 // Error message for signup process
@@ -190,6 +376,10 @@ $shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
   margin-top: 0.9rem;
   font-weight: 600;
   text-align: center;
+  padding: 0.85rem 1rem;
+  border-radius: 12px;
+  background: rgba(255, 82, 82, 0.12);
+  border: 1px solid rgba(255, 82, 82, 0.32);
 }
 
 // Success message for signup process
@@ -199,47 +389,56 @@ $shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
   margin-top: 0.9rem;
   font-weight: 600;
   text-align: center;
+  padding: 0.85rem 1rem;
+  border-radius: 12px;
+  background: rgba(39, 174, 96, 0.12);
+  border: 1px solid rgba(39, 174, 96, 0.28);
+}
+
+.policyText {
+  margin: 1rem 0 0;
+  font-size: 0.88rem;
+  color: $muted;
+  text-align: center;
+  line-height: 1.5;
 }
 
 // Home/back button in the signup form
 #homeBtn {
   // Circular, white, shadowed button in top left
   position: absolute;
-  top: 16px;
-  left: 16px;
-  width: 40px;
-  height: 40px;
+  top: 22px;
+  left: 22px;
+  width: 44px;
+  height: 44px;
   border: none;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.92);
-  color: #232526;
-  font-size: 1rem;
+  background: rgba(255, 255, 255, 0.9);
+  color: #0c1014;
+  font-size: 1.1rem;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.12);
-  transition: background 0.18s ease, color 0.18s ease, transform 0.08s ease, outline-color 0.18s;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.25);
+  transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.2s ease, outline-color 0.18s ease;
   z-index: 2;
   padding: 0;
 }
 
-// Add arrow icon before home button text
 #homeBtn::before {
-  // Left arrow before button text
-  content: "←";
-  font-size: 1.1rem; 
+  content: '←';
+  font-size: 1.2rem;
+  line-height: 1;
 }
 
-// Hover/focus effect for home button
 #homeBtn:hover,
 #homeBtn:focus-visible {
-  // Brighter background, darker text, outline, scale up
-  background: #fcfcfc;
-  color: #020202;
-  transform: scale(1.06);
-  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.15);
-  outline: 2.5px solid #0a0a0a;
+  background: #f4f8fa;
+  color: #040507;
+  transform: translateY(-2px) scale(1.04);
+  box-shadow: 0 18px 32px rgba(0, 0, 0, 0.28);
+  outline: 2px solid rgba(86, 204, 242, 0.55);
   outline-offset: 2px;
 }
 
@@ -257,6 +456,12 @@ $shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
   margin: 0 auto;
 }
 
+#signupBtn .loader {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+}
+
 // Animation for loader spinner
 @keyframes spin {
    0% { transform: rotate(0deg);}
@@ -265,15 +470,15 @@ $shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
 
 // Animation for fade-in effect
 @keyframes fadeIn {
-   from { opacity: 0; transform: translateY(30px);}
-  to { opacity: 1; transform: translateY(0);};
+   from { opacity: 0; transform: translateY(24px) scale(0.98);}
+  to { opacity: 1; transform: translateY(0) scale(1);}
 }
 
 // Style invalid/touched Angular inputs with error color
 input.ng-invalid.ng-touched {
   // Red border and background for invalid fields
   border-color: rgba(255, 82, 82, 0.95);
-  background: #fff0f0;
+  background: rgba(53, 16, 16, 0.4);
   box-shadow: 0 0 0 3px rgba(255, 82, 82, 0.18);
 }
 
@@ -282,14 +487,78 @@ form.loading {
    cursor: progress;
 }
 
+.btn-icon,
+.btn-text,
+.signupBadge,
+.signupSubtitle,
+.policyText {
+  transition: color 0.2s ease;
+}
+
+@media (max-width: 900px) {
+  #signup-container {
+    padding: 4vh 1.5rem;
+  }
+
+  .signupContainer {
+    padding: 2.4rem 2rem 2.2rem;
+    border-radius: 20px;
+  }
+}
+
 // Responsive styles for small screens
 @media (max-width: 560px) {
   // Adjust container and field/button width for mobile
   .signupContainer {
-    max-width: 96vw;
-    padding: 1.4rem 0.9rem 1.4rem;
+    padding: 2rem 1.3rem 1.9rem;
+    gap: 1.1rem;
   }
-  .field, #signupBtn {
-    width: 94%;
+
+  #homeBtn {
+    top: 16px;
+    left: 16px;
+    width: 40px;
+    height: 40px;
+  }
+
+  .signupBadge {
+    font-size: 0.7rem;
+    letter-spacing: 0.14em;
+  }
+
+  .signupSubtitle {
+    font-size: 0.95rem;
+  }
+
+  .field.has-icon .text-input {
+    padding-left: 2.85rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .signupContainer {
+    border-radius: 18px;
+    padding: 1.8rem 1.15rem;
+  }
+
+  #signup-title {
+    font-size: 2rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@supports not (mask: linear-gradient(#000 0 0)) {
+  .signupContainer::before {
+    padding: 0;
+    background: linear-gradient(135deg, rgba(0, 200, 83, 0.45), rgba(86, 204, 242, 0.35));
+    opacity: 0.4;
   }
 }

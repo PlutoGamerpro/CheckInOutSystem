@@ -1,4 +1,5 @@
-// Variáveis (poderiam migrar para tema global)
+
+
 $color-bg: #0f1115;
 $color-surface: #1b1f27;
 $color-surface-alt: #222833;
@@ -15,6 +16,28 @@ $radius-md: 8px;
 $radius-pill: 999px;
 $shadow: 0 2px 4px -2px rgba(0,0,0,.4), 0 4px 12px -2px rgba(0,0,0,.35);
 $transition: .16s cubic-bezier(.4,0,.2,1);
+
+@import 'bootstrap/scss/bootstrap.scss';
+
+
+// Modal custom styling for dark theme
+.modal-content {
+  background: $color-surface;
+  color: $color-text;
+  border-radius: $radius-md;
+  box-shadow: $shadow;
+}
+.modal-header, .modal-footer {
+  background: $color-surface-alt;
+  border-bottom: 1px solid $color-border-strong;
+  border-top: 1px solid $color-border-strong;
+}
+.modal-title {
+  color: $color-text;
+}
+.btn-close {
+  filter: invert(1);
+}
 
 :host {
   display: block;

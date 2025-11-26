@@ -25,6 +25,8 @@ namespace TimeRegistration.Services
         private readonly IConfiguration _cfg;
         private readonly AppDbContext _ctx;
 
+         private readonly IUserRepo _userRepo;
+
         private readonly ITokenService _tokenService;
 
         public AdminService(
@@ -34,7 +36,8 @@ namespace TimeRegistration.Services
             //  IAdminAuthService auth,
             IConfiguration cfg,
             AppDbContext ctx,
-            ITokenService tokenService
+            ITokenService tokenService,
+            IUserRepo userRepo
             )
         {
             _repo = repo;
@@ -44,6 +47,7 @@ namespace TimeRegistration.Services
             _cfg = cfg;
             _ctx = ctx;
             _tokenService = tokenService;
+            _userRepo = userRepo;
 
         }
 
@@ -55,15 +59,18 @@ namespace TimeRegistration.Services
             var password = req.Password!.Trim();
 
             var user = _ctx.Users.FirstOrDefault(u => u.Phone == phone);
-            // if (user == null) throw new UnauthorizedAccessException("Invalid password");
-            if (user == null || !user.IsManager) throw new UnauthorizedAccessException("Invalid credentials");
-            LoginRequestValidator.VerifyPasswordOrThrow(password, user.Password);
+            // Allow both Admin and Manager accounts to authenticate
+            if (user == null || (!user.IsAdmin && !user.IsManager))
+                throw new UnauthorizedAccessException("Invalid credentials");
 
-            // just to skip error
-            // var token = "";
-            // return new LoginResult(token, user.Name);
+            // Guard against missing password hashes
+            if (string.IsNullOrWhiteSpace(user.Password))
+                throw new UnauthorizedAccessException("Invalid credentials");
+
+            LoginRequestValidator.VerifyPasswordOrThrow(password, user.Password!);
+
             var token = _tokenService.CreateToken(user);
-            return new LoginResult(token, user.Name);
+            return new LoginResult(token, user.Name ?? user.Phone ?? "User");
 
             // var token = _auth.IssueTokenFor(phone, user.IsAdmin, /*secret, */ /*configSecret,*/ password);
             //  if (token == null) throw new InvalidOperationException("Failed to issue token");
@@ -72,9 +79,30 @@ namespace TimeRegistration.Services
 
         public void DeleteUser(int id)
         {
+         
             var user = _ctx.Users.Find(id);
             if (user == null) throw new KeyNotFoundException("User not found");
-            _externalRepo.DeleteUser(id, user);
+           
+
+            // new added.............. 
+            /*
+            var users = _userRepo.GetAll().ToList();
+            var userToDelete = users.Find(u => u.Id == id);
+            if (userToDelete == null) throw new KeyNotFoundException("User not found in repo");
+        */
+
+
+            /*
+            // Delete all registrations associated with this user first to avoid FK constraint violations
+            var userRegistrations = _ctx.Registrations.Where(r => r.FkUserId == id).ToList();
+            if (userRegistrations.Any())
+            {
+                _ctx.Registrations.RemoveRange(userRegistrations);
+                _ctx.SaveChanges();
+            }
+            */
+           _externalRepo.DeleteUser(id, user);
+         // _externalRepo.DeleteUser(id, userToDelete);
 
            // _adminRepo.DeleteUser(id, user);
         }

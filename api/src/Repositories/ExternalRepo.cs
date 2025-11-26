@@ -20,7 +20,8 @@ namespace TimeRegistration.Repositories
 
         public User? DeleteUser(int id, User user)
         {
-            if (user != null || user.Id == id)
+           // if (user != null || user.Id == id) old 
+            if (user != null && user.Id == id)
             {
                 _ctx.Users.Remove(user);
                 _ctx.SaveChanges();

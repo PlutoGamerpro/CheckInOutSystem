@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\GH\\Source\\Repos\\CheckInOutSystem\\api\\TimeRegistration.csproj": {}
+    "C:\\Users\\GH\\Source\\Repos\\CheckInOutsystem\\api\\TimeRegistration.csproj": {}
   },
   "projects": {
-    "C:\\Users\\GH\\Source\\Repos\\CheckInOutSystem\\api\\TimeRegistration.csproj": {
+    "C:\\Users\\GH\\Source\\Repos\\CheckInOutsystem\\api\\TimeRegistration.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\GH\\Source\\Repos\\CheckInOutSystem\\api\\TimeRegistration.csproj",
+        "projectUniqueName": "C:\\Users\\GH\\Source\\Repos\\CheckInOutsystem\\api\\TimeRegistration.csproj",
         "projectName": "TimeRegistration",
-        "projectPath": "C:\\Users\\GH\\Source\\Repos\\CheckInOutSystem\\api\\TimeRegistration.csproj",
+        "projectPath": "C:\\Users\\GH\\Source\\Repos\\CheckInOutsystem\\api\\TimeRegistration.csproj",
         "packagesPath": "C:\\Users\\GH\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\GH\\Source\\Repos\\CheckInOutSystem\\api\\obj\\",
+        "outputPath": "C:\\Users\\GH\\Source\\Repos\\CheckInOutsystem\\api\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\GH\\AppData\\Roaming\\NuGet\\NuGet.Config"

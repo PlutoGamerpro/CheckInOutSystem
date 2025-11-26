@@ -87,11 +87,11 @@ export class Login {
     if (this.loading) return;
     this.phone = (this.phone ?? '').replace(/\D/g, '');
     if (!this.phone) {
-      this.message = 'Indtast telefonnummer';
+      this.message = 'Enter your phone number';
       return;
     }
     if (!/^\d{8}$/.test(this.phone)) {
-      this.message = 'Telefonnummer skal være 8 cifre';
+      this.message = 'Phone number must be 8 digits';
       return;
     }
 
@@ -109,15 +109,15 @@ export class Login {
 
   // Compute dynamic button label used by the template
   get actionLabel(): string {
-    return this.isCheckedIn ? 'Check ud' : 'Check ind';
+    return this.isCheckedIn ? 'Check out' : 'Check in';
   }
 
   // Compute status chip text used by the template
   get statusText(): string {
-    if (this.loading) return 'Opdaterer status…';
-    if (this.isCheckedIn) return 'Du er aktuelt checket ind.';
-    if (this.checkOutTime) return 'Du er logget ud.';
-    return 'Klar til at checke ind.';
+    if (this.loading) return 'Updating status…';
+    if (this.isCheckedIn) return 'You are currently checked in.';
+    if (this.checkOutTime) return 'You are checked out.';
+    return 'Ready to check in.';
   }
 
   // Centralized status handling to reduce conditional complexity in subscribe
@@ -135,15 +135,15 @@ export class Login {
     this.checkinService.checkinByPhone(this.phone).subscribe({
       next: (inRes: ActionResponse) => {
         // se backend não enviar name por algum motivo, usar phone ou texto padrão
-        this.userName = inRes.name ?? inRes.phone ?? 'Bruger';
+        this.userName = inRes.name ?? inRes.phone ?? 'User'; // old bruger
         this.checkInTime = new Date().toISOString();
         this.checkOutTime = undefined;
         this.isCheckedIn = true;
-        this.message = `Du er logget ind, ${this.userName}!`;
+        this.message = `You are checked in, ${this.userName}!`;
         this.afterActionReset();
       },
       error: (err: unknown) => {
-        this.setErrorMessage(err, 'Der opstod en fejl. Prøv igen.');
+        this.setErrorMessage(err, 'An error occurred. Please try again.');
         this.loading = false;
       },
     });
@@ -153,15 +153,15 @@ export class Login {
   private performCheckout(): void {
     this.checkinService.checkoutByPhone(this.phone).subscribe({
       next: (outRes: ActionResponse) => {
-        const name = outRes.name ?? outRes.phone ?? 'Bruger';
-        this.message = `Du er nu checket ud, ${name}!`;
+        const name = outRes.name ?? outRes.phone ?? 'User'; // old bruger
+        this.message = `You are now checked out, ${name}!`;
         this.checkOutTime = new Date().toISOString();
         this.checkInTime = undefined;
         this.isCheckedIn = false;
         this.afterActionReset();
       },
       error: () => {
-        this.message = 'Der opstod en fejl ved check-out.';
+        this.message = 'An error occurred during check-out.';
         this.loading = false;
       },
     });
@@ -185,7 +185,7 @@ export class Login {
     // Narrowing minimal: treat as any for status access
     const status = (err as any)?.status;
     if (status === 404) {
-      this.message = 'Telefonnummeret eksisterer ikke i systemet';
+      this.message = 'Phone number does not exist in the system';
     } else {
       this.message = fallback;
     }

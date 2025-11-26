@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { FormsModule } from '@angular/forms'
+import { Adminservice} from '../shared/services/adminservice';
 
 @Component({
   selector: 'app-users-dash-board',
@@ -18,13 +19,22 @@ export class UsersDashBoard {
   originalRaw: any[] = [];
   loading = false;
   error = '';
+  //labelDeleteUser = ''; // should not be here but use the one below
+  labelTextToDisplay = '';
+  selectedUserId: number | null = null;
+
 
   constructor(
     private http: HttpClient,
     private router: Router,
+    private adminservice: Adminservice
   ) {}
 
   ngOnInit(): void {
+    const token = localStorage.getItem('adminToken') || localStorage.getItem('managerToken');
+    if (!token) { this.error = 'Not authorized'; return; }
+
+
     this.load();
   }
 
@@ -46,7 +56,7 @@ export class UsersDashBoard {
     const token = localStorage.getItem('adminToken')
       || localStorage.getItem('managerToken')
       || '';
-    return { headers: new HttpHeaders({ 'X-Admin-Token': token }) };
+    return { headers: new HttpHeaders({ 'Authorization': `Bearer ${token}`, 'X-Admin-Token': token }) };
   }
 
   saveEdit(): void {
@@ -104,27 +114,39 @@ export class UsersDashBoard {
     this.router.navigate(['/admin']);
   }
 
+  DeleteUserPost(id: number){
 
-
-  DeleteUser(id: number): void {
-    if (this.loading) return;
-    const token = localStorage.getItem('adminToken') || localStorage.getItem('managerToken');
+  const token = localStorage.getItem('adminToken') || localStorage.getItem('managerToken');
     if (!token) { this.error = 'Not authorized'; return; }
 
+    if (this.loading) return;
+ 
     const user = this.users.find(u => u.id === id);
-    const label = user ? `${user.name || ''} (ID: ${id})` : `ID: ${id}`;
-    const ok = confirm(`Delete user ${label}?`);
-    if (!ok) return;
-
+       this.selectedUserId = id;
     this.loading = true;
     this.error = '';
-    this.http.delete(`${environment.baseApiUrl}/external/user/${id}`, this.adminHeaders).subscribe({
+
+
+  
+    this.adminservice.DeleteUser(id).subscribe({
       next: () => this.load(),
       error: () => {
         this.error = 'Failed to delete user';
         this.loading = false;
       }
     });
+    
+  }
+
+  DeleteUser(id: number): void {
+    if (this.loading) return;
+   // const token = localStorage.getItem('adminToken') || localStorage.getItem('managerToken');
+    //if (!token) { this.error = 'Not authorized'; return; }
+
+    const user = this.users.find(u => u.id === id);
+    const label = user ? `${user.name || ''} (ID: ${id})` : `ID: ${id}`;
+    this.labelTextToDisplay = (`DELETE user ${label}? No way to undo! after actions done`);
+    // Modal åbnes via data-bs-toggle - sletning sker først i DeleteUserPost() efter bekræftelse
   }
 
 }

@@ -23,6 +23,7 @@ interface AdminReg {
   styleUrls: ['./admin-dashboard.component.scss']
 })
 export class AdminDashboardComponent implements OnInit {
+  selectedRegistrationId: string | number | null = null;
   registrations: AdminReg[] = [];
   originalRaw: any[] = [];
   loading = false;
@@ -33,6 +34,7 @@ export class AdminDashboardComponent implements OnInit {
   private readonly base = environment.baseApiUrl.replace(/\/$/, '');
   includeAdmins = true; // define false to exclude admins from list
   currentPeriod: string | null = 'all'; 
+  labelTextToDisplay = '';
 
   // Estado de calendário
   calendarYear = new Date().getUTCFullYear();
@@ -257,10 +259,12 @@ export class AdminDashboardComponent implements OnInit {
     }
   }
 
-  deleteRegistration(id: string | number): void { 
+  deleteRegistrationRequest(id: string | number | null): void {
     if (id === undefined || id === null) return;
-    if (!confirm(`Remover registro ${id}?`)) return;
-    this.registrationsService.deleteRegistration(id).subscribe({
+    if (this.loading) return; 
+    const token = localStorage.getItem('adminToken') || localStorage.getItem('managerToken');
+
+     this.registrationsService.deleteRegistration(id).subscribe({
       next: () => {
         // updates local list without full reload (faster)
         this.registrations = this.registrations.filter(r => r.id !== id);
@@ -271,6 +275,15 @@ export class AdminDashboardComponent implements OnInit {
         this.handleError('Falha ao excluir registro');
       }
     });
+  }
+
+  deleteRegistration(id: string | number): void { 
+    if (id === undefined || id === null) return;
+    if (this.loading) return; 
+    const token = localStorage.getItem('adminToken') || localStorage.getItem('managerToken');
+    this.selectedRegistrationId = id;
+    this.labelTextToDisplay = `DELETE registration ID: ${id}? No way to undo! after actions done.`;
+    // Modal åbnes via data-bs-toggle
   }
 
   Home(): void {

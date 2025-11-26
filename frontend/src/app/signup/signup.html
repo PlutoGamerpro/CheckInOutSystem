@@ -1,13 +1,28 @@
 <!-- Simple signup form with username and password fields -->
 <form (ngSubmit)="onSubmit()" #signupForm="ngForm" novalidate [class.loading]="loading">
   <div id="signup-container">
+    <span class="signupDecor signupDecor--primary" aria-hidden="true"></span>
+    <span class="signupDecor signupDecor--secondary" aria-hidden="true"></span>
+
     <div id="signupContainer" class="signupContainer" #signupContainer>
       <!-- Back button to return to login -->
       <button id="homeBtn" type="button" (click)="goToLogin()" aria-label="Tilbage til login"></button>
-      <!-- Signup page title -->
-      <h1 id="signup-title">Signup</h1>
+
+      <section class="signupHeader" aria-labelledby="signup-title">
+        <span class="signupBadge">New profile setup</span>
+        <h1 id="signup-title">Create your account</h1>
+        <p class="signupSubtitle">Join the platform and start tracking time with a polished, intuitive experience.</p>
+      </section>
+
+      <div class="card-divider" role="presentation"></div>
+
       <!-- Name input field (first + last) -->
-      <div class="field">
+      <div class="field has-icon">
+        <span class="input-icon" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" focusable="false">
+            <path d="M12 12c2.761 0 5-2.686 5-6s-2.239-6-5-6-5 2.686-5 6 2.239 6 5 6zm0 2c-3.333 0-10 1.667-10 5v3h20v-3c0-3.333-6.667-5-10-5z" />
+          </svg>
+        </span>
         <input
           id="usernameField"
           #usernameInput
@@ -25,13 +40,19 @@
           [attr.aria-invalid]="usernameCtrl.invalid && usernameCtrl.touched ? true : null"
           [attr.aria-describedby]="(usernameCtrl.invalid && usernameCtrl.touched) ? 'usernameError' : null"
         />
-        <label for="usernameField" class="floating">First name & Last name</label>
+        <label for="usernameField" class="floating">First and Last name</label>
         <div class="field-error" *ngIf="usernameCtrl.touched && usernameCtrl.invalid" id="usernameError" aria-live="assertive">
           Please enter your first and last name.
         </div>
       </div>
+
       <!-- Phone number input field -->
-      <div class="field">
+      <div class="field has-icon">
+        <span class="input-icon" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" focusable="false">
+            <path d="M6.62 10.79a15.053 15.053 0 006.59 6.59l1.82-1.82a1 1 0 011-.24 11.72 11.72 0 003.68.59 1 1 0 011 1V20a1 1 0 01-1 1A17 17 0 013 4a1 1 0 011-1h2.09a1 1 0 011 1 11.72 11.72 0 00.59 3.68 1 1 0 01-.24 1z" />
+          </svg>
+        </span>
         <input
           id="phoneField"
           #phoneInput
@@ -57,11 +78,30 @@
           Please enter a valid phone number with 8 digits.
         </div>
       </div>
+
       <!-- Signup submit button with loading spinner -->
-      <button id="signupBtn" type="submit" [disabled]="loading || signupForm.invalid" [attr.aria-busy]="loading ? 'true' : null">
-        <span *ngIf="!loading">Signup</span>
-        <span *ngIf="loading" class="loader" aria-hidden="true"></span>
+      <button
+        id="signupBtn"
+        type="submit"
+        [disabled]="loading || signupForm.invalid"
+        [attr.aria-busy]="loading ? 'true' : null"
+        [attr.aria-label]="loading ? 'Submitting signup form' : 'Submit signup form'"
+      >
+        <span *ngIf="!loading; else loadingState" class="btn-content">
+          <span class="btn-icon" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" focusable="false">
+              <path d="M4 4h7l2 3h7a1 1 0 011 1v11a1 1 0 01-1 1H4a1 1 0 01-1-1V5a1 1 0 011-1zm4 9v2h8v-2z" />
+            </svg>
+          </span>
+          <span class="btn-text">Create account</span>
+        </span>
       </button>
+      <ng-template #loadingState>
+        <span class="loader" aria-hidden="true"></span>
+      </ng-template>
+
+      <p class="policyText">We protect your data with enterprise-grade security and never share it with third parties.</p>
+
       <!-- Error message for signup process -->
       <div *ngIf="errorMessage" id="signup-errorMessage" role="alert" aria-live="assertive">{{ errorMessage }}</div>
       <!-- Success message for signup process -->

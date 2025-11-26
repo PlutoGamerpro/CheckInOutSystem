@@ -16,6 +16,38 @@ $radius-pill: 999px;
 $shadow: 0 2px 4px -2px rgba(0,0,0,.4), 0 4px 12px -2px rgba(0,0,0,.35);
 $transition: .16s cubic-bezier(.4,0,.2,1);
 
+
+
+
+@import 'bootstrap/scss/bootstrap.scss';
+
+
+// Modal custom styling for dark theme
+.modal-content {
+  background: $color-surface;
+  color: $color-text;
+  border-radius: $radius-md;
+  box-shadow: $shadow;
+}
+.modal-header, .modal-footer {
+  background: $color-surface-alt;
+  border-bottom: 1px solid $color-border-strong;
+  border-top: 1px solid $color-border-strong;
+}
+.modal-title {
+  color: $color-text;
+}
+.btn-close {
+  filter: invert(1);
+}
+
+
+
+
+
+
+
+
 :host {
   display: block;
   color: $color-text;
