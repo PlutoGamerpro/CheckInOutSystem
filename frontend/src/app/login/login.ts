@@ -43,6 +43,30 @@ export class Login {
     private checkinService: CheckinService
   ) {}
 
+
+  
+  PhoneCountryCode = [
+    { code: '+45', country: 'Denmark' },
+    { code: '+1', country: 'USA' },
+    { code: '+44', country: 'UK' },
+    { code: '+49', country: 'Germany' },
+    { code: '+33', country: 'France' }
+  ];
+  
+  countryCode: string = 'Select Countrycode'; // Default til none if users is not from denmark
+  isDropdownOpen = false;
+  selectedCountryCode = 'Select Countrycode'; // Initialize with default value
+
+    toggleDropdown() {
+    this.isDropdownOpen = !this.isDropdownOpen;
+}
+
+selectItem(item: any) {
+  this.selectedCountryCode = item.code;
+  this.isDropdownOpen = false;
+}
+
+
   // English: Allow only digits & control/navigation keys
   allowOnlyNumbers(event: KeyboardEvent): void {
     const allowedKeys = [

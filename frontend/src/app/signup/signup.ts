@@ -24,9 +24,9 @@ export class Signup {
     { code: '+33', country: 'France' }
   ];
   
-  countryCode: string = '+45'; // Default til Danmark
+  countryCode: string = 'Select Countrycode'; // Default til Danmark
   isDropdownOpen = false;
-  selectedCountryCode = '+45'; // Initialize with default value
+  selectedCountryCode = 'Select Countrycode'; // Initialize with default value
 
   toggleDropdown() {
     this.isDropdownOpen = !this.isDropdownOpen;
