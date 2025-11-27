@@ -28,13 +28,7 @@ namespace TimeRegistration.Controllers
             _adminservice = adminservice;
             _managerService = managerService;
             _ctx = ctx;
-        }
-
-
-     
-
-    
-
+        }  
 
 
         [HttpPost("login")]
@@ -65,11 +59,6 @@ namespace TimeRegistration.Controllers
                 }
             }
         }
-
-
-
-
-
 
         [HttpDelete("user/{id}")]
         [AdminAuthorize]

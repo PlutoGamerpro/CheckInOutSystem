@@ -42,6 +42,11 @@ Decrypting them in the dashboard should not be possible (dashboard is not a safe
 
 ## import can, delete user without confirmation, / registartion
 
+## opdaret login,signup,admin forms ...........
+
+## implement json token for better sercuity  
+
+## nav bar 
 
 -----------------------------------------------------------------------------------------------------------
 
@@ -58,15 +63,11 @@ Decrypting them in the dashboard should not be possible (dashboard is not a safe
   ### add so a admin can't delete a other admin but only a manager
   ### add so a manager can't delete a other manager but only a users. 
 
-
-## implement json token for better sercuity  
 ## hardcoded-credentials Embedding credentials in source code risks unauthorized access (app settings) 
 ## Create methods for the items below (to avoid repeating code)
 
 
 -----------------------------------------------------------------------------------------------------------
-
-
 ## Importans fixes
 
 ## do i need a manger role??? or is it not needed???
@@ -74,12 +75,17 @@ Decrypting them in the dashboard should not be possible (dashboard is not a safe
 ## should add some phone number policy so not just randoms number likes +4444444
 ## plus language emoj
 
-## create profil ui problmes
+## FIX create profil ui problmes
 
+## maybe opdate ( so only usersname and password to login)
 
+## fjern evt manager helt fra programmet 
 
+## ændreder order på admin login så password til sidste
 
+## token er brugt i seperat og i api kald filen (blandet ikke godt et sted bedre)
 
+## 
 
 
 
