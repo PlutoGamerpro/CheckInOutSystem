@@ -6,28 +6,37 @@
   [class.loading]="loading"
 >
   <div id="login-container">
+    <span class="loginDecor loginDecor--primary" aria-hidden="true"></span>
+    <span class="loginDecor loginDecor--secondary" aria-hidden="true"></span>
+
     <div class="loginContainer">
       <!-- Home button to navigate back to the home page -->
+     
+     <!--
       <button
         id="homeBtn"
         type="button"
         (click)="goHome()"
         aria-label="Tilbage til forsiden"
       ></button>
+-->
+      <section class="loginHeader" aria-labelledby="login-title">
+        <span class="loginBadge" *ngIf="statusText">{{ statusText }}</span>
+        <h1 id="login-title">Check in/out</h1>
+        <p class="loginSubtitle">
+          Enter your 8-digit phone number to check in or out.
+        </p>
+      </section>
 
-      <!-- Login page title -->
-      <h1 id="login-title">Check in/out</h1>
-
-      <!-- Subtitle for the login form -->
-      <p class="login-subtitle">
-        Enter your 8-digit phone number to check in or out.
-      </p>
-
-      <!-- Status chip to display dynamic status messages -->
-      <div class="status-chip" *ngIf="statusText">{{ statusText }}</div>
+      <div class="card-divider" role="presentation"></div>
 
       <!-- Phone number input field with floating label and validation -->
-      <div class="field">
+      <div class="field has-icon">
+        <span class="input-icon" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" focusable="false">
+            <path d="M6.62 10.79a15.053 15.053 0 006.59 6.59l1.82-1.82a1 1 0 011-.24 11.72 11.72 0 003.68.59 1 1 0 011 1V20a1 1 0 01-1 1A17 17 0 013 4a1 1 0 011-1h2.09a1 1 0 011 1 11.72 11.72 0 00.59 3.68 1 1 0 01-.24 1z" />
+          </svg>
+        </span>
         <input
           id="loginField"
           class="text-input"
@@ -65,32 +74,48 @@
         type="submit"
         [disabled]="loading || loginForm.invalid"
         [attr.aria-busy]="loading ? 'true' : null"
-        [class.is-loading]="loading"
+        [attr.aria-label]="loading ? 'Processing request' : actionLabel"
       >
-        <span *ngIf="!loading">{{ actionLabel }}</span>
-        <span *ngIf="loading" class="loader" aria-hidden="true"></span>
-        <span *ngIf="loading" class="sr-only">Behandler forespørgslen</span>
+        <span *ngIf="!loading; else loadingState" class="btn-content">
+          <span class="btn-icon" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" focusable="false">
+              <path d="M9 5v2h6.59L4 18.59 5.41 20 17 8.41V15h2V5z" />
+            </svg>
+          </span>
+          <span class="btn-text">{{ actionLabel }}</span>
+        </span>
       </button>
+      <ng-template #loadingState>
+        <span class="loader" aria-hidden="true"></span>
+      </ng-template>
 
       <!-- Show check-in time if available -->
-      <div *ngIf="checkInTime && isCheckedIn" class="feedback feedback-tight">
-        Check-in tid: {{ checkInTime | date:'dd-MM-yyyy HH:mm:ss' }}
+      <div *ngIf="checkInTime && isCheckedIn" class="infoChip">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+        </svg>
+        Check-in: {{ checkInTime | date:'dd-MM-yyyy HH:mm:ss' }}
       </div>
       <!-- Show check-out time if available -->
-      <div *ngIf="checkOutTime && !isCheckedIn" class="feedback feedback-tight">
-        Check-ud tid: {{ checkOutTime | date:'dd-MM-yyyy HH:mm:ss' }}
+      <div *ngIf="checkOutTime && !isCheckedIn" class="infoChip">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+        </svg>
+        Check-out: {{ checkOutTime | date:'dd-MM-yyyy HH:mm:ss' }}
       </div>
 
       <!-- Feedback message for login result -->
-      <div *ngIf="message" class="feedback" role="alert" aria-live="polite">
+      <div *ngIf="message" id="login-message" role="alert" aria-live="polite">
         {{ message }}
       </div>
 
+      <p class="policyText">Your time tracking data is securely stored and accessible only to authorized personnel.</p>
+
       <!-- Signup link section -->
-      <div id="signUpContainer">
-        <span class="signUpLabel">Don't have an account?</span>
-        <button type="button" id="signUpBtn" (click)="goToSignup()">
-          Signup
+      <div class="signupPrompt">
+        <span class="promptLabel">Don't have an account?</span>
+        <button type="button" class="promptBtn" (click)="goToSignup()">
+          Create one now
         </button>
       </div>
     </div>

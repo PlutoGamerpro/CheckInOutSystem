@@ -230,7 +230,7 @@ $shadow: 0 28px 60px rgba(0, 0, 0, 0.38);
   transform: translateY(-50%);
   color: rgba(198, 206, 214, 0.82);
   pointer-events: none;
-  transition: top 0.18s ease, font-size 0.18s ease, color 0.18s ease, background 0.18s ease;
+  transition: top 0.18s ease, font-size 0.18s ease, color 0.18s ease, background 0.18s ease, transform 0.18s ease;
   padding: 0 0.35rem;
   background: transparent;
   font-size: 1rem;
@@ -247,7 +247,7 @@ $shadow: 0 28px 60px rgba(0, 0, 0, 0.38);
 .text-input:focus + .floating,
 .text-input:not(:placeholder-shown) + .floating {
   // Label shrinks and moves up, colored green
-  top: 8px;
+  top: 0;
   font-size: 0.78rem;
   color: $primary;
   background: rgba(10, 16, 22, 0.92);

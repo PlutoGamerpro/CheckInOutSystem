@@ -1,12 +1,26 @@
 <form (ngSubmit)="submit()" #adminLoginForm="ngForm" novalidate [class.loading]="loading" aria-live="polite">
   <div class="admin-login-shell">
+    <span class="adminDecor adminDecor--primary" aria-hidden="true"></span>
+    <span class="adminDecor adminDecor--secondary" aria-hidden="true"></span>
+
     <div class="interaction-pane">
       <div id="admin-login-container">
         <div class="adminLoginContainer">
           <button id="homeBtn" type="button" (click)="goToMain()" aria-label="Tilbage"></button>
-          <h1 id="admin-login-title">Admin Login</h1>
-          <div class="field pill">
-            <span class="field-icon">👤</span>
+
+          <section class="adminHeader" aria-labelledby="admin-login-title">
+            <span class="adminBadge">Administrator Access</span>
+            <h1 id="admin-login-title">Admin Login</h1>
+            <p class="adminSubtitle">Secure access to administrative dashboard and system controls.</p>
+          </section>
+
+          <div class="card-divider" role="presentation"></div>
+          <div class="field has-icon">
+            <span class="input-icon" aria-hidden="true">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" focusable="false">
+                <path d="M12 12c2.761 0 5-2.686 5-6s-2.239-6-5-6-5 2.686-5 6 2.239 6 5 6zm0 2c-3.333 0-10 1.667-10 5v3h20v-3c0-3.333-6.667-5-10-5z" />
+              </svg>
+            </span>
             <input
               id="adminUsername"
               class="text-input"
@@ -20,8 +34,12 @@
             />
             <label class="floating" for="adminUsername">Username</label>
           </div>
-          <div class="field pill">
-            <span class="field-icon">🔒</span>
+          <div class="field has-icon">
+            <span class="input-icon" aria-hidden="true">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" focusable="false">
+                <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z" />
+              </svg>
+            </span>
             <input
               id="adminPassword"
               class="text-input"
@@ -35,8 +53,12 @@
             />
             <label class="floating" for="adminPassword">Password</label>
           </div>
-          <div class="field pill">
-            <span class="field-icon">📱</span>
+          <div class="field has-icon">
+            <span class="input-icon" aria-hidden="true">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" focusable="false">
+                <path d="M6.62 10.79a15.053 15.053 0 006.59 6.59l1.82-1.82a1 1 0 011-.24 11.72 11.72 0 003.68.59 1 1 0 011 1V20a1 1 0 01-1 1A17 17 0 013 4a1 1 0 011-1h2.09a1 1 0 011 1 11.72 11.72 0 00.59 3.68 1 1 0 01-.24 1z" />
+              </svg>
+            </span>
             <input
               id="adminPhone"
               class="text-input"
@@ -60,10 +82,28 @@
               Please enter a valid phone number with 8 digits.
             </div>
           </div>
-          <button id="adminLoginBtn" type="submit" [disabled]="loading || adminLoginForm.invalid" [attr.aria-busy]="loading ? 'true' : null">
-            <span *ngIf="!loading">Login</span>
-            <span *ngIf="loading" class="loader" aria-hidden="true"></span>
+          <button
+            id="adminLoginBtn"
+            type="submit"
+            [disabled]="loading || adminLoginForm.invalid"
+            [attr.aria-busy]="loading ? 'true' : null"
+            [attr.aria-label]="loading ? 'Processing login' : 'Login to admin dashboard'"
+          >
+            <span *ngIf="!loading; else loadingState" class="btn-content">
+              <span class="btn-icon" aria-hidden="true">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" focusable="false">
+                  <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z" />
+                </svg>
+              </span>
+              <span class="btn-text">Access Dashboard</span>
+            </span>
           </button>
+          <ng-template #loadingState>
+            <span class="loader" aria-hidden="true"></span>
+          </ng-template>
+
+          <p class="policyText">Administrative access is monitored and logged for security purposes.</p>
+
           <div *ngIf="errorMessage" id="admin-errorMessage" role="alert" aria-live="assertive">
             {{ errorMessage }}
           </div>

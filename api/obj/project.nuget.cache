@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "aNzuVGFDa64=",
+  "dgSpecHash": "yDIkPIsPhAg=",
   "success": true,
-  "projectFilePath": "C:\\Users\\GH\\Source\\Repos\\CheckInOutsystem\\api\\TimeRegistration.csproj",
+  "projectFilePath": "C:\\Users\\GH\\Source\\Repos\\CheckInOutSystem\\api\\TimeRegistration.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\GH\\.nuget\\packages\\bcrypt.net-next\\4.0.3\\bcrypt.net-next.4.0.3.nupkg.sha512",
     "C:\\Users\\GH\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
