@@ -76,6 +76,7 @@ namespace TimeRegistration.Services
 
             existingUser.Name = userRecordRequest.Name;
             existingUser.Phone = userRecordRequest.Phone;
+           existingUser.CountryCode = userRecordRequest.CountryCode;
 
             _managerRepo.UpdateUser(userRecordRequest);
             return existingUser;

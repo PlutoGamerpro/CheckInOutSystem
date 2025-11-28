@@ -189,12 +189,12 @@ namespace TimeRegistration.Controllers
             if ((end - start).TotalDays > 400) return BadRequest("Intervalo muito grande (max 400 dias).");
             return Ok(GetRegistrationsJoinRange(start, end));
         }
-    }
-}
+    
+
     
 
         
-/*
+
         [HttpPost("seed-basic")]
         public IActionResult SeedBasic([FromQuery] bool force = false)
         {
@@ -315,4 +315,4 @@ namespace TimeRegistration.Controllers
 }
 
 
-*/
+

@@ -11,3 +11,6 @@ public record AdminRegistrationDto(
     [property: JsonPropertyName("checkOut")] DateTime? CheckOut,
     [property: JsonPropertyName("isOpen")] bool IsOpen
 );
+
+// NOTE: If CountryCode is always '-', check your mapping logic in the controller/repository.
+// Make sure you assign the user's CountryCode to this DTO when creating AdminRegistrationDto.

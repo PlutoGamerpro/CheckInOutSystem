@@ -68,6 +68,7 @@ namespace TimeRegistration.Services
             {
                 Name = name,
                 Phone = phone,
+                CountryCode = countryCode,
                 IsAdmin = dto.IsAdmin ?? false,
                 IsManager = dto.IsManager 
             };

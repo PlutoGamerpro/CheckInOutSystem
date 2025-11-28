@@ -62,7 +62,7 @@ namespace TimeRegistration.Controllers
                     Phone = dto.Phone,
                     CountryCode = dto.CountryCode // new aded                   
                 };
-                return CreatedAtAction(nameof(GetByPhone), new { phone = dto.Phone }, safeoption);
+                return CreatedAtAction(nameof(GetByPhone), new { phone = dto.Phone, countryCode = dto.CountryCode }, safeoption);
             }
             catch (Exception ex)
             {

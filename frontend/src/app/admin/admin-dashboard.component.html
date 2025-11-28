@@ -16,7 +16,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-        <button type="button" (click)="deleteRegistrationRequest(selectedRegistrationId)" class="btn btn-danger">Delete Registration</button>
+        <button type="button" (click)="deleteRegistrationRequest(selectedRegistrationId)" data-bs-dismiss="modal" class="btn btn-danger">Delete Registration</button>
       </div>
     </div>
   </div>
@@ -111,6 +111,7 @@ normalize(item: any) &#123;
       <tr>
         <th>User</th>
         <th>Phone</th>
+        <th>Country Code</th>
         <th>Check In</th>
         <th>Check Out</th>
         <th>Status</th>
@@ -124,6 +125,9 @@ normalize(item: any) &#123;
         </td>
         <td data-label="Phone">
           <ng-container *ngIf="r.phone; else dash">{{ r.phone }}</ng-container>
+        </td>
+        <td data-label="Country Code">
+          <ng-container *ngIf="r.countryCode; else dash">{{ r.countryCode }}</ng-container>
         </td>
         <td data-label="Check In">
           <ng-container *ngIf="r.checkIn; else dash">{{ r.checkIn | date : 'short' }}</ng-container>

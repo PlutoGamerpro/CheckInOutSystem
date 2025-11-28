@@ -41,12 +41,14 @@ selectItem(item: any) {
   @ViewChild('signupForm') signupForm?: NgForm;
   username: string = '';
   phone: string = '';
+  CountryCode: string = 'Select Countrycode';
   errorMessage: string = '';
   successMessage: string = '';
   loading = false;
 
   @ViewChild('usernameInput') usernameInput?: ElementRef<HTMLInputElement>;
   @ViewChild('phoneInput') phoneInput?: ElementRef<HTMLInputElement>;
+
 
   constructor(private http: HttpClient, private router: Router) {}
   
@@ -63,6 +65,10 @@ selectItem(item: any) {
     }
     const digits = (this.phone ?? '').replace(/\D/g, '');
     if (digits.length !== 8) {
+      this.phoneInput?.nativeElement.focus();
+    }
+    const countryCodeValid = this.selectedCountryCode !== 'Select Countrycode';
+    if (!countryCodeValid) {
       this.phoneInput?.nativeElement.focus();
     }
   }
@@ -104,28 +110,35 @@ selectItem(item: any) {
 
     const usernameTrimmed = (this.username ?? '').trim();
     const phoneDigits = (this.phone ?? '').replace(/\D/g, '');
+    const countryCode = this.selectedCountryCode !== 'Select Countrycode' ? this.selectedCountryCode : '';
 
     const nameRegex = /^[A-Za-zÀ-ÖØ-öø-ÿ]+(?:\s+[A-Za-zÀ-ÖØ-öø-ÿ'-]+)+$/;
     if (!usernameTrimmed || !nameRegex.test(usernameTrimmed)) {
-      this.errorMessage = 'Fornavn & efternavn skal udfyldes (mindst to ord).';
+      this.errorMessage = 'First and last name are required (at least two words).';
       this.focusFirstInvalid();
       return;
     }
     if (phoneDigits.length !== 8) {
-      this.errorMessage = 'Telefonnummer skal være 8 cifre.';
+      this.errorMessage = 'Phone number must be 8 digits.';
+      this.focusFirstInvalid();
+      return;
+    }
+    if(!countryCode) {
+      this.errorMessage = 'Please select a country code.';
       this.focusFirstInvalid();
       return;
     }
 
     this.loading = true;
     // Use environment.baseApiUrl for the API endpoint
-    this.http.post(`${environment.baseApiUrl}/user`, { name: usernameTrimmed, phone: phoneDigits }).subscribe({
+    this.http.post(`${environment.baseApiUrl}/user`, { name: usernameTrimmed, phone: phoneDigits, countryCode: countryCode }).subscribe({
       next: () => {
         this.successMessage = 'User created!';
         this.loading = false;
-        this.signupForm?.resetForm({ username: '', phone: '' });
+        this.signupForm?.resetForm({ username: '', phone: '', countryCode: '',   });
         this.username = '';
         this.phone = '';
+        this.selectedCountryCode = '';
         setTimeout(() => {
           this.router.navigate(['/']);
         }, 1000);

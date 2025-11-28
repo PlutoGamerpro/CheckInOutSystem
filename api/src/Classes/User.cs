@@ -29,8 +29,8 @@ public class User
     private string _phone; // used to have ? but now requiered attribute
 
 // not added to db
-   // [Required]
-    [JsonPropertyName("CountryCode")]
+    // [Required]
+     [JsonPropertyName("countryCode")]
     [Column("CountryCode")]
     public string? CountryCode {get;set;}
 // ends below is already added to db 

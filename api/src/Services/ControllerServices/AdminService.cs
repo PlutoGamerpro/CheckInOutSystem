@@ -114,6 +114,7 @@ namespace TimeRegistration.Services
 
             existingUser.Name = userRecordRequest.Name;
             existingUser.Phone = userRecordRequest.Phone;
+            existingUser.CountryCode = userRecordRequest.CountryCode;
             existingUser.IsAdmin = userRecordRequest.IsAdmin;
 
             _adminRepo.UpdateUser(userRecordRequest);
@@ -132,23 +133,22 @@ namespace TimeRegistration.Services
                 join u in _ctx.Users on ci.FkUserId equals u.Id
                 join co in _ctx.CheckOuts on r.FkCheckOutId equals co.Id into coLeft
                 from co in coLeft.DefaultIfEmpty()
-                select new
-                {
-                    id = r.Id,
-                    userName = u.Name,
-                    phone = u.Phone,
-                    checkIn = ci.TimeStart,
-                    checkOut = co != null ? co.TimeEnd : (DateTime?)null,
-                    isOpen = r.FkCheckOutId == null
-                };
+                select new AdminRegistrationDto(
+                    r.Id,
+                    u.Name,
+                    u.Phone,
+                    u.CountryCode,
+                    ci.TimeStart,
+                    co != null ? co.TimeEnd : (DateTime?)null,
+                    r.FkCheckOutId == null
+                );
 
             if (startInclusiveUtc.HasValue)
-                query = query.Where(x => x.checkIn >= startInclusiveUtc.Value);
+                query = query.Where(x => x.CheckIn >= startInclusiveUtc.Value);
             if (endExclusiveUtc.HasValue)
-                query = query.Where(x => x.checkIn < endExclusiveUtc.Value);
+                query = query.Where(x => x.CheckIn < endExclusiveUtc.Value);
 
-            
-            return query.OrderByDescending(x => x.checkIn).ToList();
+            return query.OrderByDescending(x => x.CheckIn).ToList();
         }
 
         
