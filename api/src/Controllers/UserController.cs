@@ -60,7 +60,7 @@ namespace TimeRegistration.Controllers
                 {
                     Name = dto.Name,
                     Phone = dto.Phone,
-                   
+                    CountryCode = dto.CountryCode // new aded                   
                 };
                 return CreatedAtAction(nameof(GetByPhone), new { phone = dto.Phone }, safeoption);
             }

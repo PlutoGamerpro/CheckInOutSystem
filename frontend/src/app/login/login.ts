@@ -44,7 +44,7 @@ export class Login {
   ) {}
 
 
-  
+  /*
   PhoneCountryCode = [
     { code: '+45', country: 'Denmark' },
     { code: '+1', country: 'USA' },
@@ -65,7 +65,7 @@ selectItem(item: any) {
   this.selectedCountryCode = item.code;
   this.isDropdownOpen = false;
 }
-
+*/
 
   // English: Allow only digits & control/navigation keys
   allowOnlyNumbers(event: KeyboardEvent): void {

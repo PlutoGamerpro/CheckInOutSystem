@@ -39,6 +39,10 @@ namespace TimeRegistration.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasAnnotation("Relational:JsonPropertyName", "checkOut");
 
+                    b.Property<string>("CountryCode")
+                        .HasColumnType("text")
+                        .HasAnnotation("Relational:JsonPropertyName", "countryCode");
+
                     b.Property<bool>("IsOpen")
                         .HasColumnType("boolean")
                         .HasAnnotation("Relational:JsonPropertyName", "isOpen");
@@ -133,6 +137,11 @@ namespace TimeRegistration.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("CountryCode")
+                        .HasColumnType("text")
+                        .HasColumnName("CountryCode")
+                        .HasAnnotation("Relational:JsonPropertyName", "CountryCode");
+
                     b.Property<bool>("IsAdmin")
                         .HasColumnType("boolean")
                         .HasAnnotation("Relational:JsonPropertyName", "isAdmin");
@@ -146,6 +155,7 @@ namespace TimeRegistration.Migrations
                         .HasAnnotation("Relational:JsonPropertyName", "isManager");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("text")
                         .HasAnnotation("Relational:JsonPropertyName", "name");
 
@@ -153,6 +163,7 @@ namespace TimeRegistration.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("Phone")
+                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("Tlf")
                         .HasAnnotation("Relational:JsonPropertyName", "phone");

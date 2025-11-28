@@ -12,19 +12,28 @@ public class User
     [JsonPropertyName("id")]
     public int Id { get; set; }
 
+    [Required]
     [JsonPropertyName("name")]
-    public string? Name { get; set; }
+    public string Name { get; set; } // used to have ? but now requiered attribute
 
     //The ONLY phone field exposed via API.
     // The physical column is still called "Phone" in the database (legacy). Perform a rename migration if you want to merge.
+    [Required] 
     [JsonPropertyName("phone")]
     [Column("Tlf")] // Fysisk kolonne forbliver Tlf
-    public string? Phone
+    public string? Phone // used to have ? but now requiered attribute
     {
         get => _phone;
         set => _phone = NormalizePhone(value);
     }
-    private string? _phone;
+    private string _phone; // used to have ? but now requiered attribute
+
+// not added to db
+   // [Required]
+    [JsonPropertyName("CountryCode")]
+    [Column("CountryCode")]
+    public string? CountryCode {get;set;}
+// ends below is already added to db 
 
     [JsonPropertyName("isCheckedIn")]
     public bool IsCheckedIn { get; set; }

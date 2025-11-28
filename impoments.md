@@ -85,7 +85,9 @@ Decrypting them in the dashboard should not be possible (dashboard is not a safe
 
 ## token er brugt i seperat og i api kald filen (blandet ikke godt et sted bedre)
 
-## 
+## tilføj så med phonecountry codes kan man sortere i dashboard fx kun uk, denmark, france, germany,
+
+
 
 
 

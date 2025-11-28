@@ -20,7 +20,7 @@ export class AdminLoginComponent {
   phone: string = '';
   loading = false;
   errorMessage = '';
-
+/*
   // Country code dropdown data/state
   PhoneCountryCode = [
     { code: '+45', country: 'Denmark' },
@@ -32,11 +32,11 @@ export class AdminLoginComponent {
   countryCode: string = 'Select Countrycode';
   isDropdownOpen = false;
   selectedCountryCode = 'Select Countrycode';
-
+*/
   private readonly base = environment.baseApiUrl.replace(/\/$/, '');
 
   constructor(private http: HttpClient, private router: Router) {}
-
+/*
   // Toggle dropdown
   toggleDropdown(): void {
     this.isDropdownOpen = !this.isDropdownOpen;
@@ -48,7 +48,7 @@ export class AdminLoginComponent {
     this.countryCode = item.code;
     this.isDropdownOpen = false;
   }
-
+*/
   goToMain(): void {
     this.router.navigate(['/']);
   }

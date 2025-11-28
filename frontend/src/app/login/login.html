@@ -31,7 +31,7 @@
       <div class="card-divider" role="presentation"></div>
 
       <!-- Phone number input field with floating label and validation -->
-      <div class="field has-icon phone-field">
+      <div class="field has-icon">
         <span class="input-icon" aria-hidden="true">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" focusable="false">
             <path d="M6.62 10.79a15.053 15.053 0 006.59 6.59l1.82-1.82a1 1 0 011-.24 11.72 11.72 0 003.68.59 1 1 0 011 1V20a1 1 0 01-1 1A17 17 0 013 4a1 1 0 011-1h2.09a1 1 0 011 1 11.72 11.72 0 00.59 3.68 1 1 0 01-.24 1z" />
@@ -39,7 +39,7 @@
         </span>
         <input
           id="loginField"
-          class="text-input phone-input-with-code"
+          class="text-input"
           type="tel"
           name="phone"
           [(ngModel)]="phone"
@@ -57,18 +57,7 @@
           [attr.aria-describedby]="(phoneCtrl.invalid && phoneCtrl.touched) ? 'phoneError' : null"
         />
         <label for="loginField" class="floating">Phone number (8 digits)</label>
-
-        <button
-          type="button"
-          class="country-code-btn"
-          (click)="toggleDropdown()"
-        >
-          {{ selectedCountryCode }}
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="dropdown-arrow">
-            <path d="M7 10l5 5 5-5z"/>
-          </svg>
-        </button>
-
+        <!-- Error message for invalid phone input -->
         <div
           class="field-error"
           *ngIf="phoneCtrl.touched && phoneCtrl.invalid"
@@ -76,17 +65,6 @@
           aria-live="assertive"
         >
           Please enter a valid phone number with 8 digits.
-        </div>
-
-        <!-- Country code dropdown (samme som signup) -->
-        <div class="dropdown-menu" *ngIf="isDropdownOpen">
-          <div
-            *ngFor="let item of PhoneCountryCode"
-            class="dropdown-item"
-            (click)="selectItem(item)"
-          >
-            {{ item.country }} ({{ item.code }})
-          </div>
         </div>
       </div>
 

@@ -191,8 +191,10 @@ namespace TimeRegistration.Controllers
         }
     }
 }
+    
+
         
-        /*        
+/*
         [HttpPost("seed-basic")]
         public IActionResult SeedBasic([FromQuery] bool force = false)
         {
@@ -207,6 +209,7 @@ namespace TimeRegistration.Controllers
                 {
                     Name = "Seed User",
                     Phone = phone,
+                    CountryCode = "+1",
                     IsAdmin = false,
                     IsCheckedIn = false
                 };
@@ -308,8 +311,8 @@ namespace TimeRegistration.Controllers
             });
         }
     }
+    
 }
-// ...existing code (resto dos endpoints)...
 
 
 */

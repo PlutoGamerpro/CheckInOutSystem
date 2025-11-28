@@ -46,6 +46,13 @@ namespace TimeRegistration.Services
             if (!Regex.IsMatch(phone, @"^\d{8}$"))
                 throw new Exception("Phone must be 8 digits");
 
+            var countryCode = NormalizeCountryCode(dto.CountryCode);
+            if (string.IsNullOrWhiteSpace(countryCode))
+                throw new Exception("Country code required");
+            if (!Regex.IsMatch(countryCode, @"^\+\d{1,3}$"))
+                throw new Exception("Country code must be in the format +123");
+
+
             if (_repo.GetAll().Any(u => u.Phone != null && u.Phone == phone))
                 throw new Exception("Phone number already exists!");
 
@@ -93,6 +100,11 @@ namespace TimeRegistration.Services
             var trimmed = string.Join(' ', v.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries));
             return trimmed;
         }
+        public static string NormalizeCountryCode(string countryCode)
+        {
+            return countryCode.Trim();
+        }
+        
 
         public void GetByPhone(string phone)
         {

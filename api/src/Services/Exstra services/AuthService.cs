@@ -21,7 +21,6 @@ namespace TimeRegistration.Services
         {
            return phone.Trim().Replace(" ", "");
         }
-    
-        
+      
     }
 }

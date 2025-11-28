@@ -48,6 +48,7 @@ namespace TimeRegistration.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     UserName = table.Column<string>(type: "text", nullable: true),
                     Phone = table.Column<string>(type: "text", nullable: true),
+                    CountryCode = table.Column<string>(type: "text", nullable: true),
                     CheckIn = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     CheckOut = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     IsOpen = table.Column<bool>(type: "boolean", nullable: false)
@@ -63,8 +64,9 @@ namespace TimeRegistration.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(type: "text", nullable: true),
-                    Tlf = table.Column<string>(type: "text", nullable: true),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    Tlf = table.Column<string>(type: "text", nullable: false),
+                    CountryCode = table.Column<string>(type: "text", nullable: true),
                     IsCheckedIn = table.Column<bool>(type: "boolean", nullable: false),
                     IsAdmin = table.Column<bool>(type: "boolean", nullable: false),
                     IsManager = table.Column<bool>(type: "boolean", nullable: false),
