@@ -58,17 +58,7 @@
         />
         <label for="loginField" class="floating">Phone number (8 digits)</label>
 
-        <button
-          type="button"
-          class="country-code-btn"
-          (click)="toggleDropdown()"
-        >
-          {{ selectedCountryCode }}
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="dropdown-arrow">
-            <path d="M7 10l5 5 5-5z"/>
-          </svg>
-        </button>
-
+      
         <div
           class="field-error"
           *ngIf="phoneCtrl.touched && phoneCtrl.invalid"
@@ -79,15 +69,7 @@
         </div>
 
         <!-- Country code dropdown (samme som signup) -->
-        <div class="dropdown-menu" *ngIf="isDropdownOpen">
-          <div
-            *ngFor="let item of PhoneCountryCode"
-            class="dropdown-item"
-            (click)="selectItem(item)"
-          >
-            {{ item.country }} ({{ item.code }})
-          </div>
-        </div>
+     
       </div>
 
       <!-- Submit button with loading spinner and dynamic label -->
