@@ -117,15 +117,28 @@ selectItem(item: any) {
       return;
     }
 
+    const countryCodeValue = this.selectedCountryCode && this.selectedCountryCode !== 'Select Countrycode'
+      ? this.selectedCountryCode
+      : null;
+    if (!countryCodeValue) {
+      this.errorMessage = 'Vælg venligst et landekode.';
+      return;
+    }
+
     this.loading = true;
     // Use environment.baseApiUrl for the API endpoint
-    this.http.post(`${environment.baseApiUrl}/user`, { name: usernameTrimmed, phone: phoneDigits }).subscribe({
+    this.http.post(`${environment.baseApiUrl}/user`, {
+      name: usernameTrimmed,
+      phone: phoneDigits,
+      countryCode: countryCodeValue
+    }).subscribe({
       next: () => {
         this.successMessage = 'User created!';
         this.loading = false;
         this.signupForm?.resetForm({ username: '', phone: '' });
         this.username = '';
         this.phone = '';
+        this.selectedCountryCode = 'Select Countrycode';
         setTimeout(() => {
           this.router.navigate(['/']);
         }, 1000);

@@ -63,6 +63,8 @@ namespace TimeRegistration.Services
             if (user == null || (!user.IsAdmin && !user.IsManager))
                 throw new UnauthorizedAccessException("Invalid credentials");
 
+
+
             // Guard against missing password hashes
             if (string.IsNullOrWhiteSpace(user.Password))
                 throw new UnauthorizedAccessException("Invalid credentials");
@@ -114,6 +116,7 @@ namespace TimeRegistration.Services
 
             existingUser.Name = userRecordRequest.Name;
             existingUser.Phone = userRecordRequest.Phone;
+            existingUser.CountryCode = userRecordRequest.CountryCode;
             existingUser.IsAdmin = userRecordRequest.IsAdmin;
 
             _adminRepo.UpdateUser(userRecordRequest);
@@ -137,6 +140,7 @@ namespace TimeRegistration.Services
                     id = r.Id,
                     userName = u.Name,
                     phone = u.Phone,
+                    countryCode = u.CountryCode,
                     checkIn = ci.TimeStart,
                     checkOut = co != null ? co.TimeEnd : (DateTime?)null,
                     isOpen = r.FkCheckOutId == null

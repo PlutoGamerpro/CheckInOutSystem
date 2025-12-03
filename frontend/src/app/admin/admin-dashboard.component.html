@@ -111,6 +111,7 @@ normalize(item: any) &#123;
       <tr>
         <th>User</th>
         <th>Phone</th>
+        <th>Country Code</th>
         <th>Check In</th>
         <th>Check Out</th>
         <th>Status</th>
@@ -125,6 +126,10 @@ normalize(item: any) &#123;
         <td data-label="Phone">
           <ng-container *ngIf="r.phone; else dash">{{ r.phone }}</ng-container>
         </td>
+                  <td data-label="Country Code">
+          <ng-container *ngIf="r.countryCode; else dash">{{ r.countryCode }}</ng-container>
+        </td>
+
         <td data-label="Check In">
           <ng-container *ngIf="r.checkIn; else dash">{{ r.checkIn | date : 'short' }}</ng-container>
         </td>
@@ -136,6 +141,7 @@ normalize(item: any) &#123;
             {{ r.isOpen ? 'OPEN' : 'CLOSED' }}
           </span>
         </td>
+
         <!--
         <td data-label="Actions">
           <button class="btn btn-danger btn-sm" (click)="deleteRegistration(r.id)">Delete</button>

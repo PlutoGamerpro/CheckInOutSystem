@@ -12,8 +12,8 @@ using TimeRegistration.Data;
 namespace TimeRegistration.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250930113852_migrations")]
-    partial class migrations
+    [Migration("20251203124817_Migrations")]
+    partial class Migrations
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -41,6 +41,10 @@ namespace TimeRegistration.Migrations
                     b.Property<DateTime?>("CheckOut")
                         .HasColumnType("timestamp with time zone")
                         .HasAnnotation("Relational:JsonPropertyName", "checkOut");
+
+                    b.Property<string>("CountryCode")
+                        .HasColumnType("text")
+                        .HasAnnotation("Relational:JsonPropertyName", "countryCode");
 
                     b.Property<bool>("IsOpen")
                         .HasColumnType("boolean")
@@ -135,6 +139,11 @@ namespace TimeRegistration.Migrations
                         .HasAnnotation("Relational:JsonPropertyName", "id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("CountryCode")
+                        .HasColumnType("text")
+                        .HasColumnName("CountryCode")
+                        .HasAnnotation("Relational:JsonPropertyName", "countryCode");
 
                     b.Property<bool>("IsAdmin")
                         .HasColumnType("boolean")

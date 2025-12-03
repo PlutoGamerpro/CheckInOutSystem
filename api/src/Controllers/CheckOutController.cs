@@ -35,7 +35,7 @@ namespace TimeRegistration.Controllers
         public IActionResult CheckOutByPhone(string tlf)
         {
             var checkout = _checkoutservice.CreateCheckOut(tlf);
-            return CreatedAtAction(nameof(Get), new { id = checkout.CheckOutId, checkout.Name, checkout.Phone }, checkout);                        
+            return CreatedAtAction(nameof(Get), new { id = checkout.CheckOutId, checkout.Name, checkout.Phone, checkout.CountryCode }, checkout);                        
         }
 
         [HttpPut("{id}")]

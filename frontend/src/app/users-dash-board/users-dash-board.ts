@@ -75,6 +75,7 @@ export class UsersDashBoard {
       id: this.editUser.id,
       name: this.editUser.name,
       phone: this.editUser.phone,
+      countryCode: this.editUser.countryCode,
       isAdmin: this.editUser.isAdmin,
       isManager: this.hasAdminToken ? this.editUser.isManager : undefined // manager não altera
     };

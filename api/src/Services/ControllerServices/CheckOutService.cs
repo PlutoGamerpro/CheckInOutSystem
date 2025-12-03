@@ -41,6 +41,7 @@ namespace TimeRegistration.Services
 
             var phone = AuthService.NormalizePhone(tlf);        
             var user = _userRepo.GetAll().FirstOrDefault(u => u.Phone == tlf); 
+            
           
             // Find open registration (registration with CheckIn -> User)
             var openReg = _registrationRepo.GetAll()
@@ -71,7 +72,7 @@ namespace TimeRegistration.Services
             // _registrationRepo.Update( /*openReg.Id, openReg*/);
             _registrationRepo.Update(new UpdateRegistrationRequest(openReg));
 
-            return new CheckOutResult(checkOut.Id, user.Name, user.Phone);          
+            return new CheckOutResult(checkOut.Id, user.Name, user.Phone, user.CountryCode);          
         }
         
         public void DeleteCheckOut(int id)

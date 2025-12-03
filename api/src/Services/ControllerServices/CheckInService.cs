@@ -28,6 +28,7 @@ namespace TimeRegistration.Services
             var phone = TimeRegistration.Services.AuthService.NormalizePhone(tlf);
             var user = _userRepo.GetAll().FirstOrDefault(u => (u.Phone ?? "") == phone);
             var name = user?.Name;
+            var countryCode = user?.CountryCode;
 
             if (user == null)
             {
@@ -65,7 +66,7 @@ namespace TimeRegistration.Services
             _registrationRepo.Create(registration); 
            
             // return results with useful data for controller/frontend
-            return new CheckInResult(checkIn.Id, name, phone);
+            return new CheckInResult(checkIn.Id, name, phone, countryCode);
         }
 
         public void DeleteCheckIn(int id)

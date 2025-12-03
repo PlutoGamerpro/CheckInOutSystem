@@ -60,8 +60,8 @@ namespace TimeRegistration.Controllers
         {
             try
             {
-                var result = _checkInService.CreateCheckInByPhone(tlf);
-                return Ok(new { name = result.Name, phone = result.Phone, checkInId = result.CheckInId });
+                var result = _checkInService.CreateCheckInByPhone(tlf); /// not added country code beause does not belongs here
+                return Ok(new { name = result.Name, phone = result.Phone, countryCode = result.CountryCode, checkInId = result.CheckInId });
             }
             catch (KeyNotFoundException ex)
             {

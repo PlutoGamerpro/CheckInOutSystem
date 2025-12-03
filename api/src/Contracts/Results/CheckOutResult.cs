@@ -5,5 +5,5 @@ using System.Threading.Tasks;
 
 namespace TimeRegistration.Contracts.Results
 {
-     public record CheckOutResult(int CheckOutId, string? Name, string Phone);
+     public record CheckOutResult(int CheckOutId, string? Name, string Phone, string? CountryCode);
 }

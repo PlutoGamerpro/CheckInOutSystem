@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using TimeRegistration.Data;
 using TimeRegistration.Contracts.Requests;
 using System.Text.RegularExpressions;
+using System.Xml;
 
 
 
@@ -46,6 +47,16 @@ namespace TimeRegistration.Services
             if (!Regex.IsMatch(phone, @"^\d{8}$"))
                 throw new Exception("Phone must be 8 digits");
 
+
+            var countryCode = NormalizeCountryCode(dto.CountryCode);
+            /*
+            if (string.IsNullOrWhiteSpace(countryCode))
+                throw new Exception("Country code required");
+            if (!Regex.IsMatch(countryCode, @"^\+\d{1,3}$"))
+                throw new Exception("Country code must be in format +XX");
+*/
+
+
             if (_repo.GetAll().Any(u => u.Phone != null && u.Phone == phone))
                 throw new Exception("Phone number already exists!");
 
@@ -61,6 +72,7 @@ namespace TimeRegistration.Services
             {
                 Name = name,
                 Phone = phone,
+                CountryCode = dto.CountryCode,
                 IsAdmin = dto.IsAdmin ?? false,
                 IsManager = dto.IsManager 
             };
@@ -87,6 +99,15 @@ namespace TimeRegistration.Services
             return digits;
         }
 
+        private static string? NormalizeCountryCode(string? v){
+            if (string.IsNullOrWhiteSpace(v)) return null;
+            v = v.Trim();
+            if (!v.StartsWith("+"))
+            {
+                v = "+" + v;
+            }
+            return v;
+        }
         private static string NormalizeName(string? v)
         {
             if (string.IsNullOrWhiteSpace(v)) return "";

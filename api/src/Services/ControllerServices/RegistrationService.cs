@@ -66,6 +66,7 @@ namespace TimeRegistration.Services
                             id = r.Id,
                             userName = u.Name,
                             phone = u.Phone,
+                            countryCode = u.CountryCode,
                             checkIn = ci.TimeStart,
                             checkOut = co != null ? co.TimeEnd : (DateTime?)null,
                             isOpen = r.FkCheckOutId == null
@@ -98,6 +99,7 @@ namespace TimeRegistration.Services
                             id = r.Id,
                             userName = u.Name,
                             phone = u.Phone,
+                            countryCode = u.CountryCode,
                             checkIn = ci.TimeStart
                         })
                         .OrderByDescending(x => x.checkIn)

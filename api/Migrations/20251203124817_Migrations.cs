@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace TimeRegistration.Migrations
 {
     /// <inheritdoc />
-    public partial class migrations : Migration
+    public partial class Migrations : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -48,6 +48,7 @@ namespace TimeRegistration.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     UserName = table.Column<string>(type: "text", nullable: true),
                     Phone = table.Column<string>(type: "text", nullable: true),
+                    CountryCode = table.Column<string>(type: "text", nullable: true),
                     CheckIn = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     CheckOut = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     IsOpen = table.Column<bool>(type: "boolean", nullable: false)
@@ -65,6 +66,7 @@ namespace TimeRegistration.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(type: "text", nullable: true),
                     Tlf = table.Column<string>(type: "text", nullable: true),
+                    CountryCode = table.Column<string>(type: "text", nullable: true),
                     IsCheckedIn = table.Column<bool>(type: "boolean", nullable: false),
                     IsAdmin = table.Column<bool>(type: "boolean", nullable: false),
                     IsManager = table.Column<bool>(type: "boolean", nullable: false),

@@ -9,6 +9,7 @@ interface AdminReg {
   id: number | string;
   userName: string | null;
   phone: string | null;
+  countryCode: string | null;
   checkIn: string | null;
   checkOut: string | null;
   isOpen: boolean;
@@ -91,7 +92,7 @@ export class AdminDashboardComponent implements OnInit {
     // Ajuste seu serviço para projetar explicitamente (Select) evitando depender de múltiplas chaves.
     // Require backend returning userName and phone (fixed in admincontroller 'getall' + create registration with fkuserid)
     if (!raw) {
-      return { id: 0, userName: null, phone: null, checkIn: null, checkOut: null, isOpen: false };
+      return { id: 0, userName: null, phone: null, countryCode: null, checkIn: null, checkOut: null, isOpen: false };
     }
 
     const idValue = this.pickFirst([
@@ -113,6 +114,12 @@ export class AdminDashboardComponent implements OnInit {
       raw.mobile, raw.mobilePhone, raw.msisdn,
       raw.user?.phone, raw.user?.phoneNumber, raw.user?.telefone,
       raw.participant?.phone
+    ])?.toString() ?? null;
+
+    const countryCodeValue = this.pickFirst([
+      raw.countryCode, raw.country_code, raw.cc,
+      raw.user?.countryCode, raw.user?.country_code,
+      raw.participant?.countryCode
     ])?.toString() ?? null;
 
     const checkInValue = this.parseDateList([
@@ -146,6 +153,7 @@ export class AdminDashboardComponent implements OnInit {
       id: idValue ?? 0,
       userName: userNameValue,
       phone: phoneValue,
+      countryCode: countryCodeValue,
       checkIn: checkInValue,
       checkOut: checkOutValue,
       isOpen: isOpenValue,

@@ -62,11 +62,14 @@ namespace TimeRegistration.Repositories
             if (!string.IsNullOrWhiteSpace(userRecordRequest.Phone))
                 user.Phone = userRecordRequest.Phone.Trim();
 
+
+            if (!string.IsNullOrWhiteSpace(userRecordRequest.CountryCode))
+                user.CountryCode = userRecordRequest.CountryCode.Trim();
             // Campos booleanos opcionais (assumindo nullable bool no DTO)
             // If IsAdmin is not nullable, just assign directly
 
             // used to be manager 
-            user.IsAdmin = userRecordRequest.IsManager;
+            user.IsAdmin = userRecordRequest.IsAdmin; // used to not . userrecordrequest.isadmin but .ismanager
 
         
             // Caso exista um campo de senha no DTO (ex: PlainPassword), trate aqui (hash recomendado)

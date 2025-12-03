@@ -6,6 +6,7 @@ public record AdminRegistrationDto(
     [property: JsonPropertyName("id")] int Id,
     [property: JsonPropertyName("userName")] string? UserName,
     [property: JsonPropertyName("phone")] string? Phone,
+    [property: JsonPropertyName("countryCode")] string? CountryCode,
     [property: JsonPropertyName("checkIn")] DateTime? CheckIn,
     [property: JsonPropertyName("checkOut")] DateTime? CheckOut,
     [property: JsonPropertyName("isOpen")] bool IsOpen

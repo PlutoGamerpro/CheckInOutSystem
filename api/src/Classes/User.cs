@@ -26,6 +26,17 @@ public class User
     }
     private string? _phone;
 
+        // addded code below 
+    [JsonPropertyName("countryCode")]
+    [Column("CountryCode")]
+    public string? CountryCode
+    {
+        get => _countryCode;
+        set => _countryCode = NormalizeCountryCode(value);
+    }
+    private string? _countryCode;
+
+
     [JsonPropertyName("isCheckedIn")]
     public bool IsCheckedIn { get; set; }
 
@@ -41,6 +52,17 @@ public class User
     {
         if (string.IsNullOrWhiteSpace(value)) return null;
         return new string(value.Where(char.IsDigit).ToArray());
+    }
+
+    private static string? NormalizeCountryCode(string? value)
+    {
+        if (string.IsNullOrWhiteSpace(value)) return null;
+        value = value.Trim();
+        // Ensure it starts with +
+        if (!value.StartsWith("+")) value = "+" + value;
+        // Keep only + and digits
+        var cleaned = "+" + new string(value.Skip(1).Where(char.IsDigit).ToArray());
+        return cleaned.Length > 1 ? cleaned : null;
     }
 }
 

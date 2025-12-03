@@ -38,6 +38,7 @@
       <th>ID</th>
       <th>Name</th>
       <th>Phone</th>
+      <th>Country Code</th>
       <th>Is Admin</th>
       <th>Is Manager</th>
       <th>Edit</th>
@@ -50,6 +51,7 @@
         <td>{{ u.id }}</td>
         <td>{{ u.name }}</td>
         <td>{{ u.phone }}</td>
+        <td>{{ u.countryCode }}</td>
         <td>{{ u.isAdmin ? 'Yes' : 'No' }}</td>
         <td>{{ u.isManager ? 'Yes' : 'No' }}</td>
         <td><button class="btn btn-sm" (click)="startEdit(u)">Edit</button></td>
@@ -60,6 +62,7 @@
         <td>{{ editUser.id }}</td>
         <td><input [(ngModel)]="editUser.name" class="form-control" /></td>
         <td><input [(ngModel)]="editUser.phone" class="form-control" /></td>
+        <td><input [(ngModel)]="editUser.countryCode" class="form-control" /></td>
         <td>
           <select [(ngModel)]="editUser.isAdmin" class="form-control">
             <option [ngValue]="true">Yes</option>
