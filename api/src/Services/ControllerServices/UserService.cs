@@ -74,7 +74,7 @@ namespace TimeRegistration.Services
                 Phone = phone,
                 CountryCode = dto.CountryCode,
                 IsAdmin = dto.IsAdmin ?? false,
-                IsManager = dto.IsManager 
+              //  IsManager = dto.IsManager 
             };
 
             // NOVO: valida e aplica senha (condicional)
@@ -156,10 +156,10 @@ namespace TimeRegistration.Services
 
         private string? EnsurePasswordValid(User user, string? plainPassword)
         {
-            bool requires = user.IsAdmin || user.IsManager;
+            bool requires = user.IsAdmin; /*|| user.IsManager;*/
 
             if (requires && string.IsNullOrWhiteSpace(plainPassword))
-                throw new Exception("Password required for admin/manager");
+                throw new Exception("Password required for admin");
 
             if (string.IsNullOrWhiteSpace(plainPassword))
                 return null; // usuário comum sem senha

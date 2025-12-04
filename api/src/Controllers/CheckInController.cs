@@ -75,7 +75,7 @@ namespace TimeRegistration.Controllers
             {
                 return StatusCode(500, ex.Message + " - " + ex.InnerException?.Message);
             }
-        }
+        } 
 
         [HttpPut("{id}")]
         public ActionResult<CheckIn> Update(int id, CheckIn checkIn)

@@ -40,7 +40,7 @@ namespace TimeRegistration.Services
             new("name", user.Name ?? "")
         };
             if (user.IsAdmin) claims.Add(new(ClaimTypes.Role, "Admin"));
-            if (user.IsManager) claims.Add(new(ClaimTypes.Role, "Manager"));
+         //   if (user.IsManager) claims.Add(new(ClaimTypes.Role, "Manager"));
 
             var expiresMinutes = int.TryParse(jwtSection["ExpiresMinutes"], out var minutes) ? minutes : 60;
 

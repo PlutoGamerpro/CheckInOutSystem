@@ -11,7 +11,7 @@ namespace TimeRegistration.Contracts.Results
         public string? Name { get; set; }
         public string? Phone { get; set; }
         public bool IsAdmin { get; set; }
-        public bool IsManager { get; set; }
+       // public bool IsManager { get; set; }
     }
 
 }

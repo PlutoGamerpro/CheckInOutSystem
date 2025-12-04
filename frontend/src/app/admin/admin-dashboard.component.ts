@@ -48,7 +48,7 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const token = localStorage.getItem('adminToken') || localStorage.getItem('managerToken');
+    const token = localStorage.getItem('adminToken') /*|| localStorage.getItem('managerToken')*/;
     if (!token) { this.router.navigate(['/admin-login']); return; }
     this.load();
   }
@@ -270,7 +270,7 @@ export class AdminDashboardComponent implements OnInit {
   deleteRegistrationRequest(id: string | number | null): void {
     if (id === undefined || id === null) return;
     if (this.loading) return; 
-    const token = localStorage.getItem('adminToken') || localStorage.getItem('managerToken');
+    const token = localStorage.getItem('adminToken') /*|| localStorage.getItem('managerToken')*/;
 
      this.registrationsService.deleteRegistration(id).subscribe({
       next: () => {
@@ -288,7 +288,7 @@ export class AdminDashboardComponent implements OnInit {
   deleteRegistration(id: string | number): void { 
     if (id === undefined || id === null) return;
     if (this.loading) return; 
-    const token = localStorage.getItem('adminToken') || localStorage.getItem('managerToken');
+    const token = localStorage.getItem('adminToken') /*|| localStorage.getItem('managerToken')*/;
     this.selectedRegistrationId = id;
     this.labelTextToDisplay = `DELETE registration ID: ${id}? No way to undo! after actions done.`;
     // Modal åbnes via data-bs-toggle

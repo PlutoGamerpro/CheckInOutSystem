@@ -13,8 +13,8 @@ namespace TimeRegistration.Interfaces
     public interface IAdminRepo
     {
         List<User> GetAllAdmins(); // maybe add managers too          
-        User? DeleteManager(DeleteAdminRequest record);
-        void CreateManager(User user);
+       // User? DeleteManager(DeleteAdminRequest record);
+       // void CreateManager(User user);
         User? UpdateUser(UserRecordRequest userRecordRequest);
 
 

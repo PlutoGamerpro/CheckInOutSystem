@@ -42,9 +42,10 @@ public class User
 
     [JsonPropertyName("isAdmin")]
     public bool IsAdmin { get; set; } = false;
-
+/*
     [JsonPropertyName("isManager")]
     public bool IsManager { get; set; } = false;
+*/
 
     public string? Password { get; set; } // only admins and managers need a password 
 

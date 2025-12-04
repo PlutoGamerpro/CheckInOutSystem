@@ -25,7 +25,7 @@ public class AdminAuthService : AuthService
             throw new Exception("User not found");
 
         // Só exige senha se admin ou manager
-        if (user.IsAdmin || user.IsManager)
+        if (user.IsAdmin /*|| user.IsManager*/)
         {
             if (string.IsNullOrWhiteSpace(password) || string.IsNullOrWhiteSpace(user.Password))
                 throw new Exception("Password required");

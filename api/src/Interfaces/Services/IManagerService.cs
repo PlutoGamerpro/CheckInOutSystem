@@ -12,7 +12,7 @@ namespace TimeRegistration.Services
    // public record ManagerLoginResult(string Token, string UserName);
     public interface IManagerService
     {
-        List<User> GetAllManagers(); 
+      //  List<User> GetAllManagers(); 
         LoginResult? Login(LoginRequest req); 
         User? UpdateUser(UserRecordRequest userRecordRequest);
         void DeleteUser(int id);

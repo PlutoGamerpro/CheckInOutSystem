@@ -11,7 +11,7 @@ export class Adminservice {
   constructor(private http: HttpClient, private apiUrlService: ApiUrlService) { }
 
   private get adminHeaders() {
-    const token = localStorage.getItem('adminToken') || localStorage.getItem('managerToken') || '';
+    const token = localStorage.getItem('adminToken') /*|| localStorage.getItem('managerToken')*/ || '';
     return { headers: new HttpHeaders({ 'Authorization': `Bearer ${token}`, 'X-Admin-Token': token }) };
   }
 

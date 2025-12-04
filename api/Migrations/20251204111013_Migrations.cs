@@ -69,7 +69,6 @@ namespace TimeRegistration.Migrations
                     CountryCode = table.Column<string>(type: "text", nullable: true),
                     IsCheckedIn = table.Column<bool>(type: "boolean", nullable: false),
                     IsAdmin = table.Column<bool>(type: "boolean", nullable: false),
-                    IsManager = table.Column<bool>(type: "boolean", nullable: false),
                     Password = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>

@@ -40,7 +40,7 @@
       <th>Phone</th>
       <th>Country Code</th>
       <th>Is Admin</th>
-      <th>Is Manager</th>
+     <!--- <th>Is Manager</th> -->
       <th>Edit</th>
       <th>Delete</th>
     </tr>
@@ -53,7 +53,7 @@
         <td>{{ u.phone }}</td>
         <td>{{ u.countryCode }}</td>
         <td>{{ u.isAdmin ? 'Yes' : 'No' }}</td>
-        <td>{{ u.isManager ? 'Yes' : 'No' }}</td>
+      <!--  <td>{{ u.isManager ? 'Yes' : 'No' }}</td> -->
         <td><button class="btn btn-sm" (click)="startEdit(u)">Edit</button></td>
         <td><button type="button" class="btn btn-danger" (click)="selectedUserId = u.id; DeleteUser(u.id)" data-bs-toggle="modal" data-bs-target="#exampleModal">Delete</button></td>
        <!-- <td><button class="btn btn-danger btn-sm" (click)="DeleteUser(u.id)">Delete</button></td> -->
@@ -69,6 +69,7 @@
             <option [ngValue]="false">No</option>
           </select>
         </td>
+       <!---
         <td>
           <select [(ngModel)]="editUser.isManager" class="form-control" [disabled]="managerOnly">
             <option [ngValue]="true">Yes</option>
@@ -78,14 +79,15 @@
             Somente admin pode alterar isManager.
           </div>
         </td>
+       
         <td>
           <button class="btn btn-success btn-sm" (click)="saveEdit()">Save</button>
           <button class="btn btn-danger btn-sm" (click)="cancelEdit()">Cancel</button>
         </td>
         <td>
-       
-        <!--  <button class="btn btn-danger btn-sm" (click)="DeleteUser(editUser.id)" [disabled]="loading">Delete</button>-->
-        </td>
+        --->
+
+       <!-- </td> -->
       </ng-template>
     </tr>
   </tbody>

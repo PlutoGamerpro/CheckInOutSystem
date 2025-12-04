@@ -11,7 +11,7 @@ namespace TimeRegistration.Interfaces
     public interface IManagerRepo
     {
         // add extra functions to manager if needded 
-        List<User> GetAllManagers(); // get all managers!
+      //  List<User> GetAllManagers(); // get all managers!
         User? UpdateUser(UserRecordRequest userRecordRequest);
     }
 }

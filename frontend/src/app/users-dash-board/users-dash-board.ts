@@ -41,8 +41,8 @@ export class UsersDashBoard {
   editUser: any = null;
   // Helpers de sessão
   get hasAdminToken(): boolean { return !!localStorage.getItem('adminToken'); }
-  get hasManagerToken(): boolean { return !!localStorage.getItem('managerToken'); }
-  get managerOnly(): boolean { return !this.hasAdminToken && this.hasManagerToken; }
+  ///get hasManagerToken(): boolean { return !!localStorage.getItem('managerToken'); }
+  //get managerOnly(): boolean { return !this.hasAdminToken && this.hasManagerToken; }
 
   startEdit(user: any): void {
     this.editUser = { ...user }; // clone to avoid direct mutation
@@ -61,13 +61,15 @@ export class UsersDashBoard {
 
   saveEdit(): void {
     if (!this.editUser) return;
-    const token = localStorage.getItem('adminToken') || localStorage.getItem('managerToken');
+    const token = localStorage.getItem('adminToken') /*|| localStorage.getItem('managerToken');
     if (!token) { this.error = 'Not authorized'; return; }
     // Manager não pode promover / alterar isManager
+    /*
     if (this.managerOnly && this.editUser.isManager !== undefined && this.editUser.isManager !== false) {
       this.error = 'Somente admin pode definir isManager.';
       return;
     }
+      */
     this.loading = true;
     this.error = '';
     // Monta payload explícito para garantir envio de isManager
@@ -77,7 +79,7 @@ export class UsersDashBoard {
       phone: this.editUser.phone,
       countryCode: this.editUser.countryCode,
       isAdmin: this.editUser.isAdmin,
-      isManager: this.hasAdminToken ? this.editUser.isManager : undefined // manager não altera
+     // isManager: this.hasAdminToken ? this.editUser.isManager : undefined // manager não altera
     };
     this.http.put(`${environment.baseApiUrl}/external/user`, payload, this.adminHeaders).subscribe({
       next: () => {
@@ -117,7 +119,7 @@ export class UsersDashBoard {
 
   DeleteUserPost(id: number){
 
-  const token = localStorage.getItem('adminToken') || localStorage.getItem('managerToken');
+  const token = localStorage.getItem('adminToken') /*|| localStorage.getItem('managerToken')*/;
     if (!token) { this.error = 'Not authorized'; return; }
 
     if (this.loading) return;

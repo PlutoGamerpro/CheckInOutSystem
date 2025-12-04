@@ -12,8 +12,9 @@ using TimeRegistration.Contracts.Requests;
 
 namespace TimeRegistration.Repositories
 {
-    public class ManagerRepo : IManagerRepo
+    public class ManagerRepo //: IManagerRepo
     {
+        /*
         private readonly AppDbContext _ctx;
 
         public ManagerRepo(AppDbContext ctx)

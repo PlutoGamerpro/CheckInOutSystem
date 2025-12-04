@@ -12,7 +12,7 @@ namespace TimeRegistration.Contracts.Requests
       [property: JsonPropertyName("phone")] string? Phone, 
       [property: JsonPropertyName("countryCode")] string? CountryCode, 
       [property: JsonPropertyName("isAdmin")] bool? IsAdmin, 
-      [property: JsonPropertyName("isManager")] bool IsManager, 
+    //  [property: JsonPropertyName("isManager")] bool IsManager, 
       [property: JsonPropertyName("password")] string? Password
    );
 }

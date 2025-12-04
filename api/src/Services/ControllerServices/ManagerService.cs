@@ -21,23 +21,29 @@ using TimeRegistration.Validation;
 
 namespace TimeRegistration.Services
 {
-    public class ManagerService : IManagerService
+    public class ManagerService //: IManagerService
     {
 
-        private readonly IManagerRepo _managerRepo; 
+    
+
+    }
+}
+        /*
+
+     private readonly IManagerRepo _managerRepo; 
         private readonly IExternalRepo _externalRepo;
         private readonly AppDbContext _ctx;
         private readonly IConfiguration _cfg;
         private readonly ITokenService _tokenService;
 
-        public ManagerService(IManagerRepo managerRepo, IExternalRepo externalRepo, AppDbContext ctx, IConfiguration cfg, ITokenService tokenService /*IAdminAuthService auth*/)
+        public ManagerService(IManagerRepo managerRepo, IExternalRepo externalRepo, AppDbContext ctx, IConfiguration cfg, ITokenService tokenService )
         {
-            _managerRepo = managerRepo;
+      _managerRepo = managerRepo;
             _externalRepo = externalRepo;
             _ctx = ctx;
             _cfg = cfg;
             _tokenService = tokenService;
-        //    _auth = auth;
+  _auth = auth;
         }
 
         public void DeleteUser(int id)
@@ -46,7 +52,7 @@ namespace TimeRegistration.Services
             if (user == null) throw new KeyNotFoundException("User not found");
             _externalRepo.DeleteUser(id, user);
         }
-
+/*
         public List<User> GetAllManagers()
         {
             _managerRepo.GetAllManagers();
@@ -60,7 +66,7 @@ namespace TimeRegistration.Services
             var password = req.Password!.Trim();
 
             var user = _ctx.Users.FirstOrDefault(u => u.Phone == phone);
-            if (user == null || !user.IsManager) throw new UnauthorizedAccessException("Invalid credentials");
+          //  if (user == null || !user.IsManager) throw new UnauthorizedAccessException("Invalid credentials");
 
             LoginRequestValidator.VerifyPasswordOrThrow(password, user.Password);
 
@@ -78,7 +84,7 @@ namespace TimeRegistration.Services
             existingUser.Phone = userRecordRequest.Phone;
             existingUser.CountryCode = userRecordRequest.CountryCode;
 
-            _managerRepo.UpdateUser(userRecordRequest);
+          //  _managerRepo.UpdateUser(userRecordRequest);
             return existingUser;
         }
     }
@@ -96,4 +102,4 @@ namespace TimeRegistration.Services
                 }
             */
 
-                   
+                

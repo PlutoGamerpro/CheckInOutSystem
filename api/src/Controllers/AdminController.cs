@@ -20,37 +20,58 @@ namespace TimeRegistration.Controllers
     public class AdminController : ControllerBase
     {
         private readonly IAdminService _adminservice;
-        private readonly IManagerService _managerService;
+       // private readonly IManagerService _managerService;
         private readonly AppDbContext _ctx;
 
-        public AdminController(IAdminService adminservice, IManagerService managerService, AppDbContext ctx)
+        public AdminController(IAdminService adminservice, /*IManagerService managerService*/ AppDbContext ctx)
         {
             _adminservice = adminservice;
-            _managerService = managerService;
+           // _managerService = managerService;
             _ctx = ctx;
         }  
 
 
-        [HttpPost("login")]
-        public IActionResult Login([FromBody] LoginRequest req)
-        {
-            // 1ª tentativa: admin
-            try
-            {
-                var admin = _adminservice.Login(req);
-                return Ok(new { token = admin.Token, userName = admin.UserName, role = "admin" });
-            }
+   // ...existing code...
+[HttpPost("login")]
+public IActionResult Login([FromBody] LoginRequest req)
+{
+    try
+    {
+        var admin = _adminservice.Login(req);
+        return Ok(new { token = admin.Token, userName = admin.UserName, role = "admin" });
+    }
+    catch (KeyNotFoundException)
+    {
+        return NotFound("User not found");
+    }
+    catch (UnauthorizedAccessException)
+    {
+        return Unauthorized("Invalid credentials");
+    }
+    catch (Exception)
+    {
+        return StatusCode(500, "Login failure");
+    }
+    // Hvis du udkommenterer alt nedenfor, skal du stadig returnere noget:
+    // return StatusCode(500, "Unexpected error");
+
+// ...existing code...
+            /*
             catch (Exception exAdmin)
             {
                 // 2ª tentativa: manager
                 try
                 {
+                    
                     var mgr = _managerService.Login(req);
                     return Ok(new { token = mgr.Token, userName = mgr.UserName, role = "manager" });
+                    
                 }
+                
                 catch (Exception exMgr)
                 {
                     // Decisão de erro combinada
+                    /*
                     if (exAdmin is KeyNotFoundException && exMgr is KeyNotFoundException)
                         return NotFound("User not found");
                     if (exAdmin is UnauthorizedAccessException || exMgr is UnauthorizedAccessException)
@@ -58,6 +79,7 @@ namespace TimeRegistration.Controllers
                     return StatusCode(500, "Login failure");
                 }
             }
+            */
         }
 
         [HttpDelete("user/{id}")]

@@ -11,9 +11,10 @@ using TimeRegistration.Services;
 namespace TimeRegistration.Filters // file looks like adminauthorize
 {
     // Reusable manager authorization attribute
-    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
-    public class ManagerAuthorizeAttribute : Attribute, IAsyncActionFilter
+   // [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
+    public class ManagerAuthorizeAttribute /*: Attribute, IAsyncActionFilter*/
     {
+        /*
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
             var authService = context.HttpContext.RequestServices.GetRequiredService<IAuthenticationService>();
@@ -35,5 +36,6 @@ namespace TimeRegistration.Filters // file looks like adminauthorize
 
             await next();
         }
+        */
     }
 }

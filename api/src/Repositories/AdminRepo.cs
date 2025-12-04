@@ -26,7 +26,7 @@ namespace TimeRegistration.Repositories
             _ctx.Users.Add(user);
             _ctx.SaveChanges();
         }
-
+/*
         public User? DeleteManager(DeleteAdminRequest record)
         {
             var user = _ctx.Users.Find(record.user.Id);
@@ -38,7 +38,7 @@ namespace TimeRegistration.Repositories
             }
             return null;
         }
-
+*/
         public List<User> GetAllAdmins()
         {
             return _ctx.Users
