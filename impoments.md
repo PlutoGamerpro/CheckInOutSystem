@@ -94,6 +94,11 @@ Decrypting them in the dashboard should not be possible (dashboard is not a safe
 ## fx gamle branch feature branch for importns file,,, and that why you put it in github
 
 
+## check on time / late
+
+## idee istedet for alle skal checke in kl 8.00 kan der checkes in 8.10 og må gå 15.10 istedet for 10..
+## tifløjet hvis man checker ud for tidligt så tilaføj noget der ændrer tekstra fra sluttidspunkt til checkout too early.......
+
 
 
 

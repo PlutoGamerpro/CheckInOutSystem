@@ -12,7 +12,7 @@ using TimeRegistration.Data;
 namespace TimeRegistration.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251204111013_Migrations")]
+    [Migration("20251204132406_Migrations")]
     partial class Migrations
     {
         /// <inheritdoc />
@@ -33,6 +33,10 @@ namespace TimeRegistration.Migrations
                         .HasAnnotation("Relational:JsonPropertyName", "id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime?>("AllowedCheckOutTime")
+                        .HasColumnType("timestamp with time zone")
+                        .HasAnnotation("Relational:JsonPropertyName", "allowedCheckOutTime");
 
                     b.Property<DateTime?>("CheckIn")
                         .HasColumnType("timestamp with time zone")
@@ -70,6 +74,9 @@ namespace TimeRegistration.Migrations
                         .HasColumnType("integer");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("AllowedCheckOutTime")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("FkUserId")
                         .HasColumnType("integer");

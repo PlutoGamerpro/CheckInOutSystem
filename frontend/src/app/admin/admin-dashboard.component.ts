@@ -10,6 +10,7 @@ interface AdminReg {
   userName: string | null;
   phone: string | null;
   countryCode: string | null;
+  allowedCheckOutTimeUtc: string | null;
   checkIn: string | null;
   checkOut: string | null;
   isOpen: boolean;
@@ -92,7 +93,7 @@ export class AdminDashboardComponent implements OnInit {
     // Ajuste seu serviço para projetar explicitamente (Select) evitando depender de múltiplas chaves.
     // Require backend returning userName and phone (fixed in admincontroller 'getall' + create registration with fkuserid)
     if (!raw) {
-      return { id: 0, userName: null, phone: null, countryCode: null, checkIn: null, checkOut: null, isOpen: false };
+      return { id: 0, userName: null, phone: null, countryCode: null, allowedCheckOutTimeUtc: null, checkIn: null, checkOut: null, isOpen: false };
     }
 
     const idValue = this.pickFirst([
@@ -134,6 +135,12 @@ export class AdminDashboardComponent implements OnInit {
       raw.timeEnd, raw.timeend, raw.TimeEnd 
     ]);
 
+    const ontimeofftime = this.parseDateList([
+      raw.allowedCheckOutTime, raw.allowed_check_out_time,
+      raw.allowedCheckOutTimeUtc, raw.allowed_check_out_time_utc
+    ]);
+
+
     const statusRaw = (raw.status ?? raw.state ?? raw.currentStatus);
     const isOpenValue =
       (typeof raw.isOpen === 'boolean') ? raw.isOpen
@@ -156,6 +163,7 @@ export class AdminDashboardComponent implements OnInit {
       countryCode: countryCodeValue,
       checkIn: checkInValue,
       checkOut: checkOutValue,
+      allowedCheckOutTimeUtc: ontimeofftime,
       isOpen: isOpenValue,
       isAdmin: isAdminFlag
     };

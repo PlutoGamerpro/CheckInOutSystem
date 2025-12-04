@@ -52,6 +52,7 @@ namespace TimeRegistration.Services
             var checkIn = new CheckIn
             {
                 TimeStart = DateTime.UtcNow,
+                AllowedCheckOutTime = DateTime.UtcNow.AddHours(8), // e.g. 8 hours allowed time
                 FkUserId = user.Id
             };
             _repo.Create(checkIn);

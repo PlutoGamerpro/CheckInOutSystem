@@ -9,5 +9,6 @@ public record AdminRegistrationDto(
     [property: JsonPropertyName("countryCode")] string? CountryCode,
     [property: JsonPropertyName("checkIn")] DateTime? CheckIn,
     [property: JsonPropertyName("checkOut")] DateTime? CheckOut,
+    [property: JsonPropertyName("allowedCheckOutTime")] DateTime? AllowedCheckOutTime,
     [property: JsonPropertyName("isOpen")] bool IsOpen
 );

@@ -8,6 +8,8 @@ public class Registration
     public int FkUserId { get; set; } 
     public DateTime TimeStart { get; set; } = DateTime.UtcNow;
 
+    
+
     // Navigation to allow Include(r => r.User)
     public User? User { get; set; } // probably error this should not be added
 }

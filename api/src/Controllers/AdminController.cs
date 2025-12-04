@@ -118,11 +118,11 @@ public IActionResult Login([FromBody] LoginRequest req)
             }
         }
 
-        private IEnumerable<object> GetRegistrationsJoinRange(DateTime? startInclusiveUtc, DateTime? endExclusiveUtc)
+        private IEnumerable<object> GetRegistrationsJoinRange(DateTime? startInclusiveUtc, DateTime? endExclusiveUtc, DateTime? allowedCheckOutTimeUtc)
         {
             try
             {
-                return _adminservice.GetRegistrationsRange(startInclusiveUtc, endExclusiveUtc);
+                return _adminservice.GetRegistrationsRange(startInclusiveUtc, endExclusiveUtc, allowedCheckOutTimeUtc);
             }
             catch
             {
@@ -140,13 +140,13 @@ public IActionResult Login([FromBody] LoginRequest req)
 
         [HttpGet("registrations")]
         public IActionResult GetAllRegistrations()
-            => Ok(GetRegistrationsJoinRange(null, null));
+            => Ok(GetRegistrationsJoinRange(null, null,null));
 
         [HttpGet("registrations/today")]
         public IActionResult GetTodaysRegistrations()
         {
             var today = MidnightUtc(DateTime.UtcNow);
-            return Ok(GetRegistrationsJoinRange(today, today.AddDays(1)));
+            return Ok(GetRegistrationsJoinRange(today, today.AddDays(1), null));
         }
 
         [HttpGet("registrations/yesterday")]
@@ -154,7 +154,7 @@ public IActionResult Login([FromBody] LoginRequest req)
         {
             var today = MidnightUtc(DateTime.UtcNow);
             var yesterday = today.AddDays(-1);
-            return Ok(GetRegistrationsJoinRange(yesterday, today));
+            return Ok(GetRegistrationsJoinRange(yesterday, today, null));
         }
 
         [HttpGet("registrations/week")]
@@ -162,7 +162,7 @@ public IActionResult Login([FromBody] LoginRequest req)
         {
             var today = MidnightUtc(DateTime.UtcNow);
             var startOfWeek = today.AddDays(-(int)today.DayOfWeek); // Sunday=0
-            return Ok(GetRegistrationsJoinRange(startOfWeek, startOfWeek.AddDays(7)));
+            return Ok(GetRegistrationsJoinRange(startOfWeek, startOfWeek.AddDays(7), null));
         }
 
         [HttpGet("registrations/month")]
@@ -170,7 +170,7 @@ public IActionResult Login([FromBody] LoginRequest req)
         {
             var today = MidnightUtc(DateTime.UtcNow);
             var startOfMonth = new DateTime(today.Year, today.Month, 1, 0, 0, 0, DateTimeKind.Utc);
-            return Ok(GetRegistrationsJoinRange(startOfMonth, startOfMonth.AddMonths(1)));
+            return Ok(GetRegistrationsJoinRange(startOfMonth, startOfMonth.AddMonths(1), null));
         }
 
         [HttpGet("registrations/year")]
@@ -178,7 +178,7 @@ public IActionResult Login([FromBody] LoginRequest req)
         {
             var today = MidnightUtc(DateTime.UtcNow);
             var startOfYear = new DateTime(today.Year, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-            return Ok(GetRegistrationsJoinRange(startOfYear, startOfYear.AddYears(1)));
+            return Ok(GetRegistrationsJoinRange(startOfYear, startOfYear.AddYears(1), null));
         }
 
         [HttpGet("registrations/by-period")]
@@ -191,26 +191,28 @@ public IActionResult Login([FromBody] LoginRequest req)
 
             return period.ToLower() switch
             {
-                "today" => Ok(GetRegistrationsJoinRange(today, today.AddDays(1))),
-                "yesterday" => Ok(GetRegistrationsJoinRange(today.AddDays(-1), today)),
-                "week" => Ok(GetRegistrationsJoinRange(startOfWeek, startOfWeek.AddDays(7))),
-                "month" => Ok(GetRegistrationsJoinRange(startOfMonth, startOfMonth.AddMonths(1))),
-                "year" => Ok(GetRegistrationsJoinRange(startOfYear, startOfYear.AddYears(1))),
-                "all" => Ok(GetRegistrationsJoinRange(null, null)),
+                "today" => Ok(GetRegistrationsJoinRange(today, today.AddDays(1), null)),
+                "yesterday" => Ok(GetRegistrationsJoinRange(today.AddDays(-1), today, null)),
+                "week" => Ok(GetRegistrationsJoinRange(startOfWeek, startOfWeek.AddDays(7), null)),
+                "month" => Ok(GetRegistrationsJoinRange(startOfMonth, startOfMonth.AddMonths(1), null)),
+                "year" => Ok(GetRegistrationsJoinRange(startOfYear, startOfYear.AddYears(1), null)),
+                "all" => Ok(GetRegistrationsJoinRange(null, null, null)),
                 _ => BadRequest("period inválido")
             };
         }
 
         [HttpGet("registrations/range")]
-        public IActionResult GetRange([FromQuery] DateTime start, [FromQuery] DateTime end)
+        public IActionResult GetRange([FromQuery] DateTime start, [FromQuery] DateTime end, [FromQuery] DateTime? allowedCheckOutTimeUtc = null )
         {
-            if (start == default || end == default) return BadRequest("start/end obrigatórios");
+            if (start == default || end == default || allowedCheckOutTimeUtc == default) return BadRequest("start/end obrigatórios");
             start = ForceUtc(start);
             end = ForceUtc(end);
+            allowedCheckOutTimeUtc = ForceUtc(allowedCheckOutTimeUtc ?? DateTime.UtcNow);
             if (end <= start) return BadRequest("end <= start");
+            if(end <= allowedCheckOutTimeUtc) return BadRequest("allowedCheckOutTimeUtc most be less than the end.");
             if ((end - start).TotalDays > 400) return BadRequest("Intervalo muito grande (max 400 dias).");
-            return Ok(GetRegistrationsJoinRange(start, end));
-        }
+            return Ok(GetRegistrationsJoinRange(start, end, allowedCheckOutTimeUtc));
+        }                                               /// after end used to be null 
     }
 }
         

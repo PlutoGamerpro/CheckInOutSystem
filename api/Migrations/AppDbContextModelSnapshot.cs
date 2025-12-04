@@ -31,6 +31,10 @@ namespace TimeRegistration.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<DateTime?>("AllowedCheckOutTime")
+                        .HasColumnType("timestamp with time zone")
+                        .HasAnnotation("Relational:JsonPropertyName", "allowedCheckOutTime");
+
                     b.Property<DateTime?>("CheckIn")
                         .HasColumnType("timestamp with time zone")
                         .HasAnnotation("Relational:JsonPropertyName", "checkIn");
@@ -67,6 +71,9 @@ namespace TimeRegistration.Migrations
                         .HasColumnType("integer");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("AllowedCheckOutTime")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("FkUserId")
                         .HasColumnType("integer");

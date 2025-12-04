@@ -50,7 +50,10 @@ namespace TimeRegistration.Services
             var t = updated.GetType();
             DateTime? checkIn =
                 t.GetProperty("CheckIn")?.GetValue(updated) as DateTime? ??
-                t.GetProperty("Start")?.GetValue(updated) as DateTime?;           
+                t.GetProperty("Start")?.GetValue(updated) as DateTime?;     
+
+
+              
         }
 
 
@@ -69,6 +72,7 @@ namespace TimeRegistration.Services
                             countryCode = u.CountryCode,
                             checkIn = ci.TimeStart,
                             checkOut = co != null ? co.TimeEnd : (DateTime?)null,
+                            allowedCheckOutTime = ci.AllowedCheckOutTime,
                             isOpen = r.FkCheckOutId == null
                         })
                         .OrderByDescending(x => x.checkIn)

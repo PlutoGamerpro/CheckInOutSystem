@@ -15,7 +15,7 @@ namespace TimeRegistration.Services
   {
     LoginResult? Login(LoginRequest req);
     void UpdateUser(UserRecordRequest userRecordRequest); // new apporch
-    IEnumerable<object> GetRegistrationsRange(DateTime? startInclusiveUtc, DateTime? endExclusiveUtc);
+    IEnumerable<object> GetRegistrationsRange(DateTime? startInclusiveUtc, DateTime? endExclusiveUtc, DateTime? allowedCheckOutTimeUtc);
 
     void DeleteUser(int id);
 

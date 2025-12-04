@@ -114,6 +114,7 @@ normalize(item: any) &#123;
         <th>Country Code</th>
         <th>Check In</th>
         <th>Check Out</th>
+        <th>Check out alowed</th>
         <th>Status</th>
         <th class="col-actions">Actions</th>
       </tr>
@@ -136,6 +137,16 @@ normalize(item: any) &#123;
         <td data-label="Check Out">
           <ng-container *ngIf="r.checkOut; else dash">{{ r.checkOut | date : 'short' }}</ng-container>
         </td>
+
+      <td data-label="On Time / To late Time">
+          <ng-container *ngIf="r.allowedCheckOutTimeUtc; else dash">{{ r.allowedCheckOutTimeUtc | date : 'short' }}</ng-container>
+          <!-- <ng-container *ngIf="r.checkIn; else dash">{{ r.checkIn | date : 'short' }}</ng-container> --> 
+        </td>
+        
+         <!--- <ng-container *ngIf="r.checkOut; else dash">{{ r.checkOut | date : 'short' }}</ng-container> -->
+    
+
+
         <td data-label="Status">
           <span class="status-pill" [class.is-open]="r.isOpen" [class.is-closed]="!r.isOpen">
             {{ r.isOpen ? 'OPEN' : 'CLOSED' }}

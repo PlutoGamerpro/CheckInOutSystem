@@ -64,6 +64,7 @@ namespace TimeRegistration.Services
             {
                 TimeEnd = DateTime.UtcNow,
                 FkUserId = user.Id
+               
             }; 
             _repo.Create(checkOut);            
 

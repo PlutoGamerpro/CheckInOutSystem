@@ -4,5 +4,6 @@ public class CheckOut
 {
     public int Id { get; set; }
     public DateTime TimeEnd { get; set; }
+   // public DateTime AllowedCheckOutTime { get; set; }
     public int FkUserId { get; set; }
 }

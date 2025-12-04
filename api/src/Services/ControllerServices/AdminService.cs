@@ -150,7 +150,7 @@ namespace TimeRegistration.Services
 
        
                                                     
-        public IEnumerable<object> GetRegistrationsRange(DateTime? startInclusiveUtc, DateTime? endExclusiveUtc) 
+        public IEnumerable<object> GetRegistrationsRange(DateTime? startInclusiveUtc, DateTime? endExclusiveUtc, DateTime? allowedCheckOutTimeUtc) 
         {        
               
             var query =
@@ -159,6 +159,7 @@ namespace TimeRegistration.Services
                 join u in _ctx.Users on ci.FkUserId equals u.Id
                 join co in _ctx.CheckOuts on r.FkCheckOutId equals co.Id into coLeft
                 from co in coLeft.DefaultIfEmpty()
+
                 select new
                 {
                     id = r.Id,
@@ -167,6 +168,7 @@ namespace TimeRegistration.Services
                     countryCode = u.CountryCode,
                     checkIn = ci.TimeStart,
                     checkOut = co != null ? co.TimeEnd : (DateTime?)null,
+                    allowedCheckOutTime = ci.AllowedCheckOutTime,
                     isOpen = r.FkCheckOutId == null
                 };
 
@@ -174,6 +176,9 @@ namespace TimeRegistration.Services
                 query = query.Where(x => x.checkIn >= startInclusiveUtc.Value);
             if (endExclusiveUtc.HasValue)
                 query = query.Where(x => x.checkIn < endExclusiveUtc.Value);
+
+            if (allowedCheckOutTimeUtc.HasValue)
+                query = query.Where(x => x.checkOut <= allowedCheckOutTimeUtc.Value || (x.checkOut == null && x.checkIn <= allowedCheckOutTimeUtc.Value));
 
             
             return query.OrderByDescending(x => x.checkIn).ToList();

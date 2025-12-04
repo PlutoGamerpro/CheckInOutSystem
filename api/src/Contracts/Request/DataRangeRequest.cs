@@ -5,5 +5,5 @@ using System.Threading.Tasks;
 
 namespace TimeRegistration.Contracts.Requests
 {
-      public record DateRange(DateTime? startInclusiveUtc, DateTime? endExclusiveUtc); 
+      public record DateRange(DateTime? startInclusiveUtc, DateTime? endExclusiveUtc, DateTime? allowedCheckOutTimeUtc); 
 }

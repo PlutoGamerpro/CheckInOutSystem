@@ -19,6 +19,7 @@ namespace TimeRegistration.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     TimeStart = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    AllowedCheckOutTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     FkUserId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
@@ -51,6 +52,7 @@ namespace TimeRegistration.Migrations
                     CountryCode = table.Column<string>(type: "text", nullable: true),
                     CheckIn = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     CheckOut = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    AllowedCheckOutTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     IsOpen = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
