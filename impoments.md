@@ -85,7 +85,9 @@ Decrypting them in the dashboard should not be possible (dashboard is not a safe
 
 ## token er brugt i seperat og i api kald filen (blandet ikke godt et sted bedre)
 
-## 
+## fx gamle branch feature branch for importns file,,, and that why you put it in github
+
+## check deltet an element and get if it exist in swagger/db
 
 
 

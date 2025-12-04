@@ -22,33 +22,12 @@ export class AdminLoginComponent {
   loading = false;
   errorMessage = '';
 
-  // Country code dropdown data/state
-  PhoneCountryCode = [
-    { code: '+45', country: 'Denmark' },
-    { code: '+1',  country: 'USA' },
-    { code: '+44', country: 'UK' },
-    { code: '+49', country: 'Germany' },
-    { code: '+33', country: 'France' }
-  ];
-  countryCode: string = 'Select Countrycode';
-  isDropdownOpen = false;
-  selectedCountryCode = 'Select Countrycode';
 
   private readonly base = environment.baseApiUrl.replace(/\/$/, '');
 
   constructor(private http: HttpClient, private router: Router) {}
 
-  // Toggle dropdown
-  toggleDropdown(): void {
-    this.isDropdownOpen = !this.isDropdownOpen;
-  }
 
-  // Select country item
-  selectItem(item: { code: string; country: string }): void {
-    this.selectedCountryCode = item.code;
-    this.countryCode = item.code;
-    this.isDropdownOpen = false;
-  }
 
   goToMain(): void {
     this.router.navigate(['/']);
@@ -83,7 +62,6 @@ export class AdminLoginComponent {
     const usernameTrimmed = (this.username ?? '').trim();
     const passwordValue = this.password ?? '';
     const phoneDigits = (this.phone ?? '').replace(/\D/g, '');
-    const countryCode = this.selectedCountryCode !== 'Select Countrycode' ? this.selectedCountryCode : '';
 
     if (!usernameTrimmed) {
       this.errorMessage = 'Please enter a username.';
@@ -95,10 +73,6 @@ export class AdminLoginComponent {
     }
     if (phoneDigits.length !== 8) {
       this.errorMessage = 'Please enter an 8-digit phone number.';
-      return;
-    }
-    if (this.selectedCountryCode === 'Select Countrycode') {
-      this.errorMessage = 'Please select a country code.';
       return;
     }
 
@@ -117,7 +91,7 @@ export class AdminLoginComponent {
         this.username = '';
         this.password = '';
         this.phone = '';
-        this.countryCode = '';
+       
         this.router.navigate(['/admin']);
       },
       error: (err) => {
