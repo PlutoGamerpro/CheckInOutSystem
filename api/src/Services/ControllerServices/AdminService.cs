@@ -83,8 +83,25 @@ namespace TimeRegistration.Services
         {
          
             var user = _ctx.Users.Find(id);
-            if (user == null) throw new KeyNotFoundException("User not found");
-           
+
+
+
+          //  if (user == null) throw new KeyNotFoundException("User not found");
+            if(!user.IsAdmin && user != null)
+            {
+                // Delete all registrations associated with this user first to avoid FK constraint violations
+                var userRegistrations = _ctx.Registrations.Where(r => r.FkUserId == id).ToList();
+                if (userRegistrations.Any())
+                {
+                    _ctx.Registrations.RemoveRange(userRegistrations);
+                    _ctx.SaveChanges();
+                }
+            }
+            else
+            {
+                throw new InvalidOperationException("Cannot delete an admin user or users does not exist.");
+
+            }
 
             // new added.............. 
             /*
@@ -117,7 +134,13 @@ namespace TimeRegistration.Services
             existingUser.Name = userRecordRequest.Name;
             existingUser.Phone = userRecordRequest.Phone;
             existingUser.CountryCode = userRecordRequest.CountryCode;
+
+            if(existingUser.IsAdmin){
+           throw new InvalidOperationException("Admins roles cannot be changed password requiered.");
+            } // avoids that admins can change their own role / one admins abused other...// know not possible to demote.. admin problem
+            else { 
             existingUser.IsAdmin = userRecordRequest.IsAdmin;
+            }
 
             _adminRepo.UpdateUser(userRecordRequest);
             // this functions is not implemenet in the repo file which mean only frontend update but in backend update does get 

@@ -48,6 +48,11 @@ Decrypting them in the dashboard should not be possible (dashboard is not a safe
 
 ## nav bar 
 
+## ændreder order på admin login så password til sidste
+
+
+## admins brude nok ikke appear in dashboard kan ikke slettes 
+
 -----------------------------------------------------------------------------------------------------------
 
 # LIST DOES NOT MATTER /// FIX LIST 
@@ -64,30 +69,30 @@ Decrypting them in the dashboard should not be possible (dashboard is not a safe
   ### add so a manager can't delete a other manager but only a users. 
 
 ## hardcoded-credentials Embedding credentials in source code risks unauthorized access (app settings) 
-## Create methods for the items below (to avoid repeating code)
+## Create methods for the items below (to avoid repeating code)------- would have best practice to use other service
 
+## add extra secret code to demote admins if knows can derank admin / update other users to admin!
 
+## token er brugt i seperat og i api kald filen (blandet ikke godt et sted bedre)
+
+## maybe opdate ( so only usersname and password to login)
+
+## FIX create profil ui problmes
+
+## should add some phone number policy so not just randoms number likes +4444444
+
+## plus language emoj
 -----------------------------------------------------------------------------------------------------------
 ## Importans fixes
 
 ## do i need a manger role??? or is it not needed???
-
-## should add some phone number policy so not just randoms number likes +4444444
-## plus language emoj
-
-## FIX create profil ui problmes
-
-## maybe opdate ( so only usersname and password to login)
-
 ## fjern evt manager helt fra programmet 
 
-## ændreder order på admin login så password til sidste
 
-## token er brugt i seperat og i api kald filen (blandet ikke godt et sted bedre)
+
 
 ## fx gamle branch feature branch for importns file,,, and that why you put it in github
 
-## check deltet an element and get if it exist in swagger/db
 
 
 
