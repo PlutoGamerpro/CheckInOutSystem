@@ -114,7 +114,8 @@ normalize(item: any) &#123;
         <th>Country Code</th>
         <th>Check In</th>
         <th>Check Out</th>
-        <th>Check out alowed</th>
+        <th>Check out allowed</th>
+        <th>Time On/Off</th>
         <th>Status</th>
         <th class="col-actions">Actions</th>
       </tr>
@@ -130,7 +131,39 @@ normalize(item: any) &#123;
                   <td data-label="Country Code">
           <ng-container *ngIf="r.countryCode; else dash">{{ r.countryCode }}</ng-container>
         </td>
-
+<td data-label="Check In">
+  {{ r.checkIn | date : 'short' }}
+</td>
+<td data-label="Check Out">
+  <ng-container *ngIf="r.checkOut; else dash">{{ r.checkOut | date : 'short' }}</ng-container>
+  <ng-template #dash>-</ng-template>
+</td>
+<td data-label="Allowed Check Out">
+  <ng-container *ngIf="r.allowedCheckOutTimeUtc; else dash">{{ r.allowedCheckOutTimeUtc | date : 'short' }}</ng-container>
+  <ng-template #dash>-</ng-template>
+</td>
+<td data-label="Time Diff">
+  <ng-container *ngIf="r.checkOut">
+     <span *ngIf="(r.timeDiffMinutes">
+      <span *ngIf="r.timeDiffMinutes! > 0" class="late">{{ r.timeDiffMinutes }} min late</span>
+      <span *ngIf="r.timeDiffMinutes! < 0" class="early">{{ -r.timeDiffMinutes! }} min early</span>
+      <span *ngIf="r.timeDiffMinutes! === 0" class="on-time">On time</span>
+    </span>
+    <span *ngIf="(r.timeDiffMinutes ?? null) === null">-</span>
+  </ng-container>
+  <ng-container *ngIf="!r.checkOut">-</ng-container>
+    <!--
+    <span *ngIf="(r.timeDiffMinutes  ?? null) !== null">
+      <span *ngIf="r.timeDiffMinutes! > 0" class="late">{{ r.timeDiffMinutes }} min late</span>
+      <span *ngIf="r.timeDiffMinutes! < 0" class="early">{{ -r.timeDiffMinutes! }} min early</span>
+      <span *ngIf="r.timeDiffMinutes! === 0" class="on-time">On time</span>
+    </span>
+    <span *ngIf="(r.timeDiffMinutes ?? null) === null">-</span>
+  </ng-container>
+  <ng-container *ngIf="!r.checkOut">-</ng-container>
+  --->
+</td>
+        <!---
         <td data-label="Check In">
           <ng-container *ngIf="r.checkIn; else dash">{{ r.checkIn | date : 'short' }}</ng-container>
         </td>
@@ -139,10 +172,28 @@ normalize(item: any) &#123;
         </td>
 
       <td data-label="On Time / To late Time">
-          <ng-container *ngIf="r.allowedCheckOutTimeUtc; else dash">{{ r.allowedCheckOutTimeUtc | date : 'short' }}</ng-container>
-          <!-- <ng-container *ngIf="r.checkIn; else dash">{{ r.checkIn | date : 'short' }}</ng-container> --> 
-        </td>
-        
+    <span>
+        {{ r.allowedCheckOutTimeUtc ? (r.allowedCheckOutTimeUtc | date : 'short') : '-' }}
+    </span>
+
+</td>
+      
+
+<td data-table="TimeOnOff">
+
+
+  <ng-container *ngIf="r.checkOut; else dash">
+    <span *ngIf="!r.checkOutOnTime; else allowedTime" class="to-late">15 minutes too</span>
+    <ng-template #allowedTime>
+      <span class="on-time">
+        {{ r.allowedCheckOutTimeUtc ? (r.allowedCheckOutTimeUtc | date : 'short') : '' }}
+      </span>
+    </ng-template>
+  </ng-container>
+  <ng-template #dash>-</ng-template>
+   
+</td>
+-->
          <!--- <ng-container *ngIf="r.checkOut; else dash">{{ r.checkOut | date : 'short' }}</ng-container> -->
     
 
@@ -171,7 +222,7 @@ normalize(item: any) &#123;
   <ng-template #dash>-</ng-template>
 
   <div *ngIf="!loading && !registrations.length" class="info info-empty">No registrations.</div>
-
+<!--
   <div *ngIf="debug" class="info" style="margin-top:1rem;max-height:40vh;overflow:auto">
     <strong>RAW array ({{ originalRaw.length }} itens)</strong>
     <div *ngIf="detectedKeys.length" style="font-size:.65rem;margin:.25rem 0">
@@ -179,4 +230,5 @@ normalize(item: any) &#123;
     </div>
     <pre style="white-space:pre-wrap;font-size:.7rem">{{ originalRaw | json }}</pre>
   </div>
+  -->
 </div>

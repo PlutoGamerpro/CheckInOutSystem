@@ -73,6 +73,10 @@ namespace TimeRegistration.Services
                             checkIn = ci.TimeStart,
                             checkOut = co != null ? co.TimeEnd : (DateTime?)null,
                             allowedCheckOutTime = ci.AllowedCheckOutTime,
+                            checkOutOnTime = co != null && co.TimeEnd <= ci.AllowedCheckOutTime,
+                            timeDiffMinutes = (co != null && ci.AllowedCheckOutTime != null)
+                                ? (int)((co.TimeEnd - ci.AllowedCheckOutTime).TotalMinutes)
+                                : (int?)null,
                             isOpen = r.FkCheckOutId == null
                         })
                         .OrderByDescending(x => x.checkIn)

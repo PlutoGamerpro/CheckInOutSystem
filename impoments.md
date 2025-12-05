@@ -97,9 +97,15 @@ Decrypting them in the dashboard should not be possible (dashboard is not a safe
 ## check on time / late
 
 ## idee istedet for alle skal checke in kl 8.00 kan der checkes in 8.10 og må gå 15.10 istedet for 10..
-## tifløjet hvis man checker ud for tidligt så tilaføj noget der ændrer tekstra fra sluttidspunkt til checkout too early.......
+## tifløjet hvis man checker ud for tidligt så tilaføj noget der ændrer tekstra fra sluttidspunkt til checkout too early and specify the number how many hours / minuts to early........fx checkout 1 hour before allowedd
+
+## could add a note to every registration possible to add one ,,, checkout a reason....
 
 
+## maybe add option to edit an registration but , best not so no one can maniplute the system... 
+
+##  make registration tap under each users
+## so instead of all appear like one after one , drodropdown if  a users make more han one
 
 
 

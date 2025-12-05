@@ -11,8 +11,10 @@ interface AdminReg {
   phone: string | null;
   countryCode: string | null;
   allowedCheckOutTimeUtc: string | null;
+  checkOutOnTime: boolean | null;
   checkIn: string | null;
   checkOut: string | null;
+  timeDiffMinutes?: number | null;
   isOpen: boolean;
   isAdmin?: boolean; 
 }
@@ -93,7 +95,7 @@ export class AdminDashboardComponent implements OnInit {
     // Ajuste seu serviço para projetar explicitamente (Select) evitando depender de múltiplas chaves.
     // Require backend returning userName and phone (fixed in admincontroller 'getall' + create registration with fkuserid)
     if (!raw) {
-      return { id: 0, userName: null, phone: null, countryCode: null, allowedCheckOutTimeUtc: null, checkIn: null, checkOut: null, isOpen: false };
+      return { id: 0, userName: null, phone: null, countryCode: null, allowedCheckOutTimeUtc: null, timeDiffMinutes: null, checkOutOnTime: null, checkIn: null, checkOut: null, isOpen: false };
     }
 
     const idValue = this.pickFirst([
@@ -139,6 +141,14 @@ export class AdminDashboardComponent implements OnInit {
       raw.allowedCheckOutTime, raw.allowed_check_out_time,
       raw.allowedCheckOutTimeUtc, raw.allowed_check_out_time_utc
     ]);
+/*
+    const timeDiffMinutes = this.parseDateList([
+      raw.timeDiffMinutes, raw.time_diff_minutes,
+      raw.time_difference_minutes, raw.timediffminutes
+    ]);
+  */ 
+    const checkOutOnTimeValue = typeof raw.checkOutOnTime === 'boolean' ? raw.checkOutOnTime : null;
+
 
 
     const statusRaw = (raw.status ?? raw.state ?? raw.currentStatus);
@@ -156,6 +166,11 @@ export class AdminDashboardComponent implements OnInit {
         ? isAdminRaw
         : (typeof isAdminRaw === 'string' ? /admin/i.test(isAdminRaw) : false);
 
+    // Use backend-provided timeDiffMinutes if present
+    const timeDiffMinutes = typeof raw.timeDiffMinutes === 'number' ? raw.timeDiffMinutes : null;
+
+
+
     return {
       id: idValue ?? 0,
       userName: userNameValue,
@@ -164,6 +179,8 @@ export class AdminDashboardComponent implements OnInit {
       checkIn: checkInValue,
       checkOut: checkOutValue,
       allowedCheckOutTimeUtc: ontimeofftime,
+      checkOutOnTime: checkOutOnTimeValue,
+      timeDiffMinutes: timeDiffMinutes, // added :timeDiffMinutes,
       isOpen: isOpenValue,
       isAdmin: isAdminFlag
     };
