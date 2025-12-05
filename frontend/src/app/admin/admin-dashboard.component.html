@@ -24,9 +24,6 @@
 
 
 <div class="admin-dashboard">
-
-
-
   <h2 class="page-title">
     Admin - Registrations
     <ng-container *ngIf="!currentPeriod || currentPeriod === 'all'"> / All Reg.</ng-container>
@@ -144,12 +141,12 @@ normalize(item: any) &#123;
 </td>
 <td data-label="Time Diff">
   <ng-container *ngIf="r.checkOut">
-     <span *ngIf="(r.timeDiffMinutes">
-      <span *ngIf="r.timeDiffMinutes! > 0" class="late">{{ r.timeDiffMinutes }} min late</span>
-      <span *ngIf="r.timeDiffMinutes! < 0" class="early">{{ -r.timeDiffMinutes! }} min early</span>
-      <span *ngIf="r.timeDiffMinutes! === 0" class="on-time">On time</span>
+    <span *ngIf="r.timeDiffMinutes !== null && r.timeDiffMinutes !== undefined">
+      <span *ngIf="r.timeDiffMinutes > 0" class="late">{{ r.timeDiffMinutes }} min late</span>
+      <span *ngIf="r.timeDiffMinutes < 0" class="early">{{ -r.timeDiffMinutes }} min early</span>
+      <span *ngIf="r.timeDiffMinutes === 0" class="on-time">On time</span>
     </span>
-    <span *ngIf="(r.timeDiffMinutes ?? null) === null">-</span>
+    <span *ngIf="r.timeDiffMinutes === null || r.timeDiffMinutes === undefined">-</span>
   </ng-container>
   <ng-container *ngIf="!r.checkOut">-</ng-container>
     <!--
