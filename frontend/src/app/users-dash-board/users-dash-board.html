@@ -61,8 +61,12 @@
       <ng-template #editRow>
         <td>{{ editUser.id }}</td>
         <td><input [(ngModel)]="editUser.name" class="form-control" /></td>
-        <td><input [(ngModel)]="editUser.phone" class="form-control" /></td>
-        <td><input [(ngModel)]="editUser.countryCode" class="form-control" /></td>
+        <td><input [(ngModel)]="editUser.phone" class="form-control" style="max-width:120px;"  /></td>
+        <td>
+          <select [(ngModel)]="editUser.countryCode" class="form-control" style="max-width:90px;">
+            <option *ngFor="let item of PhoneCountryCode" [ngValue]="item.code">{{ item.code }} ({{ item.country }})</option>
+          </select>
+        </td>
         <td>
           <select [(ngModel)]="editUser.isAdmin" class="form-control">
             <option [ngValue]="true">Yes</option>

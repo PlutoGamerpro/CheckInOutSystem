@@ -1,3 +1,14 @@
+// Improve dropdown visibility in edit row
+select.form-control {
+  background: #222833 !important;
+  color: #fff !important;
+  border: 1px solid #3b4654 !important;
+}
+
+select.form-control option {
+  background: #222833 !important;
+  color: #fff !important;
+}
 
 
 $color-bg: #0f1115;

@@ -15,6 +15,13 @@ import { Adminservice} from '../shared/services/adminservice';
  // styleUrls: ['./users-dash-board.scss']
 })
 export class UsersDashBoard {
+  PhoneCountryCode = [
+    { code: '+45', country: 'Denmark' },
+    { code: '+1', country: 'USA' },
+    { code: '+44', country: 'UK' },
+    { code: '+49', country: 'Germany' },
+    { code: '+33', country: 'France' }
+  ];
   users: any[] = [];
   originalRaw: any[] = [];
   loading = false;
