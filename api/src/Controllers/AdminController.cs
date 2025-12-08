@@ -100,8 +100,8 @@ public IActionResult Login([FromBody] LoginRequest req)
         }
 
 
-        // [HttpPut("user/{id}")]
-        [HttpPut("user")]
+        // [HttpPut("user/{id}")] 
+        [HttpPut("user")] // this update users endpoint works on swagger 
         [AdminAuthorize] // could return a token instead change call to take record 
 
         public IActionResult UpdateUser([FromBody] UserRecordRequest userRecordRequest /* int id, User user*/)

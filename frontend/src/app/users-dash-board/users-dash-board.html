@@ -69,6 +69,11 @@
             <option [ngValue]="false">No</option>
           </select>
         </td>
+
+          <td>
+          <button class="btn btn-success btn-sm" (click)="saveEdit()">Save</button>
+          <button class="btn btn-danger btn-sm" (click)="cancelEdit()">Cancel</button>
+        </td>
        <!---
         <td>
           <select [(ngModel)]="editUser.isManager" class="form-control" [disabled]="managerOnly">

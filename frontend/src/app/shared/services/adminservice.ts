@@ -18,5 +18,9 @@ export class Adminservice {
   DeleteUser(userId: number): Observable<any> {
     return this.http.delete(this.apiUrlService.url(`external/user/${userId}`), this.adminHeaders);
   }
+
+  updateUser(user: any): Observable<void> {
+    return this.http.put<void>(this.apiUrlService.url(`external/user`), user, this.adminHeaders);
+  }
   // add other admin related methods here later 
 }

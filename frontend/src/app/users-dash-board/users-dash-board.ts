@@ -59,27 +59,48 @@ export class UsersDashBoard {
     return { headers: new HttpHeaders({ 'Authorization': `Bearer ${token}`, 'X-Admin-Token': token }) };
   }
 
-  saveEdit(): void {
+
+
+
+saveEdit(): void {
+
     if (!this.editUser) return;
-    const token = localStorage.getItem('adminToken') /*|| localStorage.getItem('managerToken');
-    if (!token) { this.error = 'Not authorized'; return; }
-    // Manager não pode promover / alterar isManager
-    /*
-    if (this.managerOnly && this.editUser.isManager !== undefined && this.editUser.isManager !== false) {
-      this.error = 'Somente admin pode definir isManager.';
-      return;
-    }
-      */
     this.loading = true;
     this.error = '';
-    // Monta payload explícito para garantir envio de isManager
+
+const payload = {
+  Id: this.editUser.id,
+  Name: this.editUser.name,
+  Phone: this.editUser.phone,
+  CountryCode: this.editUser.countryCode,
+  IsAdmin: this.editUser.isAdmin,
+};
+
+this.adminservice.updateUser(payload).subscribe({
+      next: () => {
+        this.editUser = null;
+        this.load();
+      },
+      error: () => {
+        this.error = 'Failed to update user';
+        this.loading = false;
+      }
+    });
+   }
+/*
+  saveEdit(): void {
+    if (!this.editUser) return;
+    const token = localStorage.getItem('adminToken') 
+    this.loading = true;
+    this.error = '';
+ 
     const payload = {
       id: this.editUser.id,
       name: this.editUser.name,
       phone: this.editUser.phone,
       countryCode: this.editUser.countryCode,
       isAdmin: this.editUser.isAdmin,
-     // isManager: this.hasAdminToken ? this.editUser.isManager : undefined // manager não altera
+  
     };
     this.http.put(`${environment.baseApiUrl}/external/user`, payload, this.adminHeaders).subscribe({
       next: () => {
@@ -92,7 +113,7 @@ export class UsersDashBoard {
       }
     });
   }
-
+*/
   load(): void {
     this.loading = true;
     this.error = '';
