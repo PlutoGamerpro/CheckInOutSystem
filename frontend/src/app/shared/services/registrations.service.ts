@@ -17,8 +17,14 @@ export class RegistrationsService {
   getAllRegistrations(): Observable<any[]> {
     return this.http.get<any[]>(this.apiUrl.url('admin/registrations'), this.authOpts());
   }
+
   deleteRegistration(id: number | string): Observable<void> {
     return this.http.delete<void>(this.apiUrl.url(`checkin/${id}`), this.authOpts());
+  }
+
+  // Get full registration history for a specific user
+  getUserHistory(userId: number | string): Observable<any[]> {
+    return this.http.get<any[]>(this.apiUrl.url(`admin/user/${userId}/registrations`), this.authOpts());
   }
 
   // Wrappers semânticos (opcionais)

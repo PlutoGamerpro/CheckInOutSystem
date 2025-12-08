@@ -114,7 +114,9 @@ normalize(item: any) &#123;
         <th>Check out allowed</th>
         <th>Time On/Off</th>
         <th>Status</th>
+        <th>History of ChecksIns & CheckOuts of the user</th>
         <th class="col-actions">Actions</th>
+      
       </tr>
     </thead>
     <tbody>
@@ -125,30 +127,104 @@ normalize(item: any) &#123;
         <td data-label="Phone">
           <ng-container *ngIf="r.phone; else dash">{{ r.phone }}</ng-container>
         </td>
-                  <td data-label="Country Code">
+        <td data-label="Country Code">
           <ng-container *ngIf="r.countryCode; else dash">{{ r.countryCode }}</ng-container>
         </td>
-<td data-label="Check In">
-  {{ r.checkIn | date : 'short' }}
-</td>
-<td data-label="Check Out">
-  <ng-container *ngIf="r.checkOut; else dash">{{ r.checkOut | date : 'short' }}</ng-container>
+        <td data-label="Check In">
+          {{ r.checkIn | date : 'short' }}
+        </td>
+        <td data-label="Check Out">
+          <ng-container *ngIf="r.checkOut; else dash">{{ r.checkOut | date : 'short' }}</ng-container>
+          <ng-template #dash>-</ng-template>
+        </td>
+        <td data-label="Allowed Check Out">
+          <ng-container *ngIf="r.allowedCheckOutTimeUtc; else dash">{{ r.allowedCheckOutTimeUtc | date : 'short' }}</ng-container>
+          <ng-template #dash>-</ng-template>
+        </td>
+        <td data-label="Time Diff">
+          <ng-container *ngIf="r.checkOut">
+            <span *ngIf="r.timeDiffMinutes !== null && r.timeDiffMinutes !== undefined">
+              <span *ngIf="r.timeDiffMinutes > 0" class="late">{{ r.timeDiffMinutes }} min late</span>
+              <span *ngIf="r.timeDiffMinutes < 0" class="early">{{ -r.timeDiffMinutes }} min early</span>
+              <span *ngIf="r.timeDiffMinutes === 0" class="on-time">On time</span>
+            </span>
+            <span *ngIf="r.timeDiffMinutes === null || r.timeDiffMinutes === undefined">-</span>
+          </ng-container>
+          <ng-container *ngIf="!r.checkOut">-</ng-container>
+        </td>
+        <td data-label="Status">
+          <span class="status-pill" [class.is-open]="r.isOpen" [class.is-closed]="!r.isOpen">
+            {{ r.isOpen ? 'OPEN' : 'CLOSED' }}
+          </span>
+        </td>
+        <td data-label="RegistrationDropdown">
+          <button class="btn btn-secondary btn-sm" (click)="toggleDetails(r.id)" [attr.aria-expanded]="isDetailsVisible(r.id) ? 'true' : 'false'" [attr.aria-controls]="'details-'+r.id">
+            {{ isDetailsVisible(r.id) ? 'Disable History' : 'User Registration History ' }}
+          </button>
+        </td>
+        <td data-label="Actions">
+          <button type="button" class="btn btn-danger" (click)="deleteRegistration(r.id)" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            Delete
+          </button>
+        </td>
+      </tr>
+      <ng-container *ngFor="let r of registrations; trackBy: trackById">
+        <tr *ngIf="isDetailsVisible(r.id) && r.userId" [attr.id]="'details-'+r.id">
+          <td colspan="10">
+            <div *ngIf="userHistories.get(r.userId); else noHistory">
+              <table class="data-table history-table">
+                <thead>
+                  <tr>
+                    <th>Check In</th>
+                    <th>Check Out</th>
+                    <th>Check out allowed</th>
+                    <th>Time On/Off</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <ng-container *ngFor="let h of userHistories.get(r.userId) || []">
+                    <tr>
+                      <td>{{ h.checkIn | date : 'short' }}</td>
+                      <td>
+                        <ng-container *ngIf="h.checkOut; else dash">{{ h.checkOut | date : 'short' }}</ng-container>
+                      </td>
+                      <td>
+                        <ng-container *ngIf="h.allowedCheckOutTimeUtc; else dash">{{ h.allowedCheckOutTimeUtc | date : 'short' }}</ng-container>
+                      </td>
+                      <td>
+                        <ng-container *ngIf="h.checkOut">
+                          <span *ngIf="h.timeDiffMinutes !== null && h.timeDiffMinutes !== undefined">
+                            <span *ngIf="h.timeDiffMinutes > 0" class="late">{{ h.timeDiffMinutes }} min late</span>
+                            <span *ngIf="h.timeDiffMinutes < 0" class="early">{{ -h.timeDiffMinutes }} min early</span>
+                            <span *ngIf="h.timeDiffMinutes === 0" class="on-time">On time</span>
+                          </span>
+                          <span *ngIf="h.timeDiffMinutes === null || h.timeDiffMinutes === undefined">-</span>
+                        </ng-container>
+                        <ng-container *ngIf="!h.checkOut">-</ng-container>
+                      </td>
+                      <td>
+                        <span class="status-pill" [class.is-open]="h.isOpen" [class.is-closed]="!h.isOpen">
+                          {{ h.isOpen ? 'OPEN' : 'CLOSED' }}
+                        </span>
+                      </td>
+                    </tr>
+                  </ng-container>
+                </tbody>
+              </table>
+            </div>
+            <ng-template #noHistory>
+              <span>No history for this user.</span>
+            </ng-template>
+          </td>
+        </tr>
+      </ng-container>
+    </tbody>
+  </table>
   <ng-template #dash>-</ng-template>
-</td>
-<td data-label="Allowed Check Out">
-  <ng-container *ngIf="r.allowedCheckOutTimeUtc; else dash">{{ r.allowedCheckOutTimeUtc | date : 'short' }}</ng-container>
-  <ng-template #dash>-</ng-template>
-</td>
-<td data-label="Time Diff">
-  <ng-container *ngIf="r.checkOut">
-    <span *ngIf="r.timeDiffMinutes !== null && r.timeDiffMinutes !== undefined">
-      <span *ngIf="r.timeDiffMinutes > 0" class="late">{{ r.timeDiffMinutes }} min late</span>
-      <span *ngIf="r.timeDiffMinutes < 0" class="early">{{ -r.timeDiffMinutes }} min early</span>
-      <span *ngIf="r.timeDiffMinutes === 0" class="on-time">On time</span>
-    </span>
-    <span *ngIf="r.timeDiffMinutes === null || r.timeDiffMinutes === undefined">-</span>
-  </ng-container>
-  <ng-container *ngIf="!r.checkOut">-</ng-container>
+
+  <div *ngIf="!loading && !registrations.length" class="info info-empty">No registrations.</div>
+  </div>
     <!--
     <span *ngIf="(r.timeDiffMinutes  ?? null) !== null">
       <span *ngIf="r.timeDiffMinutes! > 0" class="late">{{ r.timeDiffMinutes }} min late</span>
@@ -159,7 +235,7 @@ normalize(item: any) &#123;
   </ng-container>
   <ng-container *ngIf="!r.checkOut">-</ng-container>
   --->
-</td>
+
         <!---
         <td data-label="Check In">
           <ng-container *ngIf="r.checkIn; else dash">{{ r.checkIn | date : 'short' }}</ng-container>
@@ -193,32 +269,13 @@ normalize(item: any) &#123;
 -->
          <!--- <ng-container *ngIf="r.checkOut; else dash">{{ r.checkOut | date : 'short' }}</ng-container> -->
     
-
-
-        <td data-label="Status">
-          <span class="status-pill" [class.is-open]="r.isOpen" [class.is-closed]="!r.isOpen">
-            {{ r.isOpen ? 'OPEN' : 'CLOSED' }}
-          </span>
-        </td>
-
-        <!--
+             <!--
         <td data-label="Actions">
           <button class="btn btn-danger btn-sm" (click)="deleteRegistration(r.id)">Delete</button>
         </td>
         --> 
 
-        <td data-label="Actions">
-        <button type="button" class="btn btn-danger" (click)="deleteRegistration(r.id)" data-bs-toggle="modal" data-bs-target="#exampleModal">
-          Delete 
-        </button>
-       </td>
 
-      </tr>
-    </tbody>
-  </table>
-  <ng-template #dash>-</ng-template>
-
-  <div *ngIf="!loading && !registrations.length" class="info info-empty">No registrations.</div>
 <!--
   <div *ngIf="debug" class="info" style="margin-top:1rem;max-height:40vh;overflow:auto">
     <strong>RAW array ({{ originalRaw.length }} itens)</strong>
@@ -228,4 +285,4 @@ normalize(item: any) &#123;
     <pre style="white-space:pre-wrap;font-size:.7rem">{{ originalRaw | json }}</pre>
   </div>
   -->
-</div>
+

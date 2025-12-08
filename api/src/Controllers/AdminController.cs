@@ -38,6 +38,8 @@ public IActionResult Login([FromBody] LoginRequest req)
     try
     {
         var admin = _adminservice.Login(req);
+        if (admin == null)
+            return StatusCode(500, "Login failure");
         return Ok(new { token = admin.Token, userName = admin.UserName, role = "admin" });
     }
     catch (KeyNotFoundException)
@@ -122,7 +124,62 @@ public IActionResult Login([FromBody] LoginRequest req)
         {
             try
             {
-                return _adminservice.GetRegistrationsRange(startInclusiveUtc, endExclusiveUtc, allowedCheckOutTimeUtc);
+                // Use the same joined projection shape as RegistrationService.GetAllAdmin,
+                // but optionally restrict by time range (and, if provided, allowedCheckOutTimeUtc).
+                var query =
+                    from r in _ctx.Registrations
+                    join ci in _ctx.CheckIns on r.FkCheckInId equals ci.Id
+                    join u in _ctx.Users on ci.FkUserId equals u.Id
+                    join co in _ctx.CheckOuts on r.FkCheckOutId equals co.Id into coLeft
+                    from co in coLeft.DefaultIfEmpty()
+                    select new
+                    {
+                        Registration = r,
+                        CheckIn = ci,
+                        User = u,
+                        CheckOut = co
+                    };
+
+                if (startInclusiveUtc.HasValue)
+                {
+                    query = query.Where(x => x.CheckIn.TimeStart >= startInclusiveUtc.Value);
+                }
+
+                if (endExclusiveUtc.HasValue)
+                {
+                    query = query.Where(x => x.CheckIn.TimeStart < endExclusiveUtc.Value);
+                }
+
+                // If a specific allowed checkout time filter is provided, apply it.
+                if (allowedCheckOutTimeUtc.HasValue)
+                {
+                    query = query.Where(x => x.CheckIn.AllowedCheckOutTime <= allowedCheckOutTimeUtc.Value);
+                }
+
+                var list =
+                    from x in query
+                    orderby x.CheckIn.TimeStart descending
+                    select new
+                    {
+                        id = x.Registration.Id,
+                        userId = x.User.Id,
+                        userName = x.User.Name,
+                        phone = x.User.Phone,
+                        countryCode = x.User.CountryCode,
+                        checkIn = x.CheckIn.TimeStart,
+                        checkOut = x.CheckOut != null ? (DateTime?)x.CheckOut.TimeEnd : null,
+                        allowedCheckOutTime = x.CheckIn.AllowedCheckOutTime,
+                        checkOutOnTime = x.CheckOut != null
+                            ? x.CheckOut.TimeEnd <= x.CheckIn.AllowedCheckOutTime
+                            : (bool?)null,
+                        timeDiffMinutes = x.CheckOut != null
+                            ? (int)((x.CheckOut.TimeEnd - x.CheckIn.AllowedCheckOutTime).TotalMinutes)
+                            : (int?)null,
+                        isOpen = x.Registration.FkCheckOutId == null,
+                        isAdmin = x.User.IsAdmin
+                    };
+
+                return list.ToList();
             }
             catch
             {
@@ -213,6 +270,51 @@ public IActionResult Login([FromBody] LoginRequest req)
             if ((end - start).TotalDays > 400) return BadRequest("Intervalo muito grande (max 400 dias).");
             return Ok(GetRegistrationsJoinRange(start, end, allowedCheckOutTimeUtc));
         }                                               /// after end used to be null 
+
+        // Get full registration history for a single user (by userId)
+        [HttpGet("user/{userId}/registrations")]
+        [AdminAuthorize]
+        public IActionResult GetUserRegistrationHistory(int userId)
+        {
+            if (userId <= 0) return BadRequest("Invalid user id");
+
+            try
+            {
+                var query =
+                    from r in _ctx.Registrations
+                    join ci in _ctx.CheckIns on r.FkCheckInId equals ci.Id
+                    join u in _ctx.Users on ci.FkUserId equals u.Id
+                    join co in _ctx.CheckOuts on r.FkCheckOutId equals co.Id into coLeft
+                    from co in coLeft.DefaultIfEmpty()
+                    where u.Id == userId
+                    orderby ci.TimeStart descending
+                    select new
+                    {
+                        id = r.Id,
+                        userName = u.Name,
+                        phone = u.Phone,
+                        countryCode = u.CountryCode,
+                        checkIn = ci.TimeStart,
+                        checkOut = (DateTime?)co.TimeEnd,
+                        allowedCheckOutTime = ci.AllowedCheckOutTime,
+                        checkOutOnTime = co != null
+                            ? co.TimeEnd <= ci.AllowedCheckOutTime
+                            : (bool?)null,
+                        timeDiffMinutes = co != null
+                            ? (int)((co.TimeEnd - ci.AllowedCheckOutTime).TotalMinutes)
+                            : (int?)null,
+                        isOpen = r.FkCheckOutId == null,
+                        isAdmin = u.IsAdmin
+                    };
+
+                var list = query.ToList();
+                return Ok(list);
+            }
+            catch
+            {
+                return StatusCode(500, "Failed to load user registration history");
+            }
+        }
     }
 }
         

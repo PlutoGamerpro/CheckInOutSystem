@@ -59,6 +59,36 @@ namespace TimeRegistration.Services
 
         public IEnumerable<object> GetAllAdmin()
         {
+            var list =
+                from r in _ctx.Registrations
+                join ci in _ctx.CheckIns on r.FkCheckInId equals ci.Id
+                join u in _ctx.Users on ci.FkUserId equals u.Id
+                join co in _ctx.CheckOuts on r.FkCheckOutId equals co.Id into coLeft
+                from co in coLeft.DefaultIfEmpty()
+                orderby ci.TimeStart descending
+                select new
+                {
+                    id = r.Id,
+                    userId = u.Id,
+                    userName = u.Name,
+                    phone = u.Phone,
+                    countryCode = u.CountryCode,
+                    checkIn = ci.TimeStart,
+                    checkOut = (DateTime?)co.TimeEnd,
+                    allowedCheckOutTime = ci.AllowedCheckOutTime,
+                    checkOutOnTime = co != null && ci.AllowedCheckOutTime != null
+                        ? co.TimeEnd <= ci.AllowedCheckOutTime
+                        : (bool?)null,
+                    timeDiffMinutes = (co != null && ci.AllowedCheckOutTime != null)
+                        ? (int)((co.TimeEnd - ci.AllowedCheckOutTime).TotalMinutes)
+                        : (int?)null,
+                    isOpen = r.FkCheckOutId == null,
+                    isAdmin = u.IsAdmin
+                };
+
+            return list.ToList();
+        }
+            /*
             var list = (from r in _ctx.Registrations
                         join ci in _ctx.CheckIns on r.FkCheckInId equals ci.Id
                         join u in _ctx.Users on ci.FkUserId equals u.Id
@@ -83,7 +113,8 @@ namespace TimeRegistration.Services
                         .ToList();
 
             return list;
-        }
+            */
+        
              
 
         public IEnumerable<object> GetAllRegistrations()

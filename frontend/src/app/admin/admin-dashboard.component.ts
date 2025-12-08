@@ -7,6 +7,7 @@ import { RegistrationsService } from '../shared/services/registrations.service';
 
 interface AdminReg {
   id: number | string;
+  userId?: number | string;
   userName: string | null;
   phone: string | null;
   countryCode: string | null;
@@ -16,7 +17,7 @@ interface AdminReg {
   checkOut: string | null;
   timeDiffMinutes?: number | null;
   isOpen: boolean;
-  isAdmin?: boolean; 
+  isAdmin?: boolean;
 }
 
 @Component({
@@ -27,6 +28,9 @@ interface AdminReg {
   styleUrls: ['./admin-dashboard.component.scss']
 })
 export class AdminDashboardComponent implements OnInit {
+  private visibleDetails = new Set<string | number>();
+  // cache of history per userId so we don't refetch every toggle
+  userHistories = new Map<string | number, AdminReg[]>();
   selectedRegistrationId: string | number | null = null;
   registrations: AdminReg[] = [];
   originalRaw: any[] = [];
@@ -102,6 +106,10 @@ export class AdminDashboardComponent implements OnInit {
       raw.id, raw.ID, raw.registrationId, raw._id, raw.guid, raw.uuid
     ]);
 
+    const userIdValue = this.pickFirst([
+      raw.userId, raw.user_id, raw.userID, raw.user?.id
+    ]);
+
     const userNameValue = this.pickFirst([
       raw.userName, raw.user_name, raw.username, raw.name, raw.fullName, raw.full_name,
       raw.user?.name, raw.user?.fullName, raw.user?.username,
@@ -173,6 +181,7 @@ export class AdminDashboardComponent implements OnInit {
 
     return {
       id: idValue ?? 0,
+      userId: userIdValue ?? undefined,
       userName: userNameValue,
       phone: phoneValue,
       countryCode: countryCodeValue,
@@ -180,7 +189,7 @@ export class AdminDashboardComponent implements OnInit {
       checkOut: checkOutValue,
       allowedCheckOutTimeUtc: ontimeofftime,
       checkOutOnTime: checkOutOnTimeValue,
-      timeDiffMinutes: timeDiffMinutes, // added :timeDiffMinutes,
+      timeDiffMinutes: timeDiffMinutes,
       isOpen: isOpenValue,
       isAdmin: isAdminFlag
     };
@@ -275,6 +284,44 @@ export class AdminDashboardComponent implements OnInit {
         else this.error = `Falha (${period}) status ${err.status}`;
       }
     });
+  }
+
+  // dropdwon registration details
+  toggleDetails(id: string | number): void {
+    if (this.visibleDetails.has(id)) {
+      this.visibleDetails.delete(id);
+      return;
+    }
+
+    // when opening, mark visible and, if needed, fetch history for that user
+    this.visibleDetails.add(id);
+
+    const reg = this.registrations.find(r => r.id === id);
+    if (!reg || reg.userId == null) {
+      return;
+    }
+
+    const userId = reg.userId;
+
+    // If we already loaded this user's history once, don't refetch
+    if (this.userHistories.has(userId)) {
+      return;
+    }
+
+    this.registrationsService.getUserHistory(userId).subscribe({
+      next: (historyRaw: any[]) => {
+        const history = (historyRaw || []).map((x: any) => this.normalize(x));
+        this.userHistories.set(userId, history);
+      },
+      error: (err: any) => {
+        console.error('[admin-dashboard] failed to load user history', err);
+      }
+    });
+  }
+
+  // dropdown registration details
+  isDetailsVisible(id: string | number): boolean {
+    return this.visibleDetails.has(id);
   }
 
   private normalizeAndAssign(): void {
