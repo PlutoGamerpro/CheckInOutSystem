@@ -34,10 +34,8 @@ namespace TimeRegistration.Controllers
         }
 
         // Atualização de usuário vinda do dashboard (PUT /api/external/user)
-
-
+        // Can be called by admin users or by users updating their own data
         [HttpPut("user")]
-        [AdminAuthorize]
         public IActionResult UpdateUser([FromBody] UserRecordRequest userRecordRequest)
         {
             if (userRecordRequest == null || userRecordRequest.Id <= 0)
@@ -50,6 +48,14 @@ namespace TimeRegistration.Controllers
             catch (KeyNotFoundException)
             {
                 return NotFound("User not found");
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return Forbid(ex.Message);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
             }
             catch (Exception)
             {

@@ -22,6 +22,34 @@
   </div>
 </div>
 
+<!-- Admin Role Change Modal -->
+<div class="modal fade" id="adminRoleModal" tabindex="-1" aria-labelledby="adminRoleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="adminRoleModalLabel">Verify Admin Role Change</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="cancelAdminRoleChange()"></button>
+      </div>
+      <div class="modal-body">
+        <p style="text-align: center; margin-bottom: 1.5rem;">Enter verification code to change admin role</p>
+        <div class="otp-container">
+          <input #otp0 type="text" maxlength="1" class="otp-input" (input)="onOtpInput($event, 0)" (keydown)="onOtpKeydown($event, 0)" />
+          <input #otp1 type="text" maxlength="1" class="otp-input" (input)="onOtpInput($event, 1)" (keydown)="onOtpKeydown($event, 1)" />
+          <input #otp2 type="text" maxlength="1" class="otp-input" (input)="onOtpInput($event, 2)" (keydown)="onOtpKeydown($event, 2)" />
+          <input #otp3 type="text" maxlength="1" class="otp-input" (input)="onOtpInput($event, 3)" (keydown)="onOtpKeydown($event, 3)" />
+          <input #otp4 type="text" maxlength="1" class="otp-input" (input)="onOtpInput($event, 4)" (keydown)="onOtpKeydown($event, 4)" />
+          <input #otp5 type="text" maxlength="1" class="otp-input" (input)="onOtpInput($event, 5)" (keydown)="onOtpKeydown($event, 5)" />
+        </div>
+        <div *ngIf="otpError" style="color: #e03131; text-align: center; margin-top: 1rem; font-size: 0.875rem;">{{ otpError }}</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="cancelAdminRoleChange()">Cancel</button>
+        <button type="button" class="btn btn-primary" (click)="verifyAndSaveAdminRole()">OK</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="toolbar">
     <button class="btn btn-primary" (click)="load()">Reload</button>
     <button class="btn btn-outline" (click)="Home()">Home</button>
@@ -67,7 +95,7 @@
           </select>
         </td>
         <td>
-          <select [(ngModel)]="editUser.isAdmin" class="form-control">
+          <select [(ngModel)]="editUser.isAdmin" class="form-control" (change)="onAdminRoleChange($event)">
             <option [ngValue]="true">Yes</option>
             <option [ngValue]="false">No</option>
           </select>

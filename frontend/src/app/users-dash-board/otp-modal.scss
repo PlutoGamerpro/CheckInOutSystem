@@ -1,0 +1,64 @@
+// OTP Modal Styles
+.otp-container {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+  margin: 0 auto;
+  max-width: 420px;
+}
+
+.otp-input {
+  width: 50px;
+  height: 60px;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 600;
+  border: 2px solid #3b4654;
+  border-radius: 8px;
+  background: #1b1f27;
+  color: #e6ecf3;
+  outline: none;
+  transition: all 0.2s ease;
+  
+  &:focus {
+    border-color: #3d82f6;
+    box-shadow: 0 0 0 3px rgba(61, 130, 246, 0.2);
+  }
+  
+  &:hover {
+    border-color: #4a5568;
+  }
+}
+
+// Dark theme modal adjustments
+#adminRoleModal {
+  .modal-content {
+    background: #1b1f27;
+    color: #e6ecf3;
+    border: 1px solid #2d3642;
+  }
+  
+  .modal-header {
+    border-bottom: 1px solid #2d3642;
+  }
+  
+  .modal-footer {
+    border-top: 1px solid #2d3642;
+  }
+  
+  .btn-close {
+    filter: invert(1) grayscale(100%) brightness(200%);
+  }
+}
+
+@media (max-width: 560px) {
+  .otp-container {
+    gap: 0.5rem;
+  }
+  
+  .otp-input {
+    width: 40px;
+    height: 50px;
+    font-size: 1.25rem;
+  }
+}

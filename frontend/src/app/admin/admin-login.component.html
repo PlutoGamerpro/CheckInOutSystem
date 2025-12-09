@@ -10,7 +10,7 @@
 
           <section class="adminHeader" aria-labelledby="admin-login-title">
             <span class="adminBadge">Administrator Access</span>
-            <h1 id="admin-login-title">Admin Login</h1>
+            <h1 id="admin-login-title">Admin Sign in</h1>
             <p class="adminSubtitle">Secure access to administrative dashboard and system controls.</p>
           </section>
 
@@ -91,7 +91,7 @@
             type="submit"
             [disabled]="loading || adminLoginForm.invalid"
             [attr.aria-busy]="loading ? 'true' : null"
-            [attr.aria-label]="loading ? 'Processing login' : 'Login to admin dashboard'"
+            [attr.aria-label]="loading ? 'Processing login' : 'Sign in to admin dashboard'"
           >
             <span *ngIf="!loading; else loadingState" class="btn-content">
               <span class="btn-icon" aria-hidden="true">

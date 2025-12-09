@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChildren, QueryList, ElementRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
@@ -11,10 +11,11 @@ import { Adminservice} from '../shared/services/adminservice';
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './users-dash-board.html',
-  styleUrl: './users-dash-board.scss',
- // styleUrls: ['./users-dash-board.scss']
+  styleUrls: ['./users-dash-board.scss', './otp-modal.scss']
 })
 export class UsersDashBoard {
+  @ViewChildren('otp0, otp1, otp2, otp3, otp4, otp5') otpInputs!: QueryList<ElementRef<HTMLInputElement>>;
+  
   PhoneCountryCode = [
     { code: '+45', country: 'Denmark' },
     { code: '+1', country: 'USA' },
@@ -29,6 +30,13 @@ export class UsersDashBoard {
   //labelDeleteUser = ''; // should not be here but use the one below
   labelTextToDisplay = '';
   selectedUserId: number | null = null;
+  
+  // OTP verification for admin role change
+  otpCode: string[] = ['', '', '', '', '', ''];
+  otpError = '';
+  private readonly ADMIN_CODE = '123456'; // Hardcoded verification code
+  pendingAdminRoleChange: boolean | null = null;
+  originalAdminRole: boolean | null = null;
 
 
   constructor(
@@ -178,6 +186,122 @@ this.adminservice.updateUser(payload).subscribe({
     const label = user ? `${user.name || ''} (ID: ${id})` : `ID: ${id}`;
     this.labelTextToDisplay = (`DELETE user ${label}? No way to undo! after actions done`);
     // Modal åbnes via data-bs-toggle - sletning sker først i DeleteUserPost() efter bekræftelse
+  }
+
+  onAdminRoleChange(event: any): void {
+    if (!this.editUser) return;
+    
+    // Store the pending change and original value
+    this.pendingAdminRoleChange = event.target.value === 'true';
+    this.originalAdminRole = !this.pendingAdminRoleChange;
+    
+    // Reset OTP fields
+    this.otpCode = ['', '', '', '', '', ''];
+    this.otpError = '';
+    
+    // Open modal using Bootstrap's modal API
+    const modalElement = document.getElementById('adminRoleModal');
+    if (modalElement) {
+      const modal = new (window as any).bootstrap.Modal(modalElement);
+      modal.show();
+      
+      // Focus first input after modal is shown
+      setTimeout(() => {
+        const inputs = this.otpInputs?.toArray();
+        if (inputs && inputs.length > 0) {
+          inputs[0].nativeElement.focus();
+        }
+      }, 300);
+    }
+  }
+
+  onOtpInput(event: any, index: number): void {
+    const input = event.target as HTMLInputElement;
+    const value = input.value;
+    
+    if (value.length > 0) {
+      this.otpCode[index] = value[value.length - 1];
+      input.value = this.otpCode[index];
+      
+      // Move to next input
+      if (index < 5) {
+        const inputs = this.otpInputs.toArray();
+        inputs[index + 1].nativeElement.focus();
+      }
+    }
+    this.otpError = '';
+  }
+
+  onOtpKeydown(event: KeyboardEvent, index: number): void {
+    const input = event.target as HTMLInputElement;
+    
+    // Handle backspace
+    if (event.key === 'Backspace') {
+      if (input.value === '' && index > 0) {
+        const inputs = this.otpInputs.toArray();
+        inputs[index - 1].nativeElement.focus();
+      }
+      this.otpCode[index] = '';
+    }
+    
+    // Handle paste
+    if (event.key === 'v' && (event.ctrlKey || event.metaKey)) {
+      event.preventDefault();
+      navigator.clipboard.readText().then(text => {
+        const digits = text.replace(/\D/g, '').slice(0, 6).split('');
+        const inputs = this.otpInputs.toArray();
+        digits.forEach((digit, i) => {
+          if (i < 6) {
+            this.otpCode[i] = digit;
+            inputs[i].nativeElement.value = digit;
+          }
+        });
+        if (digits.length > 0) {
+          const lastIndex = Math.min(digits.length - 1, 5);
+          inputs[lastIndex].nativeElement.focus();
+        }
+      });
+    }
+  }
+
+  verifyAndSaveAdminRole(): void {
+    const enteredCode = this.otpCode.join('');
+    
+    if (enteredCode !== this.ADMIN_CODE) {
+      this.otpError = 'Invalid verification code';
+      return;
+    }
+    
+    // Code is correct, apply the change
+    if (this.editUser && this.pendingAdminRoleChange !== null) {
+      this.editUser.isAdmin = this.pendingAdminRoleChange;
+    }
+    
+    // Close modal
+    const modalElement = document.getElementById('adminRoleModal');
+    if (modalElement) {
+      const modal = (window as any).bootstrap.Modal.getInstance(modalElement);
+      if (modal) modal.hide();
+    }
+    
+    // Reset
+    this.pendingAdminRoleChange = null;
+    this.originalAdminRole = null;
+    this.otpCode = ['', '', '', '', '', ''];
+    this.otpError = '';
+  }
+
+  cancelAdminRoleChange(): void {
+    // Revert the change
+    if (this.editUser && this.originalAdminRole !== null) {
+      this.editUser.isAdmin = this.originalAdminRole;
+    }
+    
+    // Reset
+    this.pendingAdminRoleChange = null;
+    this.originalAdminRole = null;
+    this.otpCode = ['', '', '', '', '', ''];
+    this.otpError = '';
   }
 
 }

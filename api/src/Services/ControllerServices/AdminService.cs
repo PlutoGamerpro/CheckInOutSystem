@@ -132,20 +132,16 @@ namespace TimeRegistration.Services
             var existingUser = _ctx.Users.Find(userRecordRequest.Id);
             if (existingUser == null) throw new KeyNotFoundException("User not found");
 
+            // Always allow updating these personal fields
             existingUser.Name = userRecordRequest.Name;
             existingUser.Phone = userRecordRequest.Phone;
             existingUser.CountryCode = userRecordRequest.CountryCode;
 
-            if(existingUser.IsAdmin){
-           throw new InvalidOperationException("Admins roles cannot be changed password requiered.");
-            } // avoids that admins can change their own role / one admins abused other...// know not possible to demote.. admin problem
-            else { 
+            // Allow all users to change admin role (OTP verification is done on frontend)
             existingUser.IsAdmin = userRecordRequest.IsAdmin;
-            }
 
             _adminRepo.UpdateUser(userRecordRequest);
-            // this functions is not implemenet in the repo file which mean only frontend update but in backend update does get 
-            // changed
+            _ctx.SaveChanges(); // Persist changes to database
         }
 
        

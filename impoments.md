@@ -58,6 +58,7 @@ Decrypting them in the dashboard should not be possible (dashboard is not a safe
 
 ## admins brude nok ikke appear in dashboard kan ikke slettes 
 
+## error admin can't change user name,phonenumber, countrycode, (derank, delete not possible.... only throw secret code)
 
 ## check on time / late
 
@@ -107,11 +108,15 @@ Decrypting them in the dashboard should not be possible (dashboard is not a safe
 ##  make registration tap under each users
 ## so instead of all appear like one after one , drodropdown if  a users make more han one
 
+## fjerne fra all users dashboard men der er admins / mulighed skal det virkligvære der????
+
+## for at kunne derank anden admin opdagere users til admin kræves kode
+## code virkere kun en gang hvis flere gange virkere den ikke!!
 
 
 
+## Perfect! I found the problem. The TokenService only adds the "Admin" role claim if user.IsAdmin is true. When ## you're logged in as a regular user (not admin), the token doesn't have the "Admin" role, so when you try to save, ## the [AdminAuthorize] filter rejects it with 403 Forbidden.
 
-
-
-
-
+## The endpoint is marked with [AdminAuthorize] - which requires the token to have "Admin" role
+## But a regular user cannot call this endpoint even to update their own name/phone
+## The user likely logged in as a non-admin, so their token doesn't have the "Admin" role claim
