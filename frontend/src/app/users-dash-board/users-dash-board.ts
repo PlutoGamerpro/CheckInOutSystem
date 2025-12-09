@@ -37,6 +37,7 @@ export class UsersDashBoard {
   private readonly ADMIN_CODE = '123456'; // Hardcoded verification code
   pendingAdminRoleChange: boolean | null = null;
   originalAdminRole: boolean | null = null;
+  adminRoleWasChanged = false; // Track if admin role was actually changed
 
 
   constructor(
@@ -61,10 +62,16 @@ export class UsersDashBoard {
 
   startEdit(user: any): void {
     this.editUser = { ...user }; // clone to avoid direct mutation
+    this.originalAdminRole = user.isAdmin; // Store original admin role
+    this.adminRoleWasChanged = false;
   }
 
   cancelEdit(): void {
     this.editUser = null;
+    this.originalAdminRole = null;
+    this.adminRoleWasChanged = false;
+    this.pendingAdminRoleChange = null;
+    this.clearOtpState();
   }
 
   private get adminHeaders() {
@@ -78,22 +85,72 @@ export class UsersDashBoard {
 
 
 saveEdit(): void {
-
     if (!this.editUser) return;
+
+    // Check if admin role was changed
+    if (this.editUser.isAdmin !== this.originalAdminRole) {
+      this.adminRoleWasChanged = true;
+      this.pendingAdminRoleChange = this.editUser.isAdmin;
+      // Clear and show modal
+      this.clearOtpState();
+      this.showAdminRoleModal();
+      return; // Don't save yet, wait for OTP verification
+    }
+
+    // No admin change, save directly
+    this.performSave();
+  }
+
+  private showAdminRoleModal(): void {
+    const modalElement = document.getElementById('adminRoleModal');
+    if (modalElement) {
+      // Clear all OTP input fields and state before showing
+      this.clearOtpState();
+      
+      const modal = new (window as any).bootstrap.Modal(modalElement, { backdrop: 'static' });
+      modal.show();
+      
+      // Focus first OTP input
+      setTimeout(() => {
+        const inputs = this.otpInputs?.toArray();
+        if (inputs && inputs.length > 0) {
+          inputs[0].nativeElement.focus();
+        }
+      }, 300);
+    }
+  }
+
+  private clearOtpState(): void {
+    // Clear internal array
+    this.otpCode = ['', '', '', '', '', ''];
+    this.otpError = '';
+    
+    // Clear DOM inputs
+    const inputs = this.otpInputs?.toArray();
+    if (inputs) {
+      inputs.forEach(input => {
+        input.nativeElement.value = '';
+        input.nativeElement.blur();
+      });
+    }
+  }
+
+  private performSave(): void {
     this.loading = true;
     this.error = '';
 
-const payload = {
-  Id: this.editUser.id,
-  Name: this.editUser.name,
-  Phone: this.editUser.phone,
-  CountryCode: this.editUser.countryCode,
-  IsAdmin: this.editUser.isAdmin,
-};
+    const payload = {
+      Id: this.editUser.id,
+      Name: this.editUser.name,
+      Phone: this.editUser.phone,
+      CountryCode: this.editUser.countryCode,
+      IsAdmin: this.editUser.isAdmin,
+    };
 
-this.adminservice.updateUser(payload).subscribe({
+    this.adminservice.updateUser(payload).subscribe({
       next: () => {
         this.editUser = null;
+        this.adminRoleWasChanged = false;
         this.load();
       },
       error: () => {
@@ -101,7 +158,7 @@ this.adminservice.updateUser(payload).subscribe({
         this.loading = false;
       }
     });
-   }
+  }
 /*
   saveEdit(): void {
     if (!this.editUser) return;
@@ -189,119 +246,114 @@ this.adminservice.updateUser(payload).subscribe({
   }
 
   onAdminRoleChange(event: any): void {
-    if (!this.editUser) return;
-    
-    // Store the pending change and original value
-    this.pendingAdminRoleChange = event.target.value === 'true';
-    this.originalAdminRole = !this.pendingAdminRoleChange;
-    
-    // Reset OTP fields
-    this.otpCode = ['', '', '', '', '', ''];
-    this.otpError = '';
-    
-    // Open modal using Bootstrap's modal API
-    const modalElement = document.getElementById('adminRoleModal');
-    if (modalElement) {
-      const modal = new (window as any).bootstrap.Modal(modalElement);
-      modal.show();
-      
-      // Focus first input after modal is shown
-      setTimeout(() => {
-        const inputs = this.otpInputs?.toArray();
-        if (inputs && inputs.length > 0) {
-          inputs[0].nativeElement.focus();
-        }
-      }, 300);
-    }
+    // Just track the dropdown change, don't show modal yet
+    // Modal will appear when Save is clicked if role was actually changed
   }
 
   onOtpInput(event: any, index: number): void {
     const input = event.target as HTMLInputElement;
-    const value = input.value;
+    let value = input.value;
+    
+    // Keep only digits
+    value = value.replace(/\D/g, '');
     
     if (value.length > 0) {
-      this.otpCode[index] = value[value.length - 1];
-      input.value = this.otpCode[index];
+      // Take only the last digit entered
+      const digit = value[value.length - 1];
+      input.value = digit;
+      this.otpCode[index] = digit;
       
-      // Move to next input
+      // Move to next input if this one is filled
       if (index < 5) {
         const inputs = this.otpInputs.toArray();
         inputs[index + 1].nativeElement.focus();
       }
+    } else {
+      input.value = '';
+      this.otpCode[index] = '';
     }
+    
     this.otpError = '';
   }
 
   onOtpKeydown(event: KeyboardEvent, index: number): void {
     const input = event.target as HTMLInputElement;
+    const inputs = this.otpInputs.toArray();
     
     // Handle backspace
     if (event.key === 'Backspace') {
-      if (input.value === '' && index > 0) {
-        const inputs = this.otpInputs.toArray();
+      event.preventDefault();
+      input.value = '';
+      this.otpCode[index] = '';
+      
+      // Move focus to previous field
+      if (index > 0) {
         inputs[index - 1].nativeElement.focus();
       }
-      this.otpCode[index] = '';
+      return;
     }
     
-    // Handle paste
-    if (event.key === 'v' && (event.ctrlKey || event.metaKey)) {
+    // Handle paste (Ctrl+V or Cmd+V)
+    if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'v') {
       event.preventDefault();
       navigator.clipboard.readText().then(text => {
-        const digits = text.replace(/\D/g, '').slice(0, 6).split('');
-        const inputs = this.otpInputs.toArray();
-        digits.forEach((digit, i) => {
-          if (i < 6) {
-            this.otpCode[i] = digit;
-            inputs[i].nativeElement.value = digit;
-          }
-        });
-        if (digits.length > 0) {
-          const lastIndex = Math.min(digits.length - 1, 5);
+        const digits = text.replace(/\D/g, '').slice(0, 6);
+        for (let i = 0; i < digits.length && i < 6; i++) {
+          inputs[i].nativeElement.value = digits[i];
+          this.otpCode[i] = digits[i];
+        }
+        // Focus last filled input
+        const lastIndex = Math.min(digits.length - 1, 5);
+        if (inputs[lastIndex]) {
           inputs[lastIndex].nativeElement.focus();
         }
+      }).catch(() => {
+        // Clipboard read failed - silently ignore
       });
     }
   }
 
   verifyAndSaveAdminRole(): void {
-    const enteredCode = this.otpCode.join('');
+    // Read OTP directly from DOM to ensure we get current values
+    const inputs = this.otpInputs?.toArray() || [];
+    const enteredCode = inputs.map(inp => inp.nativeElement.value).join('');
+    
+    console.log('OTP Verification:', { enteredCode, expected: this.ADMIN_CODE });
+    
+    if (enteredCode.length !== 6) {
+      this.otpError = 'Please enter all 6 digits';
+      return;
+    }
     
     if (enteredCode !== this.ADMIN_CODE) {
       this.otpError = 'Invalid verification code';
       return;
     }
     
-    // Code is correct, apply the change
-    if (this.editUser && this.pendingAdminRoleChange !== null) {
-      this.editUser.isAdmin = this.pendingAdminRoleChange;
-    }
-    
-    // Close modal
+    // Code is correct, close modal and proceed with save
     const modalElement = document.getElementById('adminRoleModal');
     if (modalElement) {
       const modal = (window as any).bootstrap.Modal.getInstance(modalElement);
       if (modal) modal.hide();
     }
     
-    // Reset
-    this.pendingAdminRoleChange = null;
-    this.originalAdminRole = null;
-    this.otpCode = ['', '', '', '', '', ''];
-    this.otpError = '';
+    // Reset OTP state completely
+    this.clearOtpState();
+    
+    // Now perform the actual save
+    this.performSave();
   }
 
   cancelAdminRoleChange(): void {
-    // Revert the change
+    // Revert the change in the UI
     if (this.editUser && this.originalAdminRole !== null) {
       this.editUser.isAdmin = this.originalAdminRole;
     }
     
-    // Reset
+    // Reset all state
+    this.adminRoleWasChanged = false;
     this.pendingAdminRoleChange = null;
-    this.originalAdminRole = null;
-    this.otpCode = ['', '', '', '', '', ''];
-    this.otpError = '';
+    this.clearOtpState();
   }
 
 }

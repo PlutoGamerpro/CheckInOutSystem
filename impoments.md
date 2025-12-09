@@ -115,6 +115,8 @@ Decrypting them in the dashboard should not be possible (dashboard is not a safe
 
 
 
+## not crazed system ... fordi nedefor brude ikke være en fejl
+
 ## Perfect! I found the problem. The TokenService only adds the "Admin" role claim if user.IsAdmin is true. When ## you're logged in as a regular user (not admin), the token doesn't have the "Admin" role, so when you try to save, ## the [AdminAuthorize] filter rejects it with 403 Forbidden.
 
 ## The endpoint is marked with [AdminAuthorize] - which requires the token to have "Admin" role
