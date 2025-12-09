@@ -8,6 +8,10 @@
 
 ##### FIXED LIST
 
+
+## do i need a manger role??? or is it not needed???
+## fjern evt manager helt fra programmet 
+
 #### Delete users without confirmation (FIXED)
 
 #### Two users with the same encrypted password (tested – no error found, both had different hashes)
@@ -50,8 +54,17 @@ Decrypting them in the dashboard should not be possible (dashboard is not a safe
 
 ## ændreder order på admin login så password til sidste
 
+## drop dropwn med edit ,,, users country 
 
 ## admins brude nok ikke appear in dashboard kan ikke slettes 
+
+
+## check on time / late
+
+## idee istedet for alle skal checke in kl 8.00 kan der checkes in 8.10 og må gå 15.10 istedet for 10..
+## tifløjet hvis man checker ud for tidligt så tilaføj noget der ændrer tekstra fra sluttidspunkt til checkout too early and specify the number how many hours / minuts to early........fx checkout 1 hour before allowedd
+
+## make show all minutses and hours late not only minutes........
 
 -----------------------------------------------------------------------------------------------------------
 
@@ -82,27 +95,14 @@ Decrypting them in the dashboard should not be possible (dashboard is not a safe
 ## should add some phone number policy so not just randoms number likes +4444444
 
 ## plus language emoj
------------------------------------------------------------------------------------------------------------
-## Importans fixes
 
-## do i need a manger role??? or is it not needed???
-## fjern evt manager helt fra programmet 
-
-
-
-## drop dropwn med edit ,,, users country 
 ## fx gamle branch feature branch for importns file,,, and that why you put it in github
 
-
-## check on time / late
-
-## idee istedet for alle skal checke in kl 8.00 kan der checkes in 8.10 og må gå 15.10 istedet for 10..
-## tifløjet hvis man checker ud for tidligt så tilaføj noget der ændrer tekstra fra sluttidspunkt til checkout too early and specify the number how many hours / minuts to early........fx checkout 1 hour before allowedd
+## maybe add option to edit an registration but , best not so no one can maniplute the system... 
 
 ## could add a note to every registration possible to add one ,,, checkout a reason....
-
-
-## maybe add option to edit an registration but , best not so no one can maniplute the system... 
+-----------------------------------------------------------------------------------------------------------
+## Importans fixes
 
 ##  make registration tap under each users
 ## so instead of all appear like one after one , drodropdown if  a users make more han one

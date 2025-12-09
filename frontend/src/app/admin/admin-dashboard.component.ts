@@ -28,6 +28,7 @@ interface AdminReg {
   styleUrls: ['./admin-dashboard.component.scss']
 })
 export class AdminDashboardComponent implements OnInit {
+    groupedRegistrations: { userId: string | number, userName: string | null, registrations: AdminReg[] }[] = [];
   private visibleDetails = new Set<string | number>();
   // cache of history per userId so we don't refetch every toggle
   userHistories = new Map<string | number, AdminReg[]>();
@@ -292,22 +293,14 @@ export class AdminDashboardComponent implements OnInit {
       this.visibleDetails.delete(id);
       return;
     }
-
     // when opening, mark visible and, if needed, fetch history for that user
     this.visibleDetails.add(id);
-
-    const reg = this.registrations.find(r => r.id === id);
-    if (!reg || reg.userId == null) {
-      return;
-    }
-
-    const userId = reg.userId;
-
+    // id er nu userId
+    const userId = id;
     // If we already loaded this user's history once, don't refetch
     if (this.userHistories.has(userId)) {
       return;
     }
-
     this.registrationsService.getUserHistory(userId).subscribe({
       next: (historyRaw: any[]) => {
         const history = (historyRaw || []).map((x: any) => this.normalize(x));
@@ -328,12 +321,23 @@ export class AdminDashboardComponent implements OnInit {
     const raw = this.originalRaw;
     if (!Array.isArray(raw)) {
       this.registrations = [];
+      this.groupedRegistrations = [];
       return;
     }
     const normalized = raw.map(r => this.normalize(r));
     this.registrations = this.includeAdmins
       ? normalized
       : normalized.filter(r => !r.isAdmin);
+    // Gruppér pr. userId
+    const groups = new Map<string | number, { userId: string | number, userName: string | null, registrations: AdminReg[] }>();
+    for (const reg of this.registrations) {
+      if (!reg.userId) continue;
+      if (!groups.has(reg.userId)) {
+        groups.set(reg.userId, { userId: reg.userId, userName: reg.userName, registrations: [] });
+      }
+      groups.get(reg.userId)!.registrations.push(reg);
+    }
+    this.groupedRegistrations = Array.from(groups.values());
     if (this.allFieldsEmpty) {
       console.warn('All fields empty after normalization. Keys:', this.detectedKeys);
     }

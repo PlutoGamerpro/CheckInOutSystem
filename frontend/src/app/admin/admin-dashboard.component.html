@@ -144,8 +144,14 @@ normalize(item: any) &#123;
         <td data-label="Time Diff">
           <ng-container *ngIf="r.checkOut">
             <span *ngIf="r.timeDiffMinutes !== null && r.timeDiffMinutes !== undefined">
-              <span *ngIf="r.timeDiffMinutes > 0" class="late">{{ r.timeDiffMinutes }} min late</span>
-              <span *ngIf="r.timeDiffMinutes < 0" class="early">{{ -r.timeDiffMinutes }} min early</span>
+              <span *ngIf="r.timeDiffMinutes > 0" class="late">
+             <!---      {{ r.timeDiffMinutes }} min  late -->
+             ({{ (r.timeDiffMinutes / 60) | number:'1.2-2' }} hrs late)
+              </span>
+              <span *ngIf="r.timeDiffMinutes < 0" class="early">
+              <!--  {{ -r.timeDiffMinutes }} min  early -->
+                ({{ (-r.timeDiffMinutes / 60) | number:'1.2-2' }} hr early)
+              </span>
               <span *ngIf="r.timeDiffMinutes === 0" class="on-time">On time</span>
             </span>
             <span *ngIf="r.timeDiffMinutes === null || r.timeDiffMinutes === undefined">-</span>
@@ -195,8 +201,14 @@ normalize(item: any) &#123;
                       <td>
                         <ng-container *ngIf="h.checkOut">
                           <span *ngIf="h.timeDiffMinutes !== null && h.timeDiffMinutes !== undefined">
-                            <span *ngIf="h.timeDiffMinutes > 0" class="late">{{ h.timeDiffMinutes }} min late</span>
-                            <span *ngIf="h.timeDiffMinutes < 0" class="early">{{ -h.timeDiffMinutes }} min early</span>
+                            <span *ngIf="h.timeDiffMinutes > 0" class="late">
+                              {{ h.timeDiffMinutes }} min late
+                              ({{ (h.timeDiffMinutes / 60) | number:'1.2-2' }} hr)
+                            </span>
+                            <span *ngIf="h.timeDiffMinutes < 0" class="early">
+                              {{ -h.timeDiffMinutes }} min early
+                              ({{ (-h.timeDiffMinutes / 60) | number:'1.2-2' }} hr)
+                            </span>
                             <span *ngIf="h.timeDiffMinutes === 0" class="on-time">On time</span>
                           </span>
                           <span *ngIf="h.timeDiffMinutes === null || h.timeDiffMinutes === undefined">-</span>

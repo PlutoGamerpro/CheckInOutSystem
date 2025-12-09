@@ -163,6 +163,7 @@ namespace TimeRegistration.Services
                 select new
                 {
                     id = r.Id,
+                    userId = u.Id,
                     userName = u.Name,
                     phone = u.Phone,
                     countryCode = u.CountryCode,
