@@ -16,5 +16,11 @@ export class App {
 
    }
 
+
+   checkAdminToken(): boolean {
+    const token = localStorage.getItem('adminToken');
+    return token !== null;
+  }
+
 }
 

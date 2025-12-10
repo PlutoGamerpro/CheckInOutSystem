@@ -25,10 +25,12 @@
 
         <a class="nav-link" href="/signup">Create Account</a>
 
-        <!--  when signed in admin these become visable---->
-        <a class="nav-link" href="/admin">Registrations</a>
-        <a class="nav-link" href="/users-dashboard">User Dashboard</a>
-      <!--  <a class="nav-link disabled" aria-disabled="true">Disabled</a> -->
+      <!-- Only show if adminToken exists -->
+<a class="nav-link" href="/admin" *ngIf="checkAdminToken()">Registrations</a>
+<a class="nav-link" href="/users-dashboard" *ngIf="checkAdminToken()">User Dashboard</a>
+
+<!-- Or disable if not logged in -->
+
       </div>
     </div>
   </div>
