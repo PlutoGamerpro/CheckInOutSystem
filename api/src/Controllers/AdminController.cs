@@ -261,12 +261,18 @@ public IActionResult Login([FromBody] LoginRequest req)
         [HttpGet("registrations/range")]
         public IActionResult GetRange([FromQuery] DateTime start, [FromQuery] DateTime end, [FromQuery] DateTime? allowedCheckOutTimeUtc = null )
         {
-            if (start == default || end == default || allowedCheckOutTimeUtc == default) return BadRequest("start/end obrigatórios");
+            if (start == default || end == default) return BadRequest("start/end obrigatórios");
             start = ForceUtc(start);
             end = ForceUtc(end);
-            allowedCheckOutTimeUtc = ForceUtc(allowedCheckOutTimeUtc ?? DateTime.UtcNow);
+            
+            // Only validate allowedCheckOutTimeUtc if it was explicitly provided
+            if (allowedCheckOutTimeUtc.HasValue)
+            {
+                allowedCheckOutTimeUtc = ForceUtc(allowedCheckOutTimeUtc.Value);
+                if (end <= allowedCheckOutTimeUtc) return BadRequest("allowedCheckOutTimeUtc must be less than the end.");
+            }
+            
             if (end <= start) return BadRequest("end <= start");
-            if(end <= allowedCheckOutTimeUtc) return BadRequest("allowedCheckOutTimeUtc most be less than the end.");
             if ((end - start).TotalDays > 400) return BadRequest("Intervalo muito grande (max 400 dias).");
             return Ok(GetRegistrationsJoinRange(start, end, allowedCheckOutTimeUtc));
         }                                               /// after end used to be null 

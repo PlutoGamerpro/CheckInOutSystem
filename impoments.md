@@ -8,7 +8,6 @@
 
 ##### FIXED LIST
 
-
 ## do i need a manger role??? or is it not needed???
 ## fjern evt manager helt fra programmet 
 
@@ -67,6 +66,20 @@ Decrypting them in the dashboard should not be possible (dashboard is not a safe
 
 ## make show all minutses and hours late not only minutes........
 
+## for at kunne derank anden admin opdagere users til admin kræves kode
+## code virkere kun en gang hvis flere gange virkere den ikke!!
+
+## not crazed system ... fordi nedefor brude ikke være en fejl
+
+## Perfect! I found the problem. The TokenService only adds the "Admin" role claim if user.IsAdmin is true. When ## you're logged in as a regular user (not admin), the token doesn't have the "Admin" role, so when you try to save, ## the [AdminAuthorize] filter rejects it with 403 Forbidden.
+
+## The endpoint is marked with [AdminAuthorize] - which requires the token to have "Admin" role
+## But a regular user cannot call this endpoint even to update their own name/phone
+## The user likely logged in as a non-admin, so their token doesn't have the "Admin" role claim
+
+
+## add extra secret code to demote admins if knows can derank admin / update other users to admin!
+
 -----------------------------------------------------------------------------------------------------------
 
 # LIST DOES NOT MATTER /// FIX LIST 
@@ -75,6 +88,7 @@ Decrypting them in the dashboard should not be possible (dashboard is not a safe
 
 ## some letter like x probaly other can't be typed in (Fornavn, Efternavn) (does not matter)
 
+## role removed.
 ## make an manager only manager and also only manager (still errors not maded)
   ### then try to run api calls where admin only can , and do the same for the manager and test .. 
   ### add so a admin can't delete a other admin but only a manager
@@ -85,7 +99,6 @@ Decrypting them in the dashboard should not be possible (dashboard is not a safe
 ## hardcoded-credentials Embedding credentials in source code risks unauthorized access (app settings) 
 ## Create methods for the items below (to avoid repeating code)------- would have best practice to use other service
 
-## add extra secret code to demote admins if knows can derank admin / update other users to admin!
 
 ## token er brugt i seperat og i api kald filen (blandet ikke godt et sted bedre)
 
@@ -102,23 +115,34 @@ Decrypting them in the dashboard should not be possible (dashboard is not a safe
 ## maybe add option to edit an registration but , best not so no one can maniplute the system... 
 
 ## could add a note to every registration possible to add one ,,, checkout a reason....
+
+## update user dashboard..........(id nummer range profilerne)
 -----------------------------------------------------------------------------------------------------------
 ## Importans fixes
+
+
+
+## small improvements...
 
 ##  make registration tap under each users
 ## so instead of all appear like one after one , drodropdown if  a users make more han one
 
-## fjerne fra all users dashboard men der er admins / mulighed skal det virkligvære der????
+## fjerne fra all users dashboard men der er admins / mulighed skal det virklig være der????
 
-## for at kunne derank anden admin opdagere users til admin kræves kode
-## code virkere kun en gang hvis flere gange virkere den ikke!!
+## can edit more than one users at each time 
+## to edit phone number, countrycode requires password (otp)
+## edit so ikke en hel colune for countrycode men det står i phone.....
+
+## code errors
+
+## edit not possible in registartion...
+## calendard does not work more (erro 400 badrequest, failed loading calendar month)
+
+## design errors
+
+## hvis telefon nummeeret ikke findes lav text rød
+## og hvis man checker ud før lav texten rød.... eller gul 
+
+## improve delete modal ændrer cancel og delete rækkefølgen + når modal er åben lav delete knappen rød fra starten
 
 
-
-## not crazed system ... fordi nedefor brude ikke være en fejl
-
-## Perfect! I found the problem. The TokenService only adds the "Admin" role claim if user.IsAdmin is true. When ## you're logged in as a regular user (not admin), the token doesn't have the "Admin" role, so when you try to save, ## the [AdminAuthorize] filter rejects it with 403 Forbidden.
-
-## The endpoint is marked with [AdminAuthorize] - which requires the token to have "Admin" role
-## But a regular user cannot call this endpoint even to update their own name/phone
-## The user likely logged in as a non-admin, so their token doesn't have the "Admin" role claim
