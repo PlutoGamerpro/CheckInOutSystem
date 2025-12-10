@@ -77,9 +77,12 @@ Decrypting them in the dashboard should not be possible (dashboard is not a safe
 ## But a regular user cannot call this endpoint even to update their own name/phone
 ## The user likely logged in as a non-admin, so their token doesn't have the "Admin" role claim
 
+## calendard does not work more (erro 400 badrequest, failed loading calendar month)
 
 ## add extra secret code to demote admins if knows can derank admin / update other users to admin!
 
+
+## Lås endpoints som /users-dashboard, /admin,  (registrations) kræver admin users profile
 -----------------------------------------------------------------------------------------------------------
 
 # LIST DOES NOT MATTER /// FIX LIST 
@@ -120,8 +123,6 @@ Decrypting them in the dashboard should not be possible (dashboard is not a safe
 -----------------------------------------------------------------------------------------------------------
 ## Importans fixes
 
-
-
 ## small improvements...
 
 ##  make registration tap under each users
@@ -136,7 +137,7 @@ Decrypting them in the dashboard should not be possible (dashboard is not a safe
 ## code errors
 
 ## edit not possible in registartion...
-## calendard does not work more (erro 400 badrequest, failed loading calendar month)
+
 
 ## design errors
 
@@ -146,3 +147,4 @@ Decrypting them in the dashboard should not be possible (dashboard is not a safe
 ## improve delete modal ændrer cancel og delete rækkefølgen + når modal er åben lav delete knappen rød fra starten
 
 
+## 
