@@ -17,7 +17,7 @@ export class AdminLoginComponent {
 
   username: string = '';
   password: string = '';
-  phone: string = '';
+  //phone: string = '';
   
   loading = false;
   errorMessage = '';
@@ -52,7 +52,7 @@ export class AdminLoginComponent {
     const end = target.selectionEnd ?? target.value.length;
     const newValue = target.value.slice(0, start) + digits + target.value.slice(end);
     target.value = newValue.slice(0, 8);
-    this.phone = target.value;
+   // this.phone = target.value;
   }
 
   submit(): void {
@@ -61,7 +61,7 @@ export class AdminLoginComponent {
 
     const usernameTrimmed = (this.username ?? '').trim();
     const passwordValue = this.password ?? '';
-    const phoneDigits = (this.phone ?? '').replace(/\D/g, '');
+    //const phoneDigits = (this.phone ?? '').replace(/\D/g, '');
 
     if (!usernameTrimmed) {
       this.errorMessage = 'Please enter a username.';
@@ -71,16 +71,17 @@ export class AdminLoginComponent {
       this.errorMessage = 'Please enter a password.';
       return;
     }
+    /*
     if (phoneDigits.length !== 8) {
       this.errorMessage = 'Please enter an 8-digit phone number.';
       return;
     }
-
+*/
     this.loading = true;
     this.http.post<{ token: string; role?: string }>(`${this.base}/admin/login`, {
       username: usernameTrimmed,
       password: passwordValue,
-      phone: phoneDigits
+     // phone: phoneDigits
     
       // Hvis du senere vil sende landekoden med:
       // countryCode: this.selectedCountryCode !== 'Select Countrycode' ? this.selectedCountryCode : null
@@ -90,7 +91,7 @@ export class AdminLoginComponent {
         this.loading = false;
         this.username = '';
         this.password = '';
-        this.phone = '';
+       // this.phone = '';
        
         this.router.navigate(['/admin']);
       },

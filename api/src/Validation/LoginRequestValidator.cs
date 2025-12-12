@@ -23,19 +23,13 @@ namespace TimeRegistration.Validation
             if (req == null)
                 throw new ArgumentNullException(nameof(req), "Login request is required.");
 
-            var phone = (req.Phone ?? string.Empty).Trim();
+            var username = (req.Username ?? string.Empty).Trim();
             var password = (req.Password ?? string.Empty).Trim();
-           
 
-            if (string.IsNullOrWhiteSpace(phone) || string.IsNullOrWhiteSpace(password))
-                throw new ArgumentException("Phone and password are required.");
+            if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
+                throw new ArgumentException("Username and password are required.");
 
-            if (phone.Length != 8 || !ulong.TryParse(phone, out _))
-                throw new ArgumentException("Phone must be exactly 8 digits.");
-
-        
-
-            return phone;
+            return username;
         }
         
         public static void VerifyPasswordOrThrow(string plainPassword, string passwordHash)

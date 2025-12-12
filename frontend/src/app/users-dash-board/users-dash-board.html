@@ -2,6 +2,16 @@
 
 <!--  DELETE USER [username].... No way to undo! after actions done-->
 
+
+
+
+
+
+
+
+
+
+
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
@@ -45,6 +55,32 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="cancelAdminRoleChange()">Cancel</button>
         <button type="button" class="btn btn-primary" (click)="verifyAndSaveAdminRole()">OK</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Password Setup Modal -->
+<div class="modal fade" id="setPasswordModal" tabindex="-1" aria-labelledby="setPasswordModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content set-password-modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="setPasswordModalLabel">Set New Password</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="closeSetPasswordModal()"></button>
+      </div>
+      <div class="modal-body">
+        <input
+          type="password"
+          class="form-control set-password-modal-input"
+          [(ngModel)]="setPasswordValue"
+          placeholder="Enter new password"
+          autocomplete="off"
+        />
+        <div *ngIf="setPasswordError" class="set-password-modal-error">{{ setPasswordError }}</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="closeSetPasswordModal()">Cancel</button>
+        <button type="button" class="btn btn-primary" (click)="saveSetPasswordModal()">Save</button>
       </div>
     </div>
   </div>

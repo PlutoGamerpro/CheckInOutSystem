@@ -135,17 +135,51 @@ saveEdit(): void {
     }
   }
 
+  setPasswordValue: string = '';
+  setPasswordError: string = '';
+
+  openSetPasswordModal(): void {
+    this.setPasswordValue = '';
+    this.setPasswordError = '';
+    // @ts-ignore
+    window.bootstrap?.Modal.getOrCreateInstance(document.getElementById('setPasswordModal')).show();
+  }
+
+  closeSetPasswordModal(): void {
+    this.setPasswordValue = '';
+    this.setPasswordError = '';
+    // @ts-ignore
+    window.bootstrap?.Modal.getOrCreateInstance(document.getElementById('setPasswordModal')).hide();
+  }
+
+  saveSetPasswordModal(): void {
+    if (!this.setPasswordValue || this.setPasswordValue.length < 6) {
+      this.setPasswordError = 'Password must be at least 6 characters.';
+      return;
+    }
+    // Tilføj password til editUser og gem
+    if (this.editUser) {
+      this.editUser.password = this.setPasswordValue;
+    }
+    this.closeSetPasswordModal();
+    this.performSave();
+  }
+
   private performSave(): void {
     this.loading = true;
     this.error = '';
 
-    const payload = {
+    const payload: any = {
       Id: this.editUser.id,
       Name: this.editUser.name,
       Phone: this.editUser.phone,
       CountryCode: this.editUser.countryCode,
       IsAdmin: this.editUser.isAdmin,
     };
+    // Tilføj password hvis sat
+    if (this.editUser.password) {
+      payload.Password = this.editUser.password;
+    }
 
     this.adminservice.updateUser(payload).subscribe({
       next: () => {
@@ -159,33 +193,7 @@ saveEdit(): void {
       }
     });
   }
-/*
-  saveEdit(): void {
-    if (!this.editUser) return;
-    const token = localStorage.getItem('adminToken') 
-    this.loading = true;
-    this.error = '';
- 
-    const payload = {
-      id: this.editUser.id,
-      name: this.editUser.name,
-      phone: this.editUser.phone,
-      countryCode: this.editUser.countryCode,
-      isAdmin: this.editUser.isAdmin,
-  
-    };
-    this.http.put(`${environment.baseApiUrl}/external/user`, payload, this.adminHeaders).subscribe({
-      next: () => {
-        this.editUser = null;
-        this.load();
-      },
-      error: () => {
-        this.error = 'Failed to update user';
-        this.loading = false;
-      }
-    });
-  }
-*/
+
   load(): void {
     this.loading = true;
     this.error = '';
@@ -330,18 +338,15 @@ saveEdit(): void {
       return;
     }
     
-    // Code is correct, close modal and proceed with save
+    // Code is correct, close modal and proceed with password setup
     const modalElement = document.getElementById('adminRoleModal');
     if (modalElement) {
       const modal = (window as any).bootstrap.Modal.getInstance(modalElement);
       if (modal) modal.hide();
     }
-    
-    // Reset OTP state completely
     this.clearOtpState();
-    
-    // Now perform the actual save
-    this.performSave();
+    // Åbn password-setup-modal i stedet for at gemme direkte
+    this.openSetPasswordModal();
   }
 
   cancelAdminRoleChange(): void {

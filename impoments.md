@@ -102,7 +102,6 @@ Decrypting them in the dashboard should not be possible (dashboard is not a safe
 ## hardcoded-credentials Embedding credentials in source code risks unauthorized access (app settings) 
 ## Create methods for the items below (to avoid repeating code)------- would have best practice to use other service
 
-
 ## token er brugt i seperat og i api kald filen (blandet ikke godt et sted bedre)
 
 ## maybe opdate ( so only usersname and password to login)
@@ -120,6 +119,8 @@ Decrypting them in the dashboard should not be possible (dashboard is not a safe
 ## could add a note to every registration possible to add one ,,, checkout a reason....
 
 ## update user dashboard..........(id nummer range profilerne)
+
+## edit not possible in registartion...
 -----------------------------------------------------------------------------------------------------------
 ## Importans fixes
 
@@ -136,9 +137,6 @@ Decrypting them in the dashboard should not be possible (dashboard is not a safe
 
 ## code errors
 
-## edit not possible in registartion...
-
-
 ## design errors
 
 ## hvis telefon nummeeret ikke findes lav text rød
@@ -146,5 +144,18 @@ Decrypting them in the dashboard should not be possible (dashboard is not a safe
 
 ## improve delete modal ændrer cancel og delete rækkefølgen + når modal er åben lav delete knappen rød fra starten
 
+## fjerns taps registration, user dashboard hvis admin ikke er logget ind
 
-## 
+## lave om så man ikke skal bruge telefon nummer for at checke ind men  sit cpr nummer 
+
+## i admin login fjern så man ikke behøver at logge in med telefon nummmert
+
+## remove taps som this week, this month, this yera, 
+
+## dashboard som viser hvis en users checke in i dag men ikkke i går skole skema
+
+## password bruges til at indentificere brugeren gør så .......... username kan gører det istedet ............
+
+## if users gets updated to admin.......... password is not sete
+
+## when users is logged in as admin the new taps are not enabled w`????? dashboard registartion...........

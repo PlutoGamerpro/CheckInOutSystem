@@ -12,7 +12,7 @@ using TimeRegistration.Data;
 namespace TimeRegistration.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251204132406_Migrations")]
+    [Migration("20251212112533_Migrations")]
     partial class Migrations
     {
         /// <inheritdoc />

@@ -34,58 +34,25 @@
             />
             <label class="floating" for="adminUsername">Username</label>
           </div>
-          <div class="field has-icon phone-field">
+          <div class="field has-icon">
             <span class="input-icon" aria-hidden="true">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" focusable="false">
-                <path d="M6.62 10.79a15.053 15.053 0 006.59 6.59l1.82-1.82a1 1 0 011-.24 11.72 11.72 0 003.68.59 1 1 0 011 1V20a1 1 0 01-1 1A17 17 0 013 4a1 1 0 011-1h2.09a1 1 0 011 1 11.72 11.72 0 00.59 3.68 1 1 0 01-.24 1z" />
+                <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z" />
               </svg>
             </span>
             <input
-              id="adminPhone"
-              class="text-input "
-              name="phone"
-              type="tel"
-              [(ngModel)]="phone"
+              id="adminPassword"
+              class="text-input"
+              name="password"
+              type="password"
+              [(ngModel)]="password"
               required
-              minlength="8"
-              maxlength="8"
-              pattern="^[0-9]{8}$"
-              inputmode="numeric"
-              autocomplete="tel"
               placeholder=" "
-              (keydown)="allowOnlyNumbers($event)"
-              (paste)="onPasteNumbersOnly($event)"
-              #phoneCtrl="ngModel"
-              [attr.aria-invalid]="phoneCtrl.invalid && phoneCtrl.touched ? 'true' : 'false'"
+              #passwordCtrl="ngModel"
+              [attr.aria-invalid]="passwordCtrl.invalid && passwordCtrl.touched ? 'true' : 'false'"
             />
-            <label class="floating" for="adminPhone">Phone number (8 digits)</label>
-
-           
-            <div class="field-error" *ngIf="phoneCtrl.touched && phoneCtrl.invalid" id="phoneError" aria-live="assertive">
-              Please enter a valid phone number with 8 digits.
-            </div>
-
-           
+            <label class="floating" for="adminPassword">Password</label>
           </div>
-                    <div class="field has-icon">
-                      <span class="input-icon" aria-hidden="true">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" focusable="false">
-                          <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z" />
-                        </svg>
-                      </span>
-                      <input
-                        id="adminPassword"
-                        class="text-input"
-                        name="password"
-                        type="password"
-                        [(ngModel)]="password"
-                        required
-                        placeholder=" "
-                        #passwordCtrl="ngModel"
-                        [attr.aria-invalid]="passwordCtrl.invalid && passwordCtrl.touched ? 'true' : 'false'"
-                      />
-                      <label class="floating" for="adminPassword">Password</label>
-                    </div>
           <button
             id="adminLoginBtn"
             type="submit"

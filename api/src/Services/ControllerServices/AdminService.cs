@@ -55,29 +55,28 @@ namespace TimeRegistration.Services
         public LoginResult? Login(LoginRequest req)
         {
             if (req is null) return null;
-            var phone = LoginRequestValidator.ValidateOrThrow(req);
-            var password = req.Password!.Trim();
 
-            var user = _ctx.Users.FirstOrDefault(u => u.Phone == phone);
-            // Allow both Admin and Manager accounts to authenticate
-            /*
-            if (user == null || (!user.IsAdmin && !user.IsManager))
+            // Valider og få trimmed username
+            var username = LoginRequestValidator.ValidateOrThrow(req); // returnerer trimmed username
+            var password = (req.Password ?? string.Empty).Trim();
+
+            // Case-insensitive lookup på Name (username)
+            var lowered = username.ToLower();
+            var user = _ctx.Users.FirstOrDefault(u =>
+                u.Name != null && u.Name.ToLower() == lowered
+            );
+
+            if (user == null)
                 throw new UnauthorizedAccessException("Invalid credentials");
-            */
 
-
-            // Guard against missing password hashes
             if (string.IsNullOrWhiteSpace(user.Password))
                 throw new UnauthorizedAccessException("Invalid credentials");
 
+            // Verificér BCrypt-hash
             LoginRequestValidator.VerifyPasswordOrThrow(password, user.Password!);
 
             var token = _tokenService.CreateToken(user);
-            return new LoginResult(token, user.Name ?? user.Phone ?? "User");
-
-            // var token = _auth.IssueTokenFor(phone, user.IsAdmin, /*secret, */ /*configSecret,*/ password);
-            //  if (token == null) throw new InvalidOperationException("Failed to issue token");
-            //return new LoginResult(token, user.Name);
+            return new LoginResult(token, user.Name ?? "User");
         }
 
         public void DeleteUser(int id)

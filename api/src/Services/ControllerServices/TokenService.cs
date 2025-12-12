@@ -36,7 +36,7 @@ namespace TimeRegistration.Services
             var claims = new List<Claim>
         {
             new(ClaimTypes.NameIdentifier, user.Id.ToString()),
-            new("phone", user.Phone ?? ""),
+           // new("phone", user.Phone ?? ""),
             new("name", user.Name ?? "")
         };
             if (user.IsAdmin)

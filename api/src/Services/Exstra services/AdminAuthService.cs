@@ -14,11 +14,14 @@ public class AdminAuthService : AuthService
         _repo = repo;
         _tokenService = tokenService;
     }
-  public string Login(string rawPhone, string? password)
+  public string Login(/*string rawPhone,*/ string? password)
     {
+        /*
         var phone = NormalizePhone(rawPhone);
         if (string.IsNullOrWhiteSpace(phone))
             throw new Exception("Invalid phone number");
+*/
+    var phone = "";
 
         var user = _repo.GetAll().FirstOrDefault(u => u.Phone == phone);
         if (user == null)
