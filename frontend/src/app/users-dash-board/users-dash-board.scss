@@ -1,3 +1,120 @@
+.password-rules-popup {
+  position: absolute;
+  left: 0;
+  top: 100%;
+  margin-top: 0.3rem;
+  min-width: 320px;
+  background: rgba(30,38,54,0.98);
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.38);
+  padding: 1.1rem 1.2rem 0.7rem 1.2rem;
+  z-index: 10;
+  animation: rules-fade-in 0.32s cubic-bezier(.4,0,.2,1);
+  border: 1.5px solid #2d3642;
+  color: #e6ecf3;
+  font-size: 1.01rem;
+  font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+  pointer-events: none;
+}
+.rules-title {
+  font-size: 1.08rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #7ec4fa;
+  letter-spacing: 0.01em;
+  text-shadow: 0 2px 8px #0a0e1a44;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  animation: rules-title-pop 0.5s cubic-bezier(.4,0,.2,1);
+}
+.password-input-group {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+.password-input-group input:focus + .password-rules-popup,
+.password-input-group input:active + .password-rules-popup {
+  pointer-events: auto;
+}
+.rule-text {
+  font-size: 1.01rem;
+  font-family: 'Fira Code', 'Consolas', 'Menlo', monospace;
+  letter-spacing: 0.01em;
+  color: #b6e0fe;
+  transition: color 0.18s;
+}
+.rule-check .rule-text {
+  color: #aaffc3;
+}
+.rule-x .rule-text {
+  color: #ffb3b3;
+}
+@keyframes rules-fade-in {
+  0% { opacity: 0; transform: translateY(10px) scale(0.98); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes rules-title-pop {
+  0% { transform: scale(0.9); opacity: 0.7; }
+  60% { transform: scale(1.08); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+.password-rules-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 0.5rem 0;
+}
+.password-rules-list li {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.97rem;
+  margin-bottom: 0.15rem;
+}
+.rule-check {
+  display: inline-flex;
+  align-items: center;
+  margin-right: 0.2rem;
+}
+.rule-x {
+  display: inline-flex;
+  align-items: center;
+  margin-right: 0.2rem;
+}
+// Password input group with always-visible eye icon
+.password-input-group {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+.password-input-group input {
+  padding-right: 2.5rem;
+}
+.password-eye {
+  position: absolute;
+  right: 0.7rem;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  z-index: 2;
+  transition: transform 0.18s cubic-bezier(.4,0,.2,1);
+  display: flex;
+  align-items: center;
+  user-select: none;
+}
+.password-eye svg {
+  display: block;
+}
+.password-eye.pop {
+  animation: eye-pop 0.18s cubic-bezier(.4,0,.2,1);
+}
+@keyframes eye-pop {
+  0% { transform: translateY(-50%) scale(1); }
+  60% { transform: translateY(-50%) scale(1.25); }
+  100% { transform: translateY(-50%) scale(1); }
+}
 // Improve dropdown visibility in edit row
 select.form-control {
   background: #222833 !important;

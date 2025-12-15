@@ -68,6 +68,12 @@ namespace TimeRegistration.Repositories
             // Campos booleanos opcionais (assumindo nullable bool no DTO)
             // If IsAdmin is not nullable, just assign directly
 
+
+            if (!string.IsNullOrWhiteSpace(userRecordRequest.password))
+            {
+                // ved ikke om der er noget galt med linje nedeunder?
+                user.Password = BCrypt.Net.BCrypt.HashPassword(userRecordRequest.password.Trim());
+            }
             // used to be manager 
             user.IsAdmin = userRecordRequest.IsAdmin; // used to not . userrecordrequest.isadmin but .ismanager
 

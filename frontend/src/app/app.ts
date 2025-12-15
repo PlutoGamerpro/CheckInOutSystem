@@ -11,7 +11,7 @@ export class App {
   protected title = 'project';
 
   constructor() {
-    localStorage.removeItem('adminToken');
+    //localStorage.removeItem('adminToken');
   //  localStorage.removeItem('userToken');
 
    }

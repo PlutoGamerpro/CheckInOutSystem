@@ -5,5 +5,5 @@ using System.Threading.Tasks;
 
 namespace TimeRegistration.Contracts.Requests
 {
-   public record UserRecordRequest(int Id, string Name, string Phone, string CountryCode, bool IsAdmin/*, bool IsManager*/);
+   public record UserRecordRequest(int Id, string Name, string Phone, string? password, string CountryCode, bool IsAdmin/*, bool IsManager*/);
 }

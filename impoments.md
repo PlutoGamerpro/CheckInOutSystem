@@ -81,8 +81,24 @@ Decrypting them in the dashboard should not be possible (dashboard is not a safe
 
 ## add extra secret code to demote admins if knows can derank admin / update other users to admin!
 
+## når man typer password, i box skal den også udregner reglerne med
+
+## if users gets derank from admin to none ,,, (don't ask users to enter password, remove it from user)
+
+## if users has allrede set password don't show password popup..
 
 ## Lås endpoints som /users-dashboard, /admin,  (registrations) kræver admin users profile
+
+
+## record updateret 
+
+## password skal kunne updaters i en post request , for nye admins osv
+## repo skal fixeds
+## service skal fixeds
+## controller måske
+## i frontend hvis specialle filer til kald af apier skal updateret
+## typescript skal updatet så et password også bliver inkludetet
+
 -----------------------------------------------------------------------------------------------------------
 
 # LIST DOES NOT MATTER /// FIX LIST 
@@ -159,3 +175,11 @@ Decrypting them in the dashboard should not be possible (dashboard is not a safe
 ## if users gets updated to admin.......... password is not sete
 
 ## when users is logged in as admin the new taps are not enabled w`????? dashboard registartion...........
+
+
+
+
+
+# i password change er der to øjenen 
+
+

@@ -135,6 +135,11 @@ namespace TimeRegistration.Services
             existingUser.Name = userRecordRequest.Name;
             existingUser.Phone = userRecordRequest.Phone;
             existingUser.CountryCode = userRecordRequest.CountryCode;
+            if (!string.IsNullOrWhiteSpace(userRecordRequest.password))
+            {
+                // Hash and update password if provided
+                existingUser.Password = BCrypt.Net.BCrypt.HashPassword(userRecordRequest.password);
+            }
 
             // Allow all users to change admin role (OTP verification is done on frontend)
             existingUser.IsAdmin = userRecordRequest.IsAdmin;

@@ -14,6 +14,21 @@ import { Adminservice} from '../shared/services/adminservice';
   styleUrls: ['./users-dash-board.scss', './otp-modal.scss']
 })
 export class UsersDashBoard {
+    showPassword: boolean = false;
+    showPasswordConfirm: boolean = false;
+    eyePop: boolean = false;
+    eyePopConfirm: boolean = false;
+    toggleShowPassword(): void {
+      this.showPassword = !this.showPassword;
+      this.eyePop = true;
+      setTimeout(() => this.eyePop = false, 180);
+    }
+
+    toggleShowPasswordConfirm(): void {
+      this.showPasswordConfirm = !this.showPasswordConfirm;
+      this.eyePopConfirm = true;
+      setTimeout(() => this.eyePopConfirm = false, 180);
+    }
   @ViewChildren('otp0, otp1, otp2, otp3, otp4, otp5') otpInputs!: QueryList<ElementRef<HTMLInputElement>>;
   
   PhoneCountryCode = [
@@ -136,33 +151,77 @@ saveEdit(): void {
   }
 
   setPasswordValue: string = '';
+  setPasswordConfirm: string = '';
   setPasswordError: string = '';
+  // Password rule flags
+  passwordHasMinLength: boolean = false;
+  passwordHasUpper: boolean = false;
+  passwordHasLower: boolean = false;
+  passwordHasDigit: boolean = false;
+  passwordHasSpecial: boolean = false;
 
   openSetPasswordModal(): void {
     this.setPasswordValue = '';
+    this.setPasswordConfirm = '';
     this.setPasswordError = '';
+    this.resetPasswordRuleFlags();
     // @ts-ignore
     window.bootstrap?.Modal.getOrCreateInstance(document.getElementById('setPasswordModal')).show();
   }
 
   closeSetPasswordModal(): void {
     this.setPasswordValue = '';
+    this.setPasswordConfirm = '';
     this.setPasswordError = '';
+    this.resetPasswordRuleFlags();
     // @ts-ignore
     window.bootstrap?.Modal.getOrCreateInstance(document.getElementById('setPasswordModal')).hide();
   }
 
   saveSetPasswordModal(): void {
-    if (!this.setPasswordValue || this.setPasswordValue.length < 6) {
-      this.setPasswordError = 'Password must be at least 6 characters.';
+    // Password rules
+    const pwd = this.setPasswordValue || '';
+    const confirm = this.setPasswordConfirm || '';
+    this.onPasswordInput();
+    if (!pwd) {
+      this.setPasswordError = 'Password is required.';
+      return;
+    }
+    if (!confirm) {
+      this.setPasswordError = 'Please repeat the password.';
+      return;
+    }
+    if (pwd !== confirm) {
+      this.setPasswordError = 'Passwords do not match.';
+      return;
+    }
+    if (!this.passwordHasMinLength || !this.passwordHasUpper || !this.passwordHasLower || !this.passwordHasDigit || !this.passwordHasSpecial) {
+      this.setPasswordError = 'Password does not meet all requirements.';
       return;
     }
     // Tilføj password til editUser og gem
     if (this.editUser) {
-      this.editUser.password = this.setPasswordValue;
+      this.editUser.password = pwd;
     }
     this.closeSetPasswordModal();
     this.performSave();
+  }
+
+  onPasswordInput(): void {
+    const pwd = this.setPasswordValue || '';
+    this.passwordHasMinLength = pwd.length >= 10;
+    this.passwordHasUpper = /[A-Z]/.test(pwd);
+    this.passwordHasLower = /[a-z]/.test(pwd);
+    this.passwordHasDigit = /[0-9]/.test(pwd);
+    this.passwordHasSpecial = /[^A-Za-z0-9]/.test(pwd);
+  }
+
+  private resetPasswordRuleFlags(): void {
+    this.passwordHasMinLength = false;
+    this.passwordHasUpper = false;
+    this.passwordHasLower = false;
+    this.passwordHasDigit = false;
+    this.passwordHasSpecial = false;
   }
 
   private performSave(): void {
@@ -174,6 +233,7 @@ saveEdit(): void {
       Name: this.editUser.name,
       Phone: this.editUser.phone,
       CountryCode: this.editUser.countryCode,
+      Password: this.editUser.password, // MAYBE ERROR ADDED HERE... CHECK PUT REQUEST
       IsAdmin: this.editUser.isAdmin,
     };
     // Tilføj password hvis sat
@@ -338,14 +398,38 @@ saveEdit(): void {
       return;
     }
     
-    // Code is correct, close modal and proceed with password setup
+    // Code is correct, close modal and proceed
     const modalElement = document.getElementById('adminRoleModal');
     if (modalElement) {
       const modal = (window as any).bootstrap.Modal.getInstance(modalElement);
       if (modal) modal.hide();
     }
     this.clearOtpState();
-    // Åbn password-setup-modal i stedet for at gemme direkte
+
+    // Hvis vi deranker (admin -> none), så fjern password og gem direkte
+    if (
+      this.editUser &&
+      this.originalAdminRole === true &&
+      this.editUser.isAdmin === false
+    ) {
+      delete this.editUser.password;
+      this.closeSetPasswordModal();
+      this.performSave();
+      return;
+    }
+
+    // Hvis vi promoverer til admin, og password allerede er sat, så gem direkte uden at spørge
+    if (
+      this.editUser &&
+      this.originalAdminRole === false &&
+      this.editUser.isAdmin === true &&
+      this.editUser.password && this.editUser.password.length > 0
+    ) {
+      this.performSave();
+      return;
+    }
+
+    // Hvis vi promoverer til admin og password ikke er sat, så vis password-modal
     this.openSetPasswordModal();
   }
 
