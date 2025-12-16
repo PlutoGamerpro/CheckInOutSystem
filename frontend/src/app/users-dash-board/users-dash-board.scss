@@ -246,6 +246,7 @@ $transition: .16s cubic-bezier(.4,0,.2,1);
   &.btn-danger {
     --btn-bg: $color-danger;
     --btn-border: darken($color-danger, 10%);
+    // Base state uses theme vars (no forced red here)
     &:hover { background: $color-danger-hover; }
   }
 
@@ -253,6 +254,36 @@ $transition: .16s cubic-bezier(.4,0,.2,1);
     padding: .4rem .7rem;
     font-size: .75rem;
   }
+}
+
+// Stronger guarantee inside modal footers: always red immediately
+.modal-footer .btn.btn-danger {
+  background: $color-danger !important;
+  border-color: darken($color-danger, 10%) !important;
+  color: #fff !important;
+}
+
+// When modal is visible, emphasize the danger button immediately
+.modal.show .modal-footer .btn.btn-danger {
+  animation: danger-pop 280ms cubic-bezier(.2,.8,.2,1);
+  box-shadow: 0 0 0 4px rgba($color-danger, .16);
+}
+
+// Keep danger button red even if disabled, but only inside the modal
+.modal-footer .btn.btn-danger:disabled,
+.modal-footer .btn.btn-danger.disabled {
+  background: $color-danger !important;
+  border-color: darken($color-danger, 10%) !important;
+  color: #fff !important;
+  opacity: 1 !important;
+  filter: none !important;
+  cursor: not-allowed;
+}
+
+@keyframes danger-pop {
+  0% { transform: scale(.97); box-shadow: 0 0 0 0 rgba($color-danger, 0); }
+  70% { transform: scale(1.015); box-shadow: 0 0 0 6px rgba($color-danger, .12); }
+  100% { transform: scale(1); box-shadow: 0 0 0 4px rgba($color-danger, .16); }
 }
 
 .info {

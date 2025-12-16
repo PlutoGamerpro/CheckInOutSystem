@@ -106,15 +106,9 @@ namespace TimeRegistration.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Users_Name",
+                name: "IX_Users_Tlf_CountryCode",
                 table: "Users",
-                column: "Name",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Users_Tlf",
-                table: "Users",
-                column: "Tlf",
+                columns: new[] { "Tlf", "CountryCode" },
                 unique: true);
         }
 

@@ -368,6 +368,7 @@ $shadow: 0 28px 60px rgba(0, 0, 0, 0.38);
 }
 
 // Feedback message for login result
+
 #login-message {
   margin-top: 0.9rem;
   font-weight: 600;
@@ -377,6 +378,12 @@ $shadow: 0 28px 60px rgba(0, 0, 0, 0.38);
   background: rgba(39, 174, 96, 0.12);
   border: 1px solid rgba(39, 174, 96, 0.28);
   color: $success;
+}
+
+.error-message {
+  background: rgba(255, 82, 82, 0.12) !important;
+  border: 1px solid rgba(255, 82, 82, 0.28) !important;
+  color: $error !important;
 }
 
 .policyText {
@@ -657,4 +664,35 @@ form.loading {
   &:last-child {
     border-radius: 0 0 12px 12px;
   }
+
+
+.early-checkout-error {
+  color: #fff;
+  background: rgba(255, 82, 82, 0.32); /* More intense red */
+  border: 2px solid #ff5252; /* Solid red border */
+  outline: 2.5px solid #ff5252; /* Red outline */
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(255, 82, 82, 0.18);
+  padding: 0.7rem 1rem;
+  border-radius: 12px;
+  margin-top: 0.7rem;
+  text-align: center;
+  font-weight: 700;
+  transition: background 0.18s, border 0.18s, outline 0.18s;
+}
+
+.late-checkout-success {
+  color: #fff;
+  background: rgba(39, 174, 96, 0.32); /* More intense green */
+  border: 2px solid #27ae60; /* Solid green border */
+  outline: 2.5px solid #27ae60; /* Green outline */
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(39, 174, 96, 0.18);
+  padding: 0.7rem 1rem;
+  border-radius: 12px;
+  margin-top: 0.7rem;
+  text-align: center;
+  font-weight: 700;
+  transition: background 0.18s, border 0.18s, outline 0.18s;
+}
 }

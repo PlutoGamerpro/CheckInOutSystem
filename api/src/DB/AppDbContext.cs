@@ -16,15 +16,12 @@ namespace TimeRegistration.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            // Unique index for phone (should already be unique)
+            // Enforce uniqueness on phone + country code together, so same phone can be reused in other countries
             modelBuilder.Entity<User>()
-                .HasIndex(u => u.Phone)
+                .HasIndex(u => new { u.Phone, u.CountryCode })
                 .IsUnique();
 
-            // Unique index for name (remove it if you later decide to allow duplicate names)
-            modelBuilder.Entity<User>()
-                .HasIndex(u => u.Name)
-                .IsUnique();
+            // Allow duplicate names (no unique index on Name)
         }
     }
 }

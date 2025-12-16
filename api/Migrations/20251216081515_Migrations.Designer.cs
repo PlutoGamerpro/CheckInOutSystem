@@ -12,7 +12,7 @@ using TimeRegistration.Data;
 namespace TimeRegistration.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251212112533_Migrations")]
+    [Migration("20251216081515_Migrations")]
     partial class Migrations
     {
         /// <inheritdoc />
@@ -174,10 +174,7 @@ namespace TimeRegistration.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Name")
-                        .IsUnique();
-
-                    b.HasIndex("Phone")
+                    b.HasIndex("Phone", "CountryCode")
                         .IsUnique();
 
                     b.ToTable("Users");

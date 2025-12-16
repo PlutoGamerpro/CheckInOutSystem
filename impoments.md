@@ -89,6 +89,7 @@ Decrypting them in the dashboard should not be possible (dashboard is not a safe
 
 ## Lås endpoints som /users-dashboard, /admin,  (registrations) kræver admin users profile
 
+## i admin login fjern så man ikke behøver at logge in med telefon nummmert
 
 ## record updateret 
 
@@ -99,8 +100,23 @@ Decrypting them in the dashboard should not be possible (dashboard is not a safe
 ## i frontend hvis specialle filer til kald af apier skal updateret
 ## typescript skal updatet så et password også bliver inkludetet
 
------------------------------------------------------------------------------------------------------------
+## if users gets updated to admin.......... password is not sete
 
+## remove taps som this week, this month, this year, 
+
+## hvis telefon nummeeret ikke findes lav text rød
+
+## password bruges til at indentificere brugeren gør så .......... username kan gører det istedet ............
+
+## update error message from (" der opstod en fejl . Prøv igen til ....... navnet existere, telefon existere,... osv)
+
+## tilføj så hvis man checker ud fortidligt vises det i checkin/checkout htmlen du mangler tid 
+
+## update /checkin, checkout, i dashboard er der time on off, af pr registration...
+
+## not possible to have two users name TEST , with same phone number but diffent countrycode
+## should be possible that two users can have the same names'
+-----------------------------------------------------------------------------------------------------------
 # LIST DOES NOT MATTER /// FIX LIST 
 
 ## change all sports their is something on danish to english. (does not matter)
@@ -137,6 +153,8 @@ Decrypting them in the dashboard should not be possible (dashboard is not a safe
 ## update user dashboard..........(id nummer range profilerne)
 
 ## edit not possible in registartion...
+
+# i password change er der to øjenen 
 -----------------------------------------------------------------------------------------------------------
 ## Importans fixes
 
@@ -151,35 +169,36 @@ Decrypting them in the dashboard should not be possible (dashboard is not a safe
 ## to edit phone number, countrycode requires password (otp)
 ## edit so ikke en hel colune for countrycode men det står i phone.....
 
+## lav et password mere sikket???? send code 1-6 altid ikke særlig sikkert
+
+## opret en registration hver gang en admin logget ind, (hvis lyst og checkud når token udløber)...
+## adminds vil ikke skulle checket ud på bestemt tidspunkt
+-------------------------------------------------------------------------------------------------------------------
+# ITVIL
+## lave så man ikke skal bruge telefon nummer for at checke ind men  sit cpr nummer (svært kan ikke encypt det) cpr må ikke vises i dashboard...
+
+
+## checkin problem .... når flere bruger kan havde det samme telefon nummert men forskellig landcode
+## hvordan ved man så hvilken en der checker in????............... gør så telefon skal være unik.
+-------------------------------------------------------------------------------------------------------------------
 ## code errors
 
+## dashboard som viser hvis en users checket in i dag, men ikkke i går.... byg et  skole skema som viser statekstiken...
+
+## byg system så hvis man checker ud for tidligt kan tykke på vent.... eller checkout alligvel,,,
+## skal også vises hvor mange timer man skal vente ... for det glæder
+
+## checkout skal være ok hvis man checker ud på minut tillagt, / fjern så det ikke skal være perfekt i sekunder
+-------------------------------------------------------------------------------------------------------------------
 ## design errors
 
-## hvis telefon nummeeret ikke findes lav text rød
 ## og hvis man checker ud før lav texten rød.... eller gul 
 
 ## improve delete modal ændrer cancel og delete rækkefølgen + når modal er åben lav delete knappen rød fra starten
 
-## fjerns taps registration, user dashboard hvis admin ikke er logget ind
-
-## lave om så man ikke skal bruge telefon nummer for at checke ind men  sit cpr nummer 
-
-## i admin login fjern så man ikke behøver at logge in med telefon nummmert
-
-## remove taps som this week, this month, this yera, 
-
-## dashboard som viser hvis en users checke in i dag men ikkke i går skole skema
-
-## password bruges til at indentificere brugeren gør så .......... username kan gører det istedet ............
-
-## if users gets updated to admin.......... password is not sete
-
-## when users is logged in as admin the new taps are not enabled w`????? dashboard registartion...........
+## update /checkin, checkout, i dashboard er der time on off, af pr registration...(i login.html)
 
 
+----------------------------------------------------------------------------------------------------------------
 
-
-
-# i password change er der to øjenen 
-
-
+## admin max min på username 

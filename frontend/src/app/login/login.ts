@@ -37,13 +37,13 @@ export class Login {
   isCheckedIn = false;
   loading = false;
 
+  checkedOutEarly = true;
+
   constructor(
     private http: HttpClient,
     private router: Router,
     private checkinService: CheckinService
   ) {}
-
-
   
   PhoneCountryCode = [
     { code: '+45', country: 'Denmark' },
@@ -65,8 +65,6 @@ selectItem(item: any) {
   this.selectedCountryCode = item.code;
   this.isDropdownOpen = false;
 }
-
-
   // English: Allow only digits & control/navigation keys
   allowOnlyNumbers(event: KeyboardEvent): void {
     const allowedKeys = [
@@ -106,6 +104,18 @@ selectItem(item: any) {
     this.phone = target.value;
   }
 
+
+/*
+  this.checkinService.checkoutByPhone(this.phone).subscribe({
+  next: (outRes: ActionResponse & { timeDiffMinutes?: number }) => {
+    // ...eksisterende kode...
+    this.checkedOutEarly = !!(outRes.timeDiffMinutes !== undefined && outRes.timeDiffMinutes < 0);
+    // ...eksisterende kode...
+  },
+  // ...eksisterende kode...
+});
+*/
+
   // English: Entry point toggling check-in / check-out
   checkInOrOut(): void {
     if (this.loading) return;
@@ -130,7 +140,6 @@ selectItem(item: any) {
       },
     });
   }
-
   // Compute dynamic button label used by the template
   get actionLabel(): string {
     return this.isCheckedIn ? 'Check out' : 'Check in';
@@ -155,6 +164,7 @@ selectItem(item: any) {
   }
 
   // English: Performs check-in
+  /*
   private performCheckin(): void {
     this.checkinService.checkinByPhone(this.phone).subscribe({
       next: (inRes: ActionResponse) => {
@@ -172,12 +182,39 @@ selectItem(item: any) {
       },
     });
   }
+*/
+
+  // English: Performs check-in
+  
+  private performCheckin(): void {
+    this.checkinService.checkinByPhone(this.phone).subscribe({
+      next: (outRes: ActionResponse  & { timeDiffMinutes?: number }) => { 
+        this.checkedOutEarly = false; // Always clear on check-in
+        this.userName = outRes.name ?? outRes.phone ?? 'User'; // old bruger
+        this.checkInTime = new Date().toISOString();
+        this.checkOutTime = undefined;
+        this.isCheckedIn = true;
+        this.message = `You are checked in, ${this.userName}!`;
+        this.afterActionReset();
+      },
+      error: (err: unknown) => {
+        this.setErrorMessage(err, 'An error occurred. Please try again.');
+        this.loading = false;
+      },
+    });
+  }
+
+
 
   // English: Performs check-out
+  timeDiffMinutes?: number;
+
   private performCheckout(): void {
     this.checkinService.checkoutByPhone(this.phone).subscribe({
-      next: (outRes: ActionResponse) => {
+      next: (outRes: ActionResponse & { timeDiffMinutes?: number }) => {
         const name = outRes.name ?? outRes.phone ?? 'User'; // old bruger
+        this.checkedOutEarly = !!(outRes.timeDiffMinutes !== undefined && outRes.timeDiffMinutes < 0);
+        this.timeDiffMinutes = outRes.timeDiffMinutes;
         this.message = `You are now checked out, ${name}!`;
         this.checkOutTime = new Date().toISOString();
         this.checkInTime = undefined;
@@ -201,6 +238,11 @@ selectItem(item: any) {
   private afterActionReset(): void {
     this.phone = '';
     this.loading = false;
+    // Only clear checkedOutEarly and timeDiffMinutes if not checked out (so error stays visible after checkout)
+    if (this.isCheckedIn) {
+      this.checkedOutEarly = false;
+      this.timeDiffMinutes = undefined;
+    }
     this.loginForm?.resetForm({ phone: '' });
   }
 

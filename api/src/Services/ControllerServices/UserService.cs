@@ -49,30 +49,20 @@ namespace TimeRegistration.Services
 
 
             var countryCode = NormalizeCountryCode(dto.CountryCode);
-            /*
-            if (string.IsNullOrWhiteSpace(countryCode))
-                throw new Exception("Country code required");
-            if (!Regex.IsMatch(countryCode, @"^\+\d{1,3}$"))
-                throw new Exception("Country code must be in format +XX");
-*/
 
-
-            if (_repo.GetAll().Any(u => u.Phone != null && u.Phone == phone))
-                throw new Exception("Phone number already exists!");
-
-
-            if (_repo.GetAll()
-                .Where(u => !string.IsNullOrWhiteSpace(u.Name))
-                .Any(u => NormalizeName(u.Name) == name))
-                throw new Exception("Name already exists!");
-
-            
+            // Enforce uniqueness on (phone + countryCode) combo only
+            if (_repo.GetAll().Any(u =>
+                NormalizePhone(u.Phone) == phone &&
+                NormalizeCountryCode(u.CountryCode) == countryCode))
+            {
+                throw new Exception("Phone number already exists for this country code!");
+            }
 
             var user = new User
             {
                 Name = name,
                 Phone = phone,
-                CountryCode = dto.CountryCode,
+                CountryCode = countryCode,
                 IsAdmin = dto.IsAdmin ?? false,
               //  IsManager = dto.IsManager 
             };

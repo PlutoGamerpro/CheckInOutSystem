@@ -171,10 +171,7 @@ namespace TimeRegistration.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Name")
-                        .IsUnique();
-
-                    b.HasIndex("Phone")
+                    b.HasIndex("Phone", "CountryCode")
                         .IsUnique();
 
                     b.ToTable("Users");

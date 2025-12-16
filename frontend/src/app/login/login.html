@@ -58,8 +58,7 @@
         />
         <label for="loginField" class="floating">Phone number (8 digits)</label>
 
-      
-        <div
+       <div
           class="field-error"
           *ngIf="phoneCtrl.touched && phoneCtrl.invalid"
           id="phoneError"
@@ -101,15 +100,30 @@
         Check-in: {{ checkInTime | date:'dd-MM-yyyy HH:mm:ss' }}
       </div>
       <!-- Show check-out time if available -->
-      <div *ngIf="checkOutTime && !isCheckedIn" class="infoChip">
+      <div *ngIf="checkOutTime && !isCheckedIn" class="infoChip" [ngClass]="{
+        'early-checkout-error': checkedOutEarly === false,
+        'late-checkout-success': timeDiffMinutes !== undefined && timeDiffMinutes > 0
+      }">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" focusable="false" aria-hidden="true">
           <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
         </svg>
         Check-out: {{ checkOutTime | date:'dd-MM-yyyy HH:mm:ss' }}
+        <span *ngIf="checkedOutEarly === false">
+          You checked out too early!
+          <ng-container *ngIf="timeDiffMinutes !== undefined && timeDiffMinutes < 0">
+            ({{ -timeDiffMinutes }} min too early)
+          </ng-container>
+        </span>
+        <span *ngIf="checkedOutEarly === true && timeDiffMinutes !== undefined && timeDiffMinutes > 0">
+          You checked out late!
+          ({{ timeDiffMinutes }} min over time)
+        </span>
+        <span *ngIf="checkedOutEarly === true && (!timeDiffMinutes || timeDiffMinutes === 0)">Checked out at allowed time.</span>
       </div>
 
       <!-- Feedback message for login result -->
-      <div *ngIf="message" id="login-message" role="alert" aria-live="polite">
+      <div *ngIf="message" id="login-message" role="alert" aria-live="polite"
+        [ngClass]="{'error-message': message === 'Phone number does not exist in the system'}">
         {{ message }}
       </div>
 

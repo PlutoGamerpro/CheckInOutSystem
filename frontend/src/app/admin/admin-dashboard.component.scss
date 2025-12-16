@@ -130,6 +130,9 @@ $transition: .16s cubic-bezier(.4,0,.2,1);
     &:hover { background: $color-danger-hover; }
   }
 
+  // Modal footer: force red delete button immediately on open
+  
+
   &.btn-sm {
     padding: .4rem .7rem;
     font-size: .75rem;
@@ -164,6 +167,31 @@ $transition: .16s cubic-bezier(.4,0,.2,1);
 @keyframes pulse {
   0%,100% { opacity: .55; }
   50% { opacity: 1; }
+}
+
+// Admin modal: ensure Delete button is red immediately and animates on open
+.modal-footer .btn.btn-danger {
+  background: $color-danger !important;
+  border-color: darken($color-danger, 10%) !important;
+  color: #fff !important;
+}
+.modal.show .modal-footer .btn.btn-danger {
+  animation: admin-danger-pop 280ms cubic-bezier(.2,.8,.2,1);
+  box-shadow: 0 0 0 4px rgba($color-danger, .16);
+}
+.modal-footer .btn.btn-danger:disabled,
+.modal-footer .btn.btn-danger.disabled {
+  background: $color-danger !important;
+  border-color: darken($color-danger, 10%) !important;
+  color: #fff !important;
+  opacity: 1 !important;
+  filter: none !important;
+  cursor: not-allowed;
+}
+@keyframes admin-danger-pop {
+  0% { transform: scale(.97); box-shadow: 0 0 0 0 rgba($color-danger, 0); }
+  70% { transform: scale(1.015); box-shadow: 0 0 0 6px rgba($color-danger, .12); }
+  100% { transform: scale(1); box-shadow: 0 0 0 4px rgba($color-danger, .16); }
 }
 
 .data-table {
