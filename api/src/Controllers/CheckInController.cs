@@ -1,11 +1,14 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TimeRegistration.Classes;
+using TimeRegistration.Contracts.Request;
 using TimeRegistration.Interfaces;
 using TimeRegistration.Services;
 
 namespace TimeRegistration.Controllers
 {
+     
+
     [Route("api/[controller]")]
     [ApiController]
     public class CheckInController : ControllerBase
@@ -51,10 +54,7 @@ namespace TimeRegistration.Controllers
                 return StatusCode(500, e.Message);
             }
         }
-
-
-
-
+        
         [HttpPost("byphone/{tlf}")]
         public IActionResult CheckInByPhone(string tlf)
         {
@@ -76,6 +76,29 @@ namespace TimeRegistration.Controllers
                 return StatusCode(500, ex.Message + " - " + ex.InnerException?.Message);
             }
         } 
+
+        
+       [HttpPost("admin/byusername/{username}")]
+        public IActionResult AdminCheckInByUsername(string username, [FromBody] AdminCheckInRequest? req = null)
+        {
+            try
+            {
+                var checkIn = _checkInService.CreateAdminCheckInByUsername(
+                    username,
+                    req?.TimeStart,
+                    req?.TimeEnd
+                );
+                return Ok(new { checkInId = checkIn.Id, username });
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
 
         [HttpPut("{id}")]
         public ActionResult<CheckIn> Update(int id, CheckIn checkIn)

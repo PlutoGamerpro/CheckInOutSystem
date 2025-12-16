@@ -11,6 +11,8 @@ import { CommonModule } from '@angular/common';
 export class App {
   protected title = 'project';
 
+
+
   constructor() {
    // localStorage.removeItem('adminToken');
     //localStorage.removeItem('userToken');
@@ -20,6 +22,11 @@ export class App {
    checkAdminToken(): boolean {
     const token = localStorage.getItem('adminToken');
     return token !== null;
+  }
+  logout(): void {
+    localStorage.removeItem('adminToken');
+    localStorage.removeItem('userToken');
+    window.location.href = '/';
   }
 
 }

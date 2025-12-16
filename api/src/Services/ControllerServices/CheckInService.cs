@@ -7,7 +7,8 @@ using TimeRegistration.Data;
 using TimeRegistration.Contracts.Results;
 
 namespace TimeRegistration.Services
-{
+{        // Opret check-in for admin via username (uden telefon), kun hvis bruger er admin
+       
     public class CheckInService : ICheckInService
     {
         private readonly ICheckInRepo _repo;
@@ -21,6 +22,28 @@ namespace TimeRegistration.Services
             _userRepo = userRepo;
             _registrationRepo = registrationRepo;
             _ctx = ctx;
+        }
+
+        // Opret check-in for admin uden telefon, kun med adminId og tidspunkter
+        public CheckIn CreateAdminCheckIn(int adminId, DateTime? timeStart = null, DateTime? timeEnd = null)
+        {
+            var checkIn = new CheckIn
+            {
+                TimeStart = timeStart ?? DateTime.UtcNow,
+                AllowedCheckOutTime = timeEnd ?? DateTime.UtcNow.AddHours(8),
+                FkUserId = adminId
+            };
+            _repo.Create(checkIn);
+
+            var registration = new Registration
+            {
+                FkCheckInId = checkIn.Id,
+                FkCheckOutId = null,
+                FkUserId = adminId
+            };
+            _registrationRepo.Create(registration);
+
+            return checkIn;
         }
 
         public CheckInResult CreateCheckInByPhone(string tlf)
@@ -110,6 +133,36 @@ namespace TimeRegistration.Services
 
             return existing;
         }
+
+         public CheckIn CreateAdminCheckInByUsername(string username, DateTime? timeStart = null, DateTime? timeEnd = null)
+        {
+            if (string.IsNullOrWhiteSpace(username))
+                throw new ArgumentException("Username is required");
+
+            var user = _userRepo.GetAll().FirstOrDefault(u => u.Name != null && u.Name.ToLower() == username.ToLower() && u.IsAdmin);
+            if (user == null)
+                throw new KeyNotFoundException("Admin user not found");
+
+            var checkIn = new CheckIn
+            {
+                TimeStart = timeStart ?? DateTime.UtcNow,
+                AllowedCheckOutTime = timeEnd ?? DateTime.UtcNow.AddHours(8),
+                FkUserId = user.Id
+            };
+            _repo.Create(checkIn);
+
+            var registration = new Registration
+            {
+                FkCheckInId = checkIn.Id,
+                FkCheckOutId = null,
+                FkUserId = user.Id
+            };
+            _registrationRepo.Create(registration);
+
+            return checkIn;
+        }
+
+
 
         public bool GetCheckInStatus(string tlf)
         {

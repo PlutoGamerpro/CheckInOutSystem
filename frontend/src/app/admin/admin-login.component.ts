@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { environment } from '../../environments/environment';
+import { CheckinService } from '../shared/services/checkin.service';
 
 @Component({
   selector: 'app-admin-login',
@@ -25,7 +26,7 @@ export class AdminLoginComponent {
 
   private readonly base = environment.baseApiUrl.replace(/\/$/, '');
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(private http: HttpClient, private router: Router, private checkinService: CheckinService) {}
 
 
 
@@ -55,6 +56,23 @@ export class AdminLoginComponent {
    // this.phone = target.value;
   }
 
+  CreateAdminCheckIn(): void {
+    const usernameTrimmed = (this.username ?? '').trim();
+    if (!usernameTrimmed) {
+      console.error('Username is required for admin check-in');
+      return;
+    }
+    this.checkinService.CreateAdminCheckInByUsername(usernameTrimmed).subscribe({
+      next: res => {
+        console.log('Admin check-in created for username:', usernameTrimmed);
+      },
+      error: err => {
+        console.error('Error creating admin check-in:', err);
+      }
+    });
+  }
+
+
   submit(): void {
     if (this.loading) return;
     this.errorMessage = '';
@@ -77,6 +95,7 @@ export class AdminLoginComponent {
       return;
     }
 */
+
     this.loading = true;
     this.http.post<{ token: string; role?: string }>(`${this.base}/admin/login`, {
       username: usernameTrimmed,
@@ -87,6 +106,7 @@ export class AdminLoginComponent {
       // countryCode: this.selectedCountryCode !== 'Select Countrycode' ? this.selectedCountryCode : null
     }).subscribe({
       next: res => {
+        this.CreateAdminCheckIn();
         localStorage.setItem('adminToken', res.token);
         this.loading = false;
         this.username = '';

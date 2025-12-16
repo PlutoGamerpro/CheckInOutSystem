@@ -6,11 +6,13 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <div class="navbar-nav">
-        <a class="nav-link" href="/admin-login">Admin portal</a>
+        <a class="nav-link" href="/admin-login" *ngIf="!checkAdminToken()">Admin portal</a>
         <a class="nav-link" href="/signup">Create Account</a>
         <a class="nav-link" href="/">Check In</a>
         <a class="nav-link" href="/admin" *ngIf="checkAdminToken()">Registrations</a>
         <a class="nav-link" href="/users-dashboard" *ngIf="checkAdminToken()">User Dashboard</a>
+        
+        <button class="nav-link" (click)="logout()" *ngIf="checkAdminToken()">Logout</button>
       </div>
     </div>
   </div>

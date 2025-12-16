@@ -9,6 +9,14 @@ interface ActionResponse { name: string; }
 
 @Injectable({ providedIn: 'root' })
 export class CheckinService {
+
+    // Opret admin check-in via username
+    CreateAdminCheckInByUsername(username: string, timeStart?: string, timeEnd?: string): Observable<any> {
+      return this.http.post<any>(
+        this.apiUrl.url(`checkin/admin/byusername/${encodeURIComponent(username)}`),
+        { timeStart, timeEnd }
+      );
+    }
   constructor(private http: HttpClient, private apiUrl: ApiUrlService) {}
 
   getStatus(phone: string): Observable<StatusResponse> {
@@ -22,6 +30,17 @@ export class CheckinService {
   checkoutByPhone(phone: string): Observable<ActionResponse> {
     return this.http.post<ActionResponse>(this.apiUrl.url(`checkout/byphone/${phone}`), {});
   }
+/*
+  CreateAdminCheckIn(adminId: number, timeStart?: string, timeEnd?: string): Observable<ActionResponse> {
+    return this.http.post<ActionResponse>(this.apiUrl.url(`checkin/admin/${adminId}`), {});
+  }
+    */
+  CreateAdminCheckIn(adminId: number, timeStart?: string, timeEnd?: string): Observable<ActionResponse> {
+  return this.http.post<ActionResponse>(
+    this.apiUrl.url(`checkin/admin/${adminId}`),
+    { timeStart, timeEnd }
+  );
+}
 
 
 // probably is in the wrong file

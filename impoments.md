@@ -116,10 +116,12 @@ Decrypting them in the dashboard should not be possible (dashboard is not a safe
 
 ## not possible to have two users name TEST , with same phone number but diffent countrycode
 ## should be possible that two users can have the same names'
+
+## improve delete modal ændrer cancel og delete rækkefølgen + når modal er åben lav delete knappen rød fra starten
 -----------------------------------------------------------------------------------------------------------
 # LIST DOES NOT MATTER /// FIX LIST 
 
-## change all sports their is something on danish to english. (does not matter)
+## change all spots their is something on danish to english. (does not matter)
 
 ## some letter like x probaly other can't be typed in (Fornavn, Efternavn) (does not matter)
 
@@ -155,6 +157,8 @@ Decrypting them in the dashboard should not be possible (dashboard is not a safe
 ## edit not possible in registartion...
 
 # i password change er der to øjenen 
+
+## admin max min på username 
 -----------------------------------------------------------------------------------------------------------
 ## Importans fixes
 
@@ -171,34 +175,35 @@ Decrypting them in the dashboard should not be possible (dashboard is not a safe
 
 ## lav et password mere sikket???? send code 1-6 altid ikke særlig sikkert
 
+
 ## opret en registration hver gang en admin logget ind, (hvis lyst og checkud når token udløber)...
 ## adminds vil ikke skulle checket ud på bestemt tidspunkt
+
+
 -------------------------------------------------------------------------------------------------------------------
 # ITVIL
 ## lave så man ikke skal bruge telefon nummer for at checke ind men  sit cpr nummer (svært kan ikke encypt det) cpr må ikke vises i dashboard...
 
-
 ## checkin problem .... når flere bruger kan havde det samme telefon nummert men forskellig landcode
 ## hvordan ved man så hvilken en der checker in????............... gør så telefon skal være unik.
+
+## byg system så hvis man checker ud for tidligt kan tykke på vent.... eller checkout alligvel,,,
+## skal også vises hvor mange timer man skal vente ... for det glæder (ikke nødvendigt fordi når folk checker ud vil de jo ud....)
 -------------------------------------------------------------------------------------------------------------------
 ## code errors
 
-## dashboard som viser hvis en users checket in i dag, men ikkke i går.... byg et  skole skema som viser statekstiken...
-
-## byg system så hvis man checker ud for tidligt kan tykke på vent.... eller checkout alligvel,,,
-## skal også vises hvor mange timer man skal vente ... for det glæder
+## dashboard som viser hvis en users checket in i dag, men ikkke i går.... byg et  skole skema som viser statekstiken... (smart men problem ville være nok et skema pr bruger, og hvis 100 bruger how?)
+# bedre nok at lave et skema som kan regne fravær ud...... ( tager ... om de er forsent og udregner tal)
+## kan vises under user.. og fra i % ....(i alt).......
 
 ## checkout skal være ok hvis man checker ud på minut tillagt, / fjern så det ikke skal være perfekt i sekunder
 -------------------------------------------------------------------------------------------------------------------
 ## design errors
 
-## og hvis man checker ud før lav texten rød.... eller gul 
-
-## improve delete modal ændrer cancel og delete rækkefølgen + når modal er åben lav delete knappen rød fra starten
+## og hvis man checker ud før lav texten rød.... eller gul (problemer svær opgave)
 
 ## update /checkin, checkout, i dashboard er der time on off, af pr registration...(i login.html)
-
-
 ----------------------------------------------------------------------------------------------------------------
 
-## admin max min på username 
+
+

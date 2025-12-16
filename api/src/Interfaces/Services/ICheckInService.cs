@@ -13,5 +13,7 @@ namespace TimeRegistration.Services
         CheckIn? UpdateCheckIn(int id, CheckIn checkIn);
         void DeleteCheckIn(int id);
         bool GetCheckInStatus(string tlf);
+        CheckIn CreateAdminCheckIn(int adminId, DateTime? timeStart = null, DateTime? timeEnd = null);
+        CheckIn CreateAdminCheckInByUsername(string username, DateTime? timeStart = null, DateTime? timeEnd = null);
     }
 }
