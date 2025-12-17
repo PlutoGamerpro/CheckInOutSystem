@@ -15,9 +15,34 @@
         <a class="nav-link" routerLink="/admin" *ngIf="checkAdminToken()" routerLinkActive="active">Registrations</a>
         <a class="nav-link" routerLink="/users-dashboard" *ngIf="checkAdminToken()" routerLinkActive="active">User Dashboard</a>
       </div>
-      <div class="d-flex align-items-center gap-2">
+      <div class="d-flex align-items-center gap-2 ms-auto">
         <span class="admin-pill" *ngIf="checkAdminToken()">Admin</span>
-        <button class="btn btn-sm btn-outline-light" (click)="logout()" *ngIf="checkAdminToken()">Logout</button>
+
+        <!-- Profile button and dropdown menu -->
+        <div class="profile" *ngIf="checkAdminToken() || checkUserToken()" (keydown.escape)="closeProfileMenu()">
+          <button class="profile-btn" type="button" aria-haspopup="menu" [attr.aria-expanded]="isProfileMenuOpen" (click)="toggleProfileMenu()">
+            <span class="visually-hidden">Open profile menu</span>
+            <!-- Inline user SVG icon to avoid extra deps -->
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="1.8"/>
+              <path d="M4 20c0-4.418 3.582-8 8-8s8 3.582 8 8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+          </button>
+          <div class="profile-menu" *ngIf="isProfileMenuOpen" role="menu">
+            <div class="profile-header">
+              <div class="avatar" aria-hidden="true">{{ getProfile()?.name?.[0] || (checkAdminToken() ? 'A' : 'U') }}</div>
+              <div class="info">
+                <div class="name">{{ getProfile()?.name || 'Unknown' }}</div>
+                <div class="meta">{{ getProfile()?.email || getProfileStatus() }}</div>
+              </div>
+            </div>
+            <div class="divider" aria-hidden="true"></div>
+            <a class="menu-item" routerLink="/profile" role="menuitem">View Profile</a>
+            <a class="menu-item" *ngIf="checkAdminToken()" routerLink="/admin" role="menuitem">Admin Panel</a>
+            <a class="menu-item" routerLink="/users-dashboard" *ngIf="checkAdminToken()" role="menuitem">User Dashboard</a>
+            <button class="menu-item text-danger" type="button" (click)="logout()" role="menuitem">Logout</button>
+          </div>
+        </div>
       </div>
     </div>
   </div>

@@ -1,0 +1,120 @@
+.settings-modal {
+  max-width: 880px;
+  margin: 2rem auto;
+  background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
+  border-radius: 1rem;
+  box-shadow: 0 4px 20px rgba(0,0,0,.12), 0 0 1px rgba(0,0,0,.05);
+  color: #1a1a1a;
+  border: 1px solid rgba(0,0,0,.08);
+}
+.settings-header {
+  padding: 1.5rem 1.5rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  border-bottom: 1px solid rgba(0,0,0,.06);
+}
+.settings-header .title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #000;
+  margin: 0;
+}
+.close-btn {
+  margin-left: auto;
+  border: 1px solid #d0d7de;
+  background: #fff;
+  border-radius: 6px;
+  padding: .4rem .75rem;
+  color: #666;
+  font-weight: 500;
+  transition: all .2s ease;
+}
+.close-btn:hover {
+  background: #f6f8fa;
+  border-color: #b0b0b0;
+  color: #333;
+}
+.tabs {
+  display: flex;
+  gap: .25rem;
+  flex-wrap: wrap;
+}
+.tab {
+  border: none;
+  background: transparent;
+  padding: .5rem .75rem;
+  border-radius: .5rem;
+  color: #666;
+  font-weight: 500;
+}
+.tab.active {
+  background: transparent;
+  color: #000;
+  font-weight: 700;
+  border-bottom: 2px solid #2563eb;
+}
+.settings-body {
+  padding: 1.5rem;
+}
+.photo-row {
+  display: flex;
+  gap: 1.25rem;
+  align-items: center;
+  margin-bottom: 1.75rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid rgba(0,0,0,.06);
+}
+.avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #6ea8fe, #a970ff) center/cover no-repeat;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(110,168,254,.3);
+}
+.photo-actions {
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+}
+.link {
+  color: #2563eb;
+  background: none;
+  border: none;
+  padding: 0;
+  font-weight: 500;
+  transition: color .2s ease;
+}
+.link:hover {
+  color: #1d4ed8;
+}
+.info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem 2rem;
+}
+.info-pair {
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+}
+.info-pair.wide { grid-column: 1 / -1; }
+.info-pair .label {
+  font-size: .875rem;
+  color: #666;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: .4px;
+}
+.info-pair .value {
+  font-size: 1.1rem;
+  color: #000;
+  font-weight: 600;
+}
+.info-pair .value.warning { color: #d97706; font-weight: 700; }
+
+@media (max-width: 720px) {
+  .settings-modal { margin: .75rem; }
+  .info-grid { grid-template-columns: 1fr; }
+}

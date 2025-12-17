@@ -6,6 +6,7 @@ import { AdminLoginComponent } from './admin/admin-login.component';
 import { UsersDashBoard } from './users-dash-board/users-dash-board'; 
 import { AdminGuard } from './admin-guard';
 import { ProtectRouter } from './protect-router';
+import { ProfileComponent } from './profile/profile';
 
 export const routes: Routes = [
   { path: '', component: Login },
@@ -13,6 +14,7 @@ export const routes: Routes = [
   { path: 'admin', component: AdminDashboardComponent, canActivate: [AdminGuard] },
   { path: 'admin-login', component: AdminLoginComponent },
   { path: 'users-dashboard', component: UsersDashBoard, canActivate: [AdminGuard] },
+  { path: 'profile', component: ProfileComponent },
 ];
 
 // protectrouter allow admins and users with a valid token

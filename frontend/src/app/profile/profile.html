@@ -1,0 +1,34 @@
+<div class="settings-modal">
+  <div class="settings-header">
+    <div class="title">Settings</div>
+    <button class="close-btn" type="button" (click)="goBack()">Close</button>
+    <div class="tabs" role="tablist" aria-label="Settings tabs">
+      <button class="tab active" role="tab" aria-selected="true">Profile</button>
+    </div>
+  </div>
+
+  <div class="settings-body">
+    <div class="photo-row">
+      <div class="avatar" [style.background-image]="photoDataUrl ? 'url(' + photoDataUrl + ')' : 'url(' + faviconUrl + ')'" aria-hidden="true"></div>
+      <div class="photo-actions">
+        <label class="link">Upload new photo <input type="file" accept="image/*" (change)="onPhotoSelected($event)" hidden></label>
+        <button class="link" type="button" (click)="photoDataUrl = undefined">Remove photo</button>
+      </div>
+    </div>
+
+    <div class="info-grid">
+      <div class="info-pair wide">
+        <span class="label">Elev</span>
+        <span class="value">{{ fullName || 'Ukendt' }}</span>
+      </div>
+      <div class="info-pair">
+        <span class="label">Rolle</span>
+        <span class="value">{{ role }}</span>
+      </div>
+      <div class="info-pair">
+        <span class="label">Fravær</span>
+        <span class="value warning">{{ absenceInfo }}</span>
+      </div>
+    </div>
+  </div>
+</div>

@@ -120,6 +120,8 @@ Decrypting them in the dashboard should not be possible (dashboard is not a safe
 ## improve delete modal ændrer cancel og delete rækkefølgen + når modal er åben lav delete knappen rød fra starten
 
 ## sort dashboard based oun country code 
+
+## sletting af registartion kræver refrech ikke normalt fejl opstodedet
 -----------------------------------------------------------------------------------------------------------
 # LIST DOES NOT MATTER /// FIX LIST 
 
@@ -190,6 +192,8 @@ Decrypting them in the dashboard should not be possible (dashboard is not a safe
 ## byg system så hvis man checker ud for tidligt kan tykke på vent.... eller checkout alligvel,,,
 ## skal også vises hvor mange timer man skal vente ... for det glæder (ikke nødvendigt fordi når folk checker ud vil de jo ud....)
 
+## SLETTING AF LOGGIN SKULLLE VÆRE MULIGT?
+
 
 ## dashboard som viser hvis en users checket in i dag, men ikkke i går.... byg et  skole skema som viser statekstiken... (smart men problem ville være nok et skema pr bruger, og hvis 100 bruger how?)
 # bedre nok at lave et skema som kan regne fravær ud...... ( tager ... om de er forsent og udregner tal)
@@ -223,7 +227,12 @@ Decrypting them in the dashboard should not be possible (dashboard is not a safe
 ----------------------------------------------------------------------------------------------------------------
 ## lav en mulighed for at få closed registartion vs still open registration (and make an force registartion knap)
 
-## loggin registartion kan ikke slettes meing... må ikke være muligt.
 
-## sletting af registartion kræver refrech ikke normalt fejl opstodedet
+
 -------------------------------------------------------------------------------------------------------------------
+
+## profil menu
+## HVOR MAN KAN KLIKKE OG SE ENS DATA (FRAVÆR OSV)
+## STATUS CHECKED IN OSV,
+
+## LAV LOGIN SYSTEM FOR NORMALE BRUGER FOR AT SE DERES DATA
