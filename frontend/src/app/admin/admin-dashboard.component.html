@@ -11,8 +11,8 @@
         <h1 class="modal-title fs-5" id="exampleModalLabel">Delete Registration</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="modal-body"> {{ labelTextToDisplay }}
-              
+      <div class="modal-body delete-modal-body">
+        <p style="white-space: pre-line; line-height: 1.6; text-align: center;">{{ labelTextToDisplay }}</p>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -39,6 +39,7 @@
 
   <div class="toolbar">
         <button class="btn btn-outline" (click)="Home()">Check In menu</button>
+       
            <button class="btn btn-outline" (click)="manageUsers()">Manage Users</button>
     <button class="btn btn-primary" (click)="load()">Reload</button>
 
@@ -53,8 +54,12 @@
     -->
     <button class="btn btn-outline" (click)="load()">All Reg.</button>
     <button class="btn btn-outline" (click)="enterCalendarMode()">Calendar</button>
-
-     
+    
+    <!-- Country Filter -->
+    <select class="country-filter" (change)="onCountryFilterChange($any($event.target).value)" [value]="selectedCountryCode || ''">
+      <option value="">All Countries</option>
+      <option *ngFor="let country of availableCountries" [value]="country">{{ country }}</option>
+    </select>
   </div>
 
   <div class="toolbar calendar-nav" *ngIf="currentPeriod==='calendar'" style="margin-top:.5rem;gap:.5rem;flex-wrap:wrap">
@@ -112,7 +117,7 @@ normalize(item: any) &#123;
     </details>
   </div>
 
-  <table *ngIf="!loading && registrations.length" class="data-table">
+  <table *ngIf="!loading && displayedRegistrations.length" class="data-table">
     <thead>
       <tr>
         <th>User</th>
@@ -129,7 +134,7 @@ normalize(item: any) &#123;
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let r of registrations; trackBy: trackById" [class.row-closed]="!r.isOpen">
+      <tr *ngFor="let r of displayedRegistrations; trackBy: trackById" [class.row-closed]="!r.isOpen">
         <td data-label="User">
           <ng-container *ngIf="r.userName; else dash">{{ r.userName }}</ng-container>
         </td>
@@ -183,7 +188,7 @@ normalize(item: any) &#123;
           </button>
         </td>
       </tr>
-      <ng-container *ngFor="let r of registrations; trackBy: trackById">
+      <ng-container *ngFor="let r of displayedRegistrations; trackBy: trackById">
         <tr *ngIf="isDetailsVisible(r.id) && r.userId" [attr.id]="'details-'+r.id">
           <td colspan="10">
             <div *ngIf="userHistories.get(r.userId); else noHistory">
@@ -244,7 +249,7 @@ normalize(item: any) &#123;
   </table>
   <ng-template #dash>-</ng-template>
 
-  <div *ngIf="!loading && !registrations.length" class="info info-empty">No registrations.</div>
+  <div *ngIf="!loading && !displayedRegistrations.length" class="info info-empty">{{ selectedCountryCode ? 'No registrations for ' + selectedCountryCode : 'No registrations.' }}</div>
   </div>
     <!--
     <span *ngIf="(r.timeDiffMinutes  ?? null) !== null">

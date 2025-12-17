@@ -178,6 +178,7 @@ Decrypting them in the dashboard should not be possible (dashboard is not a safe
 
 ## opret en registration hver gang en admin logget ind, (hvis lyst og checkud når token udløber)...
 ## adminds vil ikke skulle checket ud på bestemt tidspunkt
+## admin er logget ind logger ud står stadig som om at admin ikke er logget ud...........
 
 
 -------------------------------------------------------------------------------------------------------------------
@@ -189,12 +190,16 @@ Decrypting them in the dashboard should not be possible (dashboard is not a safe
 
 ## byg system så hvis man checker ud for tidligt kan tykke på vent.... eller checkout alligvel,,,
 ## skal også vises hvor mange timer man skal vente ... for det glæder (ikke nødvendigt fordi når folk checker ud vil de jo ud....)
--------------------------------------------------------------------------------------------------------------------
-## code errors
+
 
 ## dashboard som viser hvis en users checket in i dag, men ikkke i går.... byg et  skole skema som viser statekstiken... (smart men problem ville være nok et skema pr bruger, og hvis 100 bruger how?)
 # bedre nok at lave et skema som kan regne fravær ud...... ( tager ... om de er forsent og udregner tal)
 ## kan vises under user.. og fra i % ....(i alt).......
+-------------------------------------------------------------------------------------------------------------------
+## code errors
+
+## admin er logget in, når admin logger ud registration for admin log bliver ikke stoppet,,, lukket, logger ind
+## igen opstarter ny.....
 
 ## checkout skal være ok hvis man checker ud på minut tillagt, / fjern så det ikke skal være perfekt i sekunder
 -------------------------------------------------------------------------------------------------------------------
@@ -203,7 +208,21 @@ Decrypting them in the dashboard should not be possible (dashboard is not a safe
 ## og hvis man checker ud før lav texten rød.... eller gul (problemer svær opgave)
 
 ## update /checkin, checkout, i dashboard er der time on off, af pr registration...(i login.html)
+---------------------------------------------------------------
+## CHECKOUT / CHECKIN (people with same phone number)
+
+## WAY 1
+## make a checking port for every country ... you have that avoids 
+## one from dk, checks a person from france out.
+
+## way 2
+## pick a flag of what country you want to checkin from
+## baased on that
+-------------------------------------------------------------------
+
+## sort dashboard based oun country code 
+
+## når noget bliver slettet lav en delete completed besked modal popop efter delete er kliket på
+## registartions / users
 ----------------------------------------------------------------------------------------------------------------
-
-
 

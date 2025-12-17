@@ -309,7 +309,7 @@ saveEdit(): void {
 
     const user = this.users.find(u => u.id === id);
     const label = user ? `${user.name || ''} (ID: ${id})` : `ID: ${id}`;
-    this.labelTextToDisplay = (`DELETE user ${label}? No way to undo! after actions done`);
+    this.labelTextToDisplay = `Are you sure you want to permanently delete this user?\n\n${label}\n\nThis action cannot be undone.`;
     // Modal åbnes via data-bs-toggle - sletning sker først i DeleteUserPost() efter bekræftelse
   }
 

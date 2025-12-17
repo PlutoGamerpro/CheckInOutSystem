@@ -44,6 +44,11 @@ export class AdminDashboardComponent implements OnInit {
   includeAdmins = true; // define false to exclude admins from list
   currentPeriod: string | null = 'all'; 
   labelTextToDisplay = '';
+  
+  // Country filter
+  selectedCountryCode: string | null = null;
+  availableCountries: string[] = [];
+  filteredRegistrations: AdminReg[] = [];
 
   // Estado de calendário
   calendarYear = new Date().getUTCFullYear();
@@ -235,6 +240,11 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   trackById = (_: number, r: AdminReg) => r.id;
+  
+  // Use filtered registrations in template
+  get displayedRegistrations(): AdminReg[] {
+    return this.filteredRegistrations || [];
+  }
 
   get debugLabel(): string {
     return this.debug ? 'Hide RAW' : 'Show RAW';
@@ -328,9 +338,20 @@ export class AdminDashboardComponent implements OnInit {
     this.registrations = this.includeAdmins
       ? normalized
       : normalized.filter(r => !r.isAdmin);
+    
+    // Extract unique country codes
+    this.availableCountries = Array.from(new Set(
+      this.registrations
+        .map(r => r.countryCode)
+        .filter((cc): cc is string => cc !== null && cc !== undefined)
+    )).sort();
+    
+    // Apply country filter
+    this.applyCountryFilter();
+    
     // Gruppér pr. userId
     const groups = new Map<string | number, { userId: string | number, userName: string | null, registrations: AdminReg[] }>();
-    for (const reg of this.registrations) {
+    for (const reg of this.filteredRegistrations) {
       if (!reg.userId) continue;
       if (!groups.has(reg.userId)) {
         groups.set(reg.userId, { userId: reg.userId, userName: reg.userName, registrations: [] });
@@ -341,6 +362,29 @@ export class AdminDashboardComponent implements OnInit {
     if (this.allFieldsEmpty) {
       console.warn('All fields empty after normalization. Keys:', this.detectedKeys);
     }
+  }
+  
+  private applyCountryFilter(): void {
+    if (this.selectedCountryCode) {
+      this.filteredRegistrations = this.registrations.filter(r => r.countryCode === this.selectedCountryCode);
+    } else {
+      this.filteredRegistrations = [...this.registrations];
+    }
+  }
+  
+  onCountryFilterChange(countryCode: string | null): void {
+    this.selectedCountryCode = countryCode === '' ? null : countryCode;
+    this.applyCountryFilter();
+    // Re-apply grouping
+    const groups = new Map<string | number, { userId: string | number, userName: string | null, registrations: AdminReg[] }>();
+    for (const reg of this.filteredRegistrations) {
+      if (!reg.userId) continue;
+      if (!groups.has(reg.userId)) {
+        groups.set(reg.userId, { userId: reg.userId, userName: reg.userName, registrations: [] });
+      }
+      groups.get(reg.userId)!.registrations.push(reg);
+    }
+    this.groupedRegistrations = Array.from(groups.values());
   }
 
   deleteRegistrationRequest(id: string | number | null): void {
@@ -366,7 +410,7 @@ export class AdminDashboardComponent implements OnInit {
     if (this.loading) return; 
     const token = localStorage.getItem('adminToken') /*|| localStorage.getItem('managerToken')*/;
     this.selectedRegistrationId = id;
-    this.labelTextToDisplay = `DELETE registration ID: ${id}? No way to undo! after actions done.`;
+    this.labelTextToDisplay = `Are you sure you want to permanently delete this registration?\n\nRegistration ID: ${id}\n\nThis action cannot be undone.`;
     // Modal åbnes via data-bs-toggle
   }
 
