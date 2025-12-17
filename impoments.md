@@ -118,6 +118,8 @@ Decrypting them in the dashboard should not be possible (dashboard is not a safe
 ## should be possible that two users can have the same names'
 
 ## improve delete modal ændrer cancel og delete rækkefølgen + når modal er åben lav delete knappen rød fra starten
+
+## sort dashboard based oun country code 
 -----------------------------------------------------------------------------------------------------------
 # LIST DOES NOT MATTER /// FIX LIST 
 
@@ -175,12 +177,9 @@ Decrypting them in the dashboard should not be possible (dashboard is not a safe
 
 ## lav et password mere sikket???? send code 1-6 altid ikke særlig sikkert
 
-
 ## opret en registration hver gang en admin logget ind, (hvis lyst og checkud når token udløber)...
 ## adminds vil ikke skulle checket ud på bestemt tidspunkt
 ## admin er logget ind logger ud står stadig som om at admin ikke er logget ud...........
-
-
 -------------------------------------------------------------------------------------------------------------------
 # ITVIL
 ## lave så man ikke skal bruge telefon nummer for at checke ind men  sit cpr nummer (svært kan ikke encypt det) cpr må ikke vises i dashboard...
@@ -209,7 +208,7 @@ Decrypting them in the dashboard should not be possible (dashboard is not a safe
 
 ## update /checkin, checkout, i dashboard er der time on off, af pr registration...(i login.html)
 ---------------------------------------------------------------
-## CHECKOUT / CHECKIN (people with same phone number)
+## CHECKOUT / CHECKIN (people with same phone number) (on login.html page.....)
 
 ## WAY 1
 ## make a checking port for every country ... you have that avoids 
@@ -219,10 +218,12 @@ Decrypting them in the dashboard should not be possible (dashboard is not a safe
 ## pick a flag of what country you want to checkin from
 ## baased on that
 -------------------------------------------------------------------
-
-## sort dashboard based oun country code 
-
 ## når noget bliver slettet lav en delete completed besked modal popop efter delete er kliket på
 ## registartions / users
 ----------------------------------------------------------------------------------------------------------------
+## lav en mulighed for at få closed registartion vs still open registration (and make an force registartion knap)
 
+## loggin registartion kan ikke slettes meing... må ikke være muligt.
+
+## sletting af registartion kræver refrech ikke normalt fejl opstodedet
+-------------------------------------------------------------------------------------------------------------------

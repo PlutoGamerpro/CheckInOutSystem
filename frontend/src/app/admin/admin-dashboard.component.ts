@@ -28,7 +28,7 @@ interface AdminReg {
   styleUrls: ['./admin-dashboard.component.scss']
 })
 export class AdminDashboardComponent implements OnInit {
-    groupedRegistrations: { userId: string | number, userName: string | null, registrations: AdminReg[] }[] = [];
+  groupedRegistrations: { userId: string | number, userName: string | null, registrations: AdminReg[] }[] = [];
   private visibleDetails = new Set<string | number>();
   // cache of history per userId so we don't refetch every toggle
   userHistories = new Map<string | number, AdminReg[]>();
@@ -397,6 +397,8 @@ export class AdminDashboardComponent implements OnInit {
         // updates local list without full reload (faster)
         this.registrations = this.registrations.filter(r => r.id !== id);
         this.originalRaw = this.originalRaw.filter((r: any) => (r.id ?? r.ID) !== id);
+        this.load();
+        //this.router.navigate(['/admin']);
       },
       error: (err: HttpErrorResponse) => {
         console.error(`Erro ao excluir registro ${id}:`, err);

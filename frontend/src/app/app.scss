@@ -1,1 +1,85 @@
 @import 'bootstrap/scss/bootstrap.scss';
+
+.app-navbar {
+	position: sticky;
+	top: 0;
+	z-index: 1030;
+	padding-block: .35rem;
+	background: linear-gradient(180deg, rgba(20,22,30,.75), rgba(20,22,30,.55));
+	backdrop-filter: blur(10px);
+	-webkit-backdrop-filter: blur(10px);
+	border-bottom: 1px solid rgba(255,255,255,.08);
+
+	.navbar-brand {
+		color: #fff;
+		font-weight: 700;
+		letter-spacing: .2px;
+		text-decoration: none;
+		.brand-mark {
+			width: .75rem;
+			height: .75rem;
+			border-radius: 50%;
+			display: inline-block;
+			background: conic-gradient(from 220deg, #6ea8fe, #a970ff, #ff8bd2, #6ea8fe);
+			box-shadow: 0 0 16px rgba(110,168,254,.6);
+		}
+		.brand-text {
+			color: #fff;
+		}
+	}
+
+	.navbar-toggler {
+		border-color: rgba(255,255,255,.25);
+		.navbar-toggler-icon {
+			filter: invert(1) contrast(1.2);
+		}
+	}
+
+	.nav-link {
+		color: rgba(255,255,255,.8);
+		position: relative;
+		padding-inline: 1rem;
+		transition: color .2s ease;
+
+		&.active,
+		&:hover {
+			color: #fff;
+		}
+
+		&::after {
+			content: '';
+			position: absolute;
+			left: .9rem;
+			right: .9rem;
+			bottom: .35rem;
+			height: 2px;
+			background: linear-gradient(90deg, #6ea8fe, #a970ff, #ff8bd2);
+			transform: scaleX(0);
+			transform-origin: left;
+			transition: transform .25s ease;
+		}
+		&.active::after,
+		&:hover::after {
+			transform: scaleX(1);
+		}
+	}
+
+	.admin-pill {
+		padding: .2rem .5rem;
+		font-size: .8rem;
+		border-radius: 999px;
+		color: #fff;
+		background: linear-gradient(90deg, rgba(110,168,254,.9), rgba(169,112,255,.9));
+		border: 1px solid rgba(255,255,255,.2);
+	}
+
+	.btn.btn-outline-light {
+		--bs-btn-color: rgba(255,255,255,.9);
+		--bs-btn-border-color: rgba(255,255,255,.35);
+		--bs-btn-hover-color: #111;
+		--bs-btn-hover-bg: #fff;
+		--bs-btn-hover-border-color: #fff;
+		--bs-btn-active-bg: #f0f0f0;
+		--bs-btn-active-color: #111;
+	}
+}

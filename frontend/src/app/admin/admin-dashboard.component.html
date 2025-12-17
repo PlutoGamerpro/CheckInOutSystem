@@ -71,7 +71,6 @@
     <button class="btn btn-outline btn-sm" (click)="exitCalendarMode()">Exit</button>
   </div>
 
-
   <div *ngIf="loading" class="info info-loading">Loading...</div>
   <div *ngIf="error && !networkDown" class="info info-error">{{ error }}</div>
   <div *ngIf="networkDown" class="info info-error">
