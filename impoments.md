@@ -226,13 +226,13 @@ Decrypting them in the dashboard should not be possible (dashboard is not a safe
 ## registartions / users
 ----------------------------------------------------------------------------------------------------------------
 ## lav en mulighed for at få closed registartion vs still open registration (and make an force registartion knap)
-
-
-
 -------------------------------------------------------------------------------------------------------------------
-
 ## profil menu
-## HVOR MAN KAN KLIKKE OG SE ENS DATA (FRAVÆR OSV)
-## STATUS CHECKED IN OSV,
+## HVOR MAN KAN KLIKKE OG SE ENS DATA (FRAVÆR OSV) --- ikke færdig 
+## STATUS CHECKED IN OSV, (## når man er checket ind ændres status ikke fra ukendt til true=)
+----------------------------
 
 ## LAV LOGIN SYSTEM FOR NORMALE BRUGER FOR AT SE DERES DATA
+
+
+## hvis stien ikke vises fejl i den... vis fix error page this page does not exist go to home

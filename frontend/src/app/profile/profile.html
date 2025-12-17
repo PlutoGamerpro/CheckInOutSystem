@@ -17,13 +17,25 @@
     </div>
 
     <div class="info-grid">
-      <div class="info-pair wide">
-        <span class="label">Elev</span>
+      <div class="info-pair">
+        <span class="label">Fornavn & Efternavn</span>
         <span class="value">{{ fullName || 'Ukendt' }}</span>
+      </div>
+      <div class="info-pair">
+        <span class="label">Telefon</span>
+        <span class="value">{{ countryCode ? countryCode + ' ' : '' }}{{ phone || '—' }}</span>
       </div>
       <div class="info-pair">
         <span class="label">Rolle</span>
         <span class="value">{{ role }}</span>
+      </div>
+      <div class="info-pair">
+        <span class="label">Status</span>
+        <span class="value" [ngClass]="{ 'checked-in': isCheckedIn, 'not-checked-in': isCheckedIn === false }">
+          <ng-container *ngIf="isCheckedIn === true">Checket ind</ng-container>
+          <ng-container *ngIf="isCheckedIn === false">Ikke checket ind</ng-container>
+          <ng-container *ngIf="isCheckedIn === null">Ukendt</ng-container>
+        </span>
       </div>
       <div class="info-pair">
         <span class="label">Fravær</span>

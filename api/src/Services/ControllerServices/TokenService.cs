@@ -36,8 +36,10 @@ namespace TimeRegistration.Services
             var claims = new List<Claim>
         {
             new(ClaimTypes.NameIdentifier, user.Id.ToString()),
-           // new("phone", user.Phone ?? ""),
-            new("name", user.Name ?? "")
+            new("phone", user.Phone ?? ""),
+            new("countryCode", user.CountryCode ?? ""),
+            new("name", user.Name ?? ""),
+            new("isCheckedIn", user.IsCheckedIn ? "true" : "false")
         };
             if (user.IsAdmin)
             {
